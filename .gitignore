@@ -1,0 +1,3 @@
+quartus/db
+quartus/*.qsf
+quartus/*.qws
