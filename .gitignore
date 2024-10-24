@@ -1,3 +1,7 @@
 quartus/db
 quartus/*.qsf
 quartus/*.qws
+python/bin/
+python/include/
+python/lib/
+python/pyvenv.cfg
