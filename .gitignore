@@ -8,3 +8,4 @@ python/pyvenv.cfg
 python/etc/
 python/share/
 python/lib64
+python/.ipynb_checkpoints/
