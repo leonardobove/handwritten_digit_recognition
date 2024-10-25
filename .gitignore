@@ -5,3 +5,6 @@ python/bin/
 python/include/
 python/lib/
 python/pyvenv.cfg
+python/etc/
+python/share/
+python/lib64
