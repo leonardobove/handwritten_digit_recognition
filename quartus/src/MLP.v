@@ -1,8 +1,8 @@
 module MLP(
     input clk,
     input reset,
-    input signed [7:0] pixels [783:0],
-    output signed [7:0] output_activations [9:0]
+    input signed [8*784-1:0] pixels,
+    output signed [8*10-1:0] output_activations
     );
 
     //constants
@@ -12,14 +12,14 @@ module MLP(
     parameter OL_neurons = 10;
 
     // Intermediate signals
-    wire signed [7:0] zeds_HL [29:0];
-    wire signed [7:0] activations_HL [29:0];
-    wire signed [7:0] zeds_OL [9:0];
-    wire signed [7:0] activations_OL [9:0];
-    wire signed [7:0] intermediate_weights_HL [29:0][783:0];
-    wire signed [7:0] intermediate_biases_HL [29:0];
-    wire signed [7:0] intermediate_weights_OL [9:0][29:0];
-    wire signed [7:0] intermediate_biases_OL [9:0];
+    wire signed [resolution*HL_neurons-1:0] zeds_HL;
+    wire signed [resolution*HL_neurons-1:0] activations_HL;
+    wire signed [resolution*OL_neurons-1:0] zeds_OL;
+    wire signed [resolution*OL_neurons-1:0] activations_OL;
+    wire signed [resolution*HL_neurons*pixels_number-1:0] intermediate_weights_HL;
+    wire signed [resolution*HL_neurons-1:0] intermediate_biases_HL;
+    wire signed [resolution*OL_neurons*HL_neurons-1:0] intermediate_weights_OL;
+    wire signed [resolution*OL_neurons-1:0] intermediate_biases_OL;
 
     // Instantiate the hidden_layer_param
     hidden_layer_param i_hidden_layer_param (

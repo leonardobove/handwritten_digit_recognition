@@ -1,20 +1,24 @@
 module output_layer_param (
-    output reg signed [7:0] weights_HL [9:0][29:0], // Declare output as a register array
-    output reg signed [7:0] biases_HL [9:0]
+    output reg signed [8*10*30-1:0] weights_HL, // Declare output as a flattened 1D array for weights
+    output reg signed [8*10-1:0] biases_HL // Declare output as a flattened 1D array for biases
 );
 
-    localparam signed [7:0] weights_HL_param [9:0][29:0] = '{default: '{default: 8'sd0}}; // Initialize to zero
-    localparam signed [7:0] biases_HL_param [9:0] = '{default: '{default: 8'sd0}}; // Initialize to zero
+    // Local parameters for initialized weights and biases
+    localparam signed [7:0] weights_HL_param [9:0][29:0] = '{default: '{default: 8'sd0}}; // Initialize weights to zero
+    localparam signed [7:0] biases_HL_param [9:0] = '{default: '{default: 8'sd0}}; // Initialize biases to zero
 
-    // Optional: You may want to copy values from weights_array_L2 to output_data
-    always @ (*) begin
+    // Assign values to weights and biases
+    always @(*) begin
         integer i, j;
+
+        // Assign weights from the localparam to the output
         for (i = 0; i < 10; i = i + 1) begin
             for (j = 0; j < 30; j = j + 1) begin
-                weights_HL[i][j] = weights_HL_param[i][j]; // Assign values from weights_array_L2
+                // Flattened access
+                weights_HL[(i * 30 + j) * 8 +: 8] = weights_HL_param[i][j]; // Assign 8 bits for each weight
             end
-            biases_HL[i] = biases_HL_param[i];
+            biases_HL[i * 8 +: 8] = biases_HL_param[i]; // Assign 8 bits for each bias
         end
     end
-    
+
 endmodule
