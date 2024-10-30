@@ -1,4 +1,15 @@
-module neuron #(parameter input_data_size=784, resolution=8)(
+/***************************************************************************
+The neuron module takes as an imput the weights, the imput_data and the bias. ALL the values have already been normalized to the maximum
+available number in 8-bit signed format.
+The input_data, theoretically, are unsigned, so the maximum is 2^8-1 = 255. But in Verilog we have to operates with the same type, so both
+operands need to be signed, so the maximum will be +127. This fact needs to be changed in the sigmoid function because the output has
+to be rescaled.
+At this point, we have ALL the variables rapresented in fixed point from 0 to 1 in signed 8-bit. When we make the product, the result
+has 2*resolution-bit, 6-bit for the fractional part, so, the bias has to be shifted in order to make the sum consitent.
+
+****************************************************************************/
+
+module neuron #(parameter input_data_size=1, resolution=8)(
     input clk,
     input reset,
     input signed [resolution*input_data_size-1:0] input_data, // Flattened 1D input_data
@@ -7,11 +18,17 @@ module neuron #(parameter input_data_size=784, resolution=8)(
     output reg signed [resolution-1:0] output_neuron
     );
 
+    //wire [9:0] input_data_size_width;
+    //assign input_data_size_width = $clog2(input_data_size); //to calculate the actual number of bits for input_data_size
+
+    parameter input_data_size_width = ($clog2(input_data_size)+1);
+
     // Internal registers for calculations
     reg signed [2*resolution-1:0] product;
-    reg signed [4*resolution-7:0] sum;
-    reg signed [4*resolution-6:0] z;   // Register to store z value
-    wire signed [4*resolution-6:0] z_w;
+    reg signed [2*resolution+input_data_size_width-1:0] sum;
+    reg signed [2*resolution+input_data_size_width:0] z;   
+    wire signed [resolution-1:0] z_w;
+    reg signed [2*resolution+input_data_size_width:0] z_mod;
 
     reg signed [resolution-1:0] input_data_element;
     reg signed [resolution-1:0] weight_element;
@@ -33,14 +50,31 @@ module neuron #(parameter input_data_size=784, resolution=8)(
         z = sum + bias;
     end
 
-    assign z_w = z;
+    reg mod;
+
+    always @(*) begin
+        if (z[2*resolution+input_data_size_width]==1) begin
+            z_mod = -z;
+            mod = 1;
+        end
+        else begin
+            z_mod = z;
+            mod = 0;
+        end
+    end
+    
+    assign z_w = (z_mod) >> (resolution+input_data_size_width+1); // rescale for 8-bit
 
     // Sequential logic for output neuron
     always @ (posedge clk) begin
         if (reset)
             output_neuron <= 0;
-        else
-            output_neuron <= z_w[4*resolution-6:4*resolution-13]; // Output the most significant bits
+        else begin
+            if (mod == 0)
+                output_neuron <= z_w; 
+            else
+                output_neuron <= -z_w;
+        end
     end
 
 endmodule

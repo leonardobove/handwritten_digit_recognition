@@ -60,7 +60,7 @@ module MLP(
         .number_neuron(OL_neurons),
         .input_data_size(HL_neurons),
         .resolution(resolution)
-    ) hidden_layer (
+    ) output_layer (
         .clk(clk), 
         .reset(reset), 
         .input_data(activations_HL),
