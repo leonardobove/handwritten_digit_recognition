@@ -1,3 +1,11 @@
 quartus/db
 quartus/*.qsf
 quartus/*.qws
+python/bin/
+python/include/
+python/lib/
+python/pyvenv.cfg
+python/etc/
+python/share/
+python/lib64
+python/.ipynb_checkpoints/
