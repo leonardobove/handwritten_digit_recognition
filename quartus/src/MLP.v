@@ -50,7 +50,7 @@ module MLP(
     );
 
     // Instantiate the output_layer_param
-    ooutput_layer_param i_output_layer_param (
+    output_layer_param i_output_layer_param (
         .weights_HL(intermediate_weights_OL),
         .biases_HL(intermediate_biases_OL)
     );

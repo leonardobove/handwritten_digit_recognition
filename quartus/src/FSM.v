@@ -1,12 +1,12 @@
 module FSM (clk, D1, D2, Start, Go1, Go2, reset);
-input clock, D1, D2, Start, reset;
+input clk, D1, D2, Start, reset;
 output Go1, Go2;
 parameter S0 = 0, Wait_1 = 1, Wait_2 = 2, Go_1 = 3, Done_1 = 4, Go_2 = 5, Done_2 = 6;
 
 reg [4:0]Sreg, Snext;
 reg Go1, Go2;
 
-always @ (posedge clock)
+always @ (posedge clk)
 if (reset) Sreg <= S0;
 else Sreg <= Snext;
 

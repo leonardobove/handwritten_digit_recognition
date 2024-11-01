@@ -9,7 +9,7 @@ has 2*resolution-bit, 6-bit for the fractional part, so, the bias has to be shif
 
 ****************************************************************************/
 
-module neuron #(parameter input_data_size=1, resolution=8)(
+module neuron #(parameter input_data_size=1, resolution=8, input_data_size_width=3)(
     input clk,
     input reset,
     input signed [resolution*input_data_size-1:0] input_data, // Flattened 1D input_data
@@ -18,10 +18,7 @@ module neuron #(parameter input_data_size=1, resolution=8)(
     output reg signed [resolution-1:0] output_neuron
     );
 
-    //wire [9:0] input_data_size_width;
-    //assign input_data_size_width = $clog2(input_data_size); //to calculate the actual number of bits for input_data_size
-
-    parameter input_data_size_width = ($clog2(input_data_size)+1);
+    localparam input_data_size_width = ($clog2(input_data_size)+1);
 
     // Internal registers for calculations
     reg signed [2*resolution-1:0] product;
