@@ -1,4 +1,7 @@
-module MLP(
+module MLP #(
+    parameter averaged_pixels_nr = 196,
+    parameter resolution = 8
+    )(
     input clk,
     input reset,
     input signed [8*784-1:0] pixels,
@@ -6,8 +9,6 @@ module MLP(
     );
 
     //constants
-    parameter pixels_number = 784;
-    parameter resolution = 8;
     parameter HL_neurons = 30;
     parameter OL_neurons = 10;
 
@@ -16,7 +17,7 @@ module MLP(
     wire signed [resolution*HL_neurons-1:0] activations_HL;
     wire signed [resolution*OL_neurons-1:0] zeds_OL;
     wire signed [resolution*OL_neurons-1:0] activations_OL;
-    wire signed [resolution*HL_neurons*pixels_number-1:0] intermediate_weights_HL;
+    wire signed [resolution*HL_neurons*averaged_pixels_nr-1:0] intermediate_weights_HL;
     wire signed [resolution*HL_neurons-1:0] intermediate_biases_HL;
     wire signed [resolution*OL_neurons*HL_neurons-1:0] intermediate_weights_OL;
     wire signed [resolution*OL_neurons-1:0] intermediate_biases_OL;
@@ -30,7 +31,7 @@ module MLP(
     // Instantiate the Hidden Layer
     layer #(
         .number_neuron(HL_neurons),
-        .input_data_size(pixels_number),
+        .input_data_size(averaged_pixels_nr),
         .resolution(resolution)
     ) hidden_layer (
         .clk(clk), 

@@ -1,6 +1,6 @@
 module layer #(
     parameter number_neuron = 30,
-    parameter input_data_size = 784,
+    parameter input_data_size = 196,
     parameter resolution = 8
 ) (
     input clk,
