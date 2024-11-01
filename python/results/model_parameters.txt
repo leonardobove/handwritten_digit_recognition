@@ -75,4 +75,3 @@ Weights/Biases:
 
 }
 ]
-
