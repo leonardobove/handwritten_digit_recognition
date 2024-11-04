@@ -4,8 +4,8 @@ module dff_nbit #(
         input clk,
         input en,
         input reset,
-        input signed [nbit-1:0] di,
-        output signed reg [nbit-1:0] do
+        input [nbit-1:0] di,
+        output reg [nbit-1:0] do
     );
 
     always @ (posedge clk) begin

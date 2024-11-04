@@ -2,9 +2,7 @@ module MLP (
     input clk,
     input reset,
     input signed [8*196-1:0] averaged_pixels,
-    input MLP_go,
-    output signed [8*10-1:0] output_activations,
-    output MLP_done
+    output signed [8*10-1:0] output_activations
     );
 
     //constants
@@ -30,7 +28,7 @@ module MLP (
         .nbit(averaged_pixels_nr)
     ) dff_input (
         .clk(clk),
-        .en(MLP_go),
+        .en(1),
         .reset(reset),
         .di(averaged_pixels),
         .do(averaged_pixels_w)
@@ -99,7 +97,7 @@ module MLP (
         .nbit(OL_neurons)
     ) dff_output (
         .clk(clk),
-        .en(MLP_go),
+        .en(1),
         .reset(reset),
         .di(output_activations_w),
         .do(output_activations)
