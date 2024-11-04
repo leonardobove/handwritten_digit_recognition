@@ -1,6 +1,10 @@
 quartus/db
+quartus/incremental_db/
 quartus/*.qsf
 quartus/*.qws
+quartus/src/*.bak
+quartus/tb/*.bak
+quartus/quartus_project
 python/bin/
 python/include/
 python/lib/
@@ -9,3 +13,5 @@ python/etc/
 python/share/
 python/lib64
 python/.ipynb_checkpoints/
+python/Scripts/
+python/results/.ipynb_checkpoints/
