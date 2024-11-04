@@ -3,12 +3,14 @@
 module neuron_tb;
 
     // Parameters
-    parameter input_data_size = 784;
+    parameter input_data_size = 1;
     parameter resolution = 8;
+    parameter input_data_size_width = $clog2(input_data_size);
+    wire size = input_data_size_width;
 
     // Inputs
     reg clk = 0;
-    reg reset = 1;
+    reg reset;
     reg signed [resolution*input_data_size-1:0] input_data; // Flattened 1D input_data
     reg signed [resolution*input_data_size-1:0] weight;     // Flattened 1D weight
     reg signed [resolution-1:0] bias = 0;
@@ -39,30 +41,23 @@ module neuron_tb;
     // Test vectors
     initial begin
         // Initialize inputs
-        reset = 1;
+        reset = 0;
         bias = 0;
+        #1;
+        reset = 1;
+        #1;
+        reset = 0;
         
         // Generate input data and weights
-        
-        for (i = 0; i < input_data_size; i = i + 1) begin
-            // Assign random values to each "slice" of the flattened 1D input_data and weight
-            input_data[(i+1)*resolution-1 -: resolution] = $random % (1 << (resolution - 1)); // Random within range
-            weight[(i+1)*resolution-1 -: resolution] = $random % (1 << (resolution - 1));
-        end
+        input_data = -128;
+        weight = -128;
+        bias = 127;
 
-        // Apply reset
-        #10;
-        reset = 0;
+        #20;
         
         // Test 1: Apply a bias and observe output
         bias = 8'd5;
         #20; // Wait for a few clock cycles to settle
-        
-        // Test 2: Change input data and weights, observe output
-        for (i = 0; i < input_data_size; i = i + 1) begin
-            input_data[(i+1)*resolution-1 -: resolution] = $random % (1 << (resolution - 1)); // New random values
-            weight[(i+1)*resolution-1 -: resolution] = $random % (1 << (resolution - 1));
-        end
 
         // Change bias
         bias = -8'd3;
