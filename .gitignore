@@ -9,3 +9,6 @@ python/etc/
 python/share/
 python/lib64
 python/.ipynb_checkpoints/
+python/Scripts
+quartus/incremental_db
+quartus/db
