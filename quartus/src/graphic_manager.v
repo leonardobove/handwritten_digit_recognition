@@ -22,18 +22,19 @@ module graphic_manager (
                IDLE = 1,
                ADD_PIXEL = 2;
 
+    // Current state and future state
     reg [1:0] Sreg, Snext;
 
-    // Flag to check if the reset signal to the driver has been sent
-    reg reset_sent;
+    localparam ROW_NUM = 8'd240;    // Rows number
+    localparam COL_NUM = 9'd320;    // Columns number
+    localparam PIXEL_NUM = 17'd76800; // Pixels number
 
     // LT24 LCD Driver input interface
-    wire rst_driver, driver_done, print;
+    wire driver_done, print;
     wire [15:0] pixel_rgb;
-    reg rst_driver_reg, print_reg;
+    reg print_reg;
     reg [15:0] pixel_rgb_reg;
 
-    assign rst_driver = rst_driver_reg;
     assign print = print_reg;
     assign pixel_rgb = pixel_rgb_reg;
 
@@ -41,7 +42,7 @@ module graphic_manager (
     lt24_lcd_driver lt24_lcd_driver_inst (
         .clk(clk),
         .en(en),
-        .reset(rst_driver),
+        .reset(reset),
         .pixel_rgb(pixel_rgb),
         .print(print),
         .done(driver_done),
@@ -54,16 +55,14 @@ module graphic_manager (
         .tft_data(tft_data)
     );
 
-    localparam ROW_NUM = 8'd240;    // Rows number
-    localparam COL_NUM = 9'd320;    // Columns number
-    localparam PIXEL_NUM = 17'd76800; // Pixels number
-
     // Frame RAM address
-    reg [16:0] address_reg;
-    wire [16:0] address = address_reg;
+    reg [16:0] wr_address_reg, rd_address_reg;
+    wire [16:0] wr_address = wr_address_reg;
+    wire [16:0] rd_address = rd_address_reg;
 
     // Current pixel counter for LCD print
     reg [16:0] current_pixel;
+    reg memory_cleared;
 
     // Frame RAM interface
     reg data_in_reg, write_enable_reg;
@@ -73,16 +72,16 @@ module graphic_manager (
     assign write_enable = write_enable_reg;
 
     // 1-bit color frame RAM instance
-    altsyncram #(
-        .operation_mode("SINGLE_PORT"),  // Single port mode
-        .width_a(1),                     // 1-bit data width
-        .widthad_a($clog2(PIXEL_NUM))    // Address width for PIXEL_NUM words
-    ) pixel_buffer_inst (
-        .clock0(clk),                    // Single clock for the RAM
-        .address_a(address),             // Address for the memory
-        .data_a(data_in),                // Data input (1 bit)
-        .wren_a(write_enable),           // Write enable
-        .q_a(data_out)                   // Data output (1 bit)
+    simple_dual_port_ram_single_clock #(
+        .DATA_WIDTH(1),                  // 1 bit memory word
+        .ADDR_WIDTH($clog2(PIXEL_NUM))   // Address width for PIXEL_NUM words
+    ) pixel_buffer (
+        .clk(clk),                       // Input clock for the RAM
+        .write_addr(wr_address),         // Write address for the memory
+        .read_addr(rd_address),          // Read address for the memory
+        .data(data_in),                  // Data input (1 bit)
+        .we(write_enable),               // Write enable
+        .q(data_out)                     // Data output (1 bit)
     );
 
     /* Convert 1-bit color to RGB565 color.
@@ -98,84 +97,97 @@ module graphic_manager (
         endcase
     endfunction
 
+    // Input buffers
+    reg bw_pixel_color_reg;
+    reg [7:0] pixel_row_reg;
+    reg [8:0] pixel_col_reg;
+
     // Update current status
     always @ (posedge clk)
-        if (reset) Sreg <= RESET;
-        else Sreg <= Snext;
+        if (reset) begin
+            Sreg <= RESET;
+            current_pixel <= 17'b0;
+            memory_cleared <= 1'b0;
+            bw_pixel_color_reg = 1'b0;
+            pixel_row_reg = 8'b0;
+            pixel_col_reg = 9'b0;
+        end else begin
+            Sreg <= Snext;
+
+            // Update input values buffers
+            bw_pixel_color_reg <= bw_pixel_color;
+            pixel_row_reg <= pixel_row;
+            pixel_col_reg <= pixel_col;
+
+            // Update current pixel memory pointer
+            if ((Sreg != RESET && driver_done) || (Sreg == RESET && ~memory_cleared)) begin
+                current_pixel <= current_pixel + 17'b1;
+                if (current_pixel == PIXEL_NUM) begin
+                    current_pixel <= 17'd0;
+                    if (Sreg == RESET)
+                        memory_cleared <= 1'b1;
+                    else
+                        memory_cleared <= 1'b0;
+                end
+            end
+        end
 
     // Evaluate next state
-    always @ (*)
+    always @ (*) begin
         case (Sreg)
-            RESET: if (initialized) Snext = IDLE;
-            else Snext = RESET;
+            RESET: 
+                if (initialized && memory_cleared)
+                    Snext = IDLE;
+                else 
+                    Snext = RESET;
 
-            IDLE: if (write_pixel && en) Snext = ADD_PIXEL;
-                  else Snext = IDLE;
+            IDLE:
+                if (write_pixel && en)
+                    Snext = ADD_PIXEL;
+                else
+                    Snext = IDLE;
 
-            ADD_PIXEL: if (~write_enable) Snext <= IDLE;
-                       else Snext = ADD_PIXEL;
+            ADD_PIXEL: Snext = IDLE;
 
-            default: Snext = RESET;
+            default: begin
+                Snext = RESET;
+            end
         endcase
+    end
 
-    always @ (posedge clk)
-        if (reset) begin
-            // Initialize registers on reset
-            reset_sent <= 1'b0;
-            rst_driver_reg <= 1'b0;
-            print_reg <= 1'b0;
-            write_enable_reg <= 1'b0;
-            data_in_reg <= 1'b0;
-            address_reg <= 17'b0;
-            current_pixel <= 17'b0;
-        end else
-            case (Sreg)
-                RESET: begin
-                    if (~reset_sent) begin
-                        rst_driver_reg <= 1'b1;
-                        reset_sent <= 1'b1;
-                    end else begin
-                        rst_driver_reg <= 1'b0;
-                    end
-                end
+    always @ (Sreg, bw_pixel_color_reg, pixel_row_reg, pixel_col_reg, current_pixel, data_out) begin
+        wr_address_reg = 17'd0;
+        rd_address_reg = current_pixel;
+        pixel_rgb_reg = 16'd0;
+        data_in_reg = 1'b0;
+        pixel_rgb_reg = rgb565_color(data_out);
 
-                IDLE: begin
-                    if (driver_done) begin
-                        write_enable_reg <= 1'b0;
+        case (Sreg)
+            RESET: begin
+                data_in_reg = 1'b0;
+                wr_address_reg = current_pixel;
+                write_enable_reg = 1'b1;
+                print_reg = 1'b0;
+            end
 
-                        // Enable LCD print and set pixel value
-                        print_reg <= 1'b1;
-                        address_reg <= current_pixel;
-                        pixel_rgb_reg <= current_pixel; //rgb565_color(data_out);
-                        
-                        current_pixel <= current_pixel + 2;
-                        if (current_pixel == PIXEL_NUM) begin
-                            current_pixel <= 17'd0;
-                        end
-                    end else begin
-                        print_reg <= 1'b0;  // Disable LCD print
-                    end
-                end
+            IDLE: begin
+                write_enable_reg = 1'b0;
+                print_reg = 1'b1;
+            end
+  
+            ADD_PIXEL: begin
+                wr_address_reg = (pixel_row_reg * COL_NUM) + pixel_col_reg;
+                data_in_reg = bw_pixel_color_reg;
+                write_enable_reg = 1'b1;
+                print_reg = 1'b1;
+            end
 
-                ADD_PIXEL: begin
-                    if (write_pixel) begin
-                        write_enable_reg <= 1'b1;
-                    end
-                    if (write_pixel) begin
-                        // Write pixel data to buffer at specified row/column
-                        address_reg <= (pixel_row * COL_NUM) + pixel_col;
-                        data_in_reg <= bw_pixel_color;
-                        write_enable_reg <= 1'b1;
-                    end else begin
-                        write_enable_reg <= 1'b0;
-                    end
-                end
+            default: begin
+                print_reg = 1'b0;
+                write_enable_reg = 1'b0;
+            end
 
-                default: begin
-                    print_reg <= 1'b0;
-                    rst_driver_reg <= 1'b0;
-                    write_enable_reg <= 1'b0;
-                end
-            endcase
+        endcase
+    end
 
 endmodule

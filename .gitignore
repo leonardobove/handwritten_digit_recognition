@@ -1,11 +1,10 @@
-quartus/db
-quartus/incremental_db/
-quartus/*.qsf
-quartus/*.qws
+quartus/quartus_project/db
+quartus/quartus_project/incremental_db/
+quartus/quartus_project/*.qsf
+quartus/quartus_project/*.qws
 quartus/.vscode/
 quartus/src/*.bak
 quartus/tb/*.bak
-quartus/quartus_project
 python/bin/
 python/include/
 python/lib/

@@ -21,6 +21,7 @@ module graphic_manager_tb;
         .pixel_col(pixel_col),
         .pixel_row(pixel_row),
         .write_pixel(write_pixel),
+        .bw_pixel_color(bw_pixel_color),
         .initialized(initialized),
         .tft_rst(rst),
         .tft_csx(csx),
@@ -47,7 +48,7 @@ module graphic_manager_tb;
         #10;
         pixel_col = 5;
         pixel_row = 0;
-        bw_pixel_color = 1;
+        bw_pixel_color = 1'b1;
 
         #20;
         write_pixel = 1;
