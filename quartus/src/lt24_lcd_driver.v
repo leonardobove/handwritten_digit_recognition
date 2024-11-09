@@ -4,8 +4,8 @@
  * This module takes the output signals and converts them to
  * IL9341 signals following the 16-bit 8080-I serial parallel interface.
  *
- * The input clock should be 4 times the PPU's clock (i.e., 16 MHz).
- * The module will write data to the ILI9341 at half this speed (i.e., 8 MHz).
+ * The input clock must be less than 30 MHz.
+ * The module will write data to the ILI9341 at half this speed (i.e., 15 MHz).
  */
 
 module lt24_lcd_driver (
@@ -166,7 +166,7 @@ module lt24_lcd_driver (
                 if (done || ~en) Snext = IDLE;
                 else Snext = PRINT_PIXEL;
 
-            default: Snext <= RESTART;
+            default: Snext = RESTART;
         endcase
 
     // Synchronous output layer. It is needed in order to control the timing of the instructions
