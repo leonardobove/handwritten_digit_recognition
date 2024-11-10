@@ -5,16 +5,16 @@ module dff_nbit #(
         input en,
         input reset,
         input [nbit-1:0] di,
-        output reg [nbit-1:0] do
+        output reg [nbit-1:0] dout
     );
 
     always @ (posedge clk) begin
         if (reset)
-            do <= 0;
+            dout <= 0;
         else if (en)
-            do <= di;
+            dout <= di;
         else
-            do <= do;
+            dout <= dout;
         end
 
 endmodule

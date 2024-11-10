@@ -9,7 +9,7 @@ has 2*resolution-bit, 6-bit for the fractional part, so, the bias has to be shif
 
 ****************************************************************************/
 
-module neuron #(parameter input_data_size=1, resolution=8, input_data_size_width=3)(
+module neuron #(parameter input_data_size=1, resolution=8)(
     input clk,
     input reset,
     input signed [resolution*input_data_size-1:0] input_data, // Flattened 1D input_data
@@ -19,13 +19,15 @@ module neuron #(parameter input_data_size=1, resolution=8, input_data_size_width
     );
 
     localparam input_data_size_width = ($clog2(input_data_size));
+    parameter signed MAX_8 = 127;
+    parameter signed MIN_8 = -128;
 
     // Internal registers for calculations
     reg signed [2*resolution-1:0] product;
     reg signed [2*resolution+input_data_size_width-1:0] sum;
     reg signed [2*resolution+input_data_size_width:0] z;   
     wire signed [resolution-1:0] z_w;
-    reg signed [2*resolution+input_data_size_width:0] z_mod;
+    reg signed [2*resolution+input_data_size_width:0] z_sat;
 
     reg signed [resolution-1:0] input_data_element;
     reg signed [resolution-1:0] weight_element;
@@ -45,33 +47,39 @@ module neuron #(parameter input_data_size=1, resolution=8, input_data_size_width
         end
         // Add bias to sum to compute z
         z = sum + bias;
+
+        //saturation
+
+        if (z > 8'sb01111111)
+            z_sat = MAX_8;
+        else if (z < 8'sb10000000)
+            z_sat = MIN_8;
+        else
+            z_sat = z;
     end
 
-    reg mod;
-
-    always @(*) begin
-        if (z[2*resolution+input_data_size_width]==1) begin
-            z_mod = -z;
-            mod = 1;
-        end
-        else begin
-            z_mod = z;
-            mod = 0;
-        end
-    end
+    //reg mod;
+    //
+    //always @(*) begin
+    //    if (z[2*resolution+input_data_size_width]==1) begin
+    //        z_mod = -z;
+    //        mod = 1;
+    //    end
+    //    else begin
+    //        z_mod = z;
+    //        mod = 0;
+    //    end
+    //end
     
-    assign z_w = (z_mod) >> (resolution+input_data_size_width+1); // rescale for 8-bit
+    //assign z_w = (z_sat) >>> (resolution+input_data_size_width+1); // rescale for 8-bit arithmetic shift-keep sign
+    assign z_w = z_sat[resolution-1:0];
 
     // Sequential logic for output neuron
     always @ (posedge clk) begin
         if (reset)
             output_neuron <= 0;
-        else begin
-            if (mod == 0)
-                output_neuron <= z_w; 
-            else
-                output_neuron <= -z_w;
-        end
+        else
+            output_neuron <= z_w; 
     end
 
 endmodule

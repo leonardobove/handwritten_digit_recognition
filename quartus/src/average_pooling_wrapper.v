@@ -1,10 +1,11 @@
 module average_pooling_wrapper #(
     // Parameters
     parameter resolution = 8,
-    parameter pixels_number = 16,
-    parameter averaged_pixels_nr = 4
+    parameter pixels_number = 784,
+    parameter averaged_pixels_nr = 196
     ) (
     input clk,
+    input reset,
     input [resolution*pixels_number-1:0] pixels,
     output[resolution*averaged_pixels_nr-1:0] pixels_averaged
     );
@@ -17,9 +18,9 @@ module average_pooling_wrapper #(
     ) dff_input (
         .clk(clk),
         .en(1'b1),
-        .reset(1'b0),
+        .reset(reset),
         .di(pixels),
-        .do(pixels_w)
+        .dout(pixels_w)
     );
 
     // Instantiate the DUT (Device Under Test)
@@ -27,7 +28,7 @@ module average_pooling_wrapper #(
         .resolution(resolution),
         .pixels_number(pixels_number),
         .averaged_pixels_nr(averaged_pixels_nr)
-    ) dut (
+    ) i_average_pooling (
         .pixels(pixels_w),
         .pixels_averaged(pixels_averaged_w)
     );
@@ -37,9 +38,9 @@ module average_pooling_wrapper #(
     ) dff_output (
         .clk(clk),
         .en(1'b1),
-        .reset(1'b0),
+        .reset(reset),
         .di(pixels_averaged_w),
-        .do(pixels_averaged)
+        .dout(pixels_averaged)
     );
 
 endmodule

@@ -7,7 +7,7 @@ module pixels_averaging #(
     input [resolution-1:0] in4,
     output [resolution-1:0] out
     );
-    
+
     assign out = (in1+in2+in3+in4)>> 2;
 
 endmodule
