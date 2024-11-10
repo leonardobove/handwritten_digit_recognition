@@ -2,6 +2,12 @@ quartus/quartus_project/db
 quartus/quartus_project/incremental_db/
 quartus/quartus_project/*.qsf
 quartus/quartus_project/*.qws
+quartus/quartus_project/*.done
+quartus/quartus_project/*.rpt
+quartus/quartus_project/*.smsg
+quartus/quartus_project/*.summary
+quartus/quartus_project/simulation/
+quartus/quartus_project/.qsys_edit/
 quartus/.vscode/
 quartus/src/*.bak
 quartus/tb/*.bak
@@ -15,3 +21,4 @@ python/lib64
 python/.ipynb_checkpoints/
 python/Scripts/
 python/results/.ipynb_checkpoints/
+*/*.bak
