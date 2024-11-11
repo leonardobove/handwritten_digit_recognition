@@ -14,6 +14,7 @@ module MLP #(
     // Intermediate signals
     wire signed [resolution*HL_neurons-1:0] zeds_HL;
     wire signed [resolution*HL_neurons-1:0] activations_HL;
+    wire signed [resolution*HL_neurons-1:0] activations_HL_w;
     wire signed [resolution*OL_neurons-1:0] zeds_OL;
     wire signed [resolution*OL_neurons-1:0] activations_OL;
 
@@ -74,7 +75,16 @@ module MLP #(
         .number_neuron(HL_neurons)
     ) sigmoid_layer_HL (
         .zeds(zeds_HL),
-        .activations(activations_HL)
+        .activations(activations_HL_w)
+    );
+
+    // Instantiate dff_nbit for pixel data storage
+    dff_nbit #(HL_neurons*resolution) dff_hiddel_layer (
+        .clk(clk),
+        .reset(reset),
+        .en(en),
+        .di(activations_HL_w),
+        .dout(activations_HL)
     );
 
     // Local parameters for initialized weights and biases

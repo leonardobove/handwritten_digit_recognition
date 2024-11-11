@@ -26,8 +26,7 @@ module neuron #(parameter input_data_size=1, resolution=8)(
     reg signed [2*resolution-1:0] product;
     reg signed [2*resolution+input_data_size_width-1:0] sum;
     reg signed [2*resolution+input_data_size_width:0] z;   
-    wire signed [resolution-1:0] z_w;
-    reg signed [2*resolution+input_data_size_width:0] z_sat;
+    reg signed [resolution-1:0] z_sat;
 
     reg signed [resolution-1:0] input_data_element;
     reg signed [resolution-1:0] weight_element;
@@ -55,7 +54,7 @@ module neuron #(parameter input_data_size=1, resolution=8)(
         else if (z < 8'sb10000000)
             z_sat = MIN_8;
         else
-            z_sat = z;
+            z_sat = z[resolution-1:0];
     end
 
     //reg mod;
@@ -72,14 +71,14 @@ module neuron #(parameter input_data_size=1, resolution=8)(
     //end
     
     //assign z_w = (z_sat) >>> (resolution+input_data_size_width+1); // rescale for 8-bit arithmetic shift-keep sign
-    assign z_w = z_sat[resolution-1:0];
+    //assign z_w = z_sat[resolution-1:0];
 
     // Sequential logic for output neuron
     always @ (posedge clk) begin
         if (reset)
             output_neuron <= 0;
         else
-            output_neuron <= z_w; 
+            output_neuron <= z_sat; 
     end
 
 endmodule

@@ -1,9 +1,9 @@
 `timescale 1ns/1ps
 
-module neuron_tb;
+module neuron_wrapper_tb;
 
     // Parameters
-    parameter input_data_size = 1;
+    parameter input_data_size = 4;
     parameter resolution = 8;
     parameter input_data_size_width = $clog2(input_data_size);
     wire size = input_data_size_width;
@@ -21,10 +21,10 @@ module neuron_tb;
     integer i;
 
     // Instantiate the neuron module
-    neuron #(
+    neuron_wrapper #(
         .input_data_size(input_data_size),
         .resolution(resolution)
-    ) uut (
+    ) i_neuron_wrapper (
         .clk(clk),
         .reset(reset),
         .input_data(input_data),
@@ -47,27 +47,15 @@ module neuron_tb;
         reset = 1;
         #1;
         reset = 0;
+
+        #5;
         
         // Generate input data and weights
-        input_data = -128;
-        weight = -128;
-        bias = 127;
+        input_data = {8'sb10000000, 8'sb00000011, 8'sb00000001, 8'sb00000000};
+        weight = {8'sb10000000, 8'sb00000010, 8'sb00000001, 8'sb00000011};
+        bias = 8'sb00000001;
 
-        #20;
-        
-        // Test 1: Apply a bias and observe output
-        bias = 8'd5;
-        #20; // Wait for a few clock cycles to settle
-
-        // Change bias
-        bias = -8'd3;
-        #20; // Wait for a few clock cycles
-        
-        // Test 3: Reset and observe output
-        reset = 1;
-        #10;
-        reset = 0;
-        #20;
+        #100;
 
         // Finish the simulation
         $stop;
