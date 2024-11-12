@@ -11,7 +11,7 @@ module predicted_digit #(
     integer i;
 
     always @(*) begin
-        max = 8'sb10000000; // Initialize to minimum possible value (for signed 8-bit resolution)
+        max = 8'b00000000; // Initialize to minimum possible value (for signed 8-bit resolution)
         index = 0;
 
         // Loop through each activation value

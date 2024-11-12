@@ -56,6 +56,9 @@ module neuron_wrapper_tb;
         bias = 8'sb00000001;
 
         #100;
+        input_data = {8'sb10000000, 8'sb00000101, 8'sb00000010, 8'sb00000001};
+
+        #100;
 
         // Finish the simulation
         $stop;

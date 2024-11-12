@@ -82,7 +82,7 @@ module MLP #(
     dff_nbit #(HL_neurons*resolution) dff_hiddel_layer (
         .clk(clk),
         .reset(reset),
-        .en(en),
+        .en(1'b1),
         .di(activations_HL_w),
         .dout(activations_HL)
     );
@@ -127,6 +127,6 @@ module MLP #(
         .activations(activations_OL)
     );
 
-    assign output_activations = zeds_OL;
+    assign output_activations = activations_OL;
 
 endmodule
