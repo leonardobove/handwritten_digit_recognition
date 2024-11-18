@@ -21,7 +21,7 @@ module painter_tb();
     reg [11:0] x_pos, y_pos;
 
     painter #(
-        .N_FRAMES(1)
+        .N_FRAMES(2)
     ) dut (
         .clk(clk),
         .en(en),
@@ -44,6 +44,7 @@ module painter_tb();
     end
 
     initial begin
+        load_frame_sel = 1;
         rom_q = 1;
         reset = 1;
         #40;
