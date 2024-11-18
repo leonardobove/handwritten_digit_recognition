@@ -8,7 +8,7 @@
  * throughput. This means that the setup of the y position conversion
  * and the serial read of the x position are partially overlapped.
  *
- * The input clock must be 2 MHz.
+ * The input clock must be 2 MHz maximum.
  */
 module lt24_touchscreen_driver (
     input clk,
@@ -22,7 +22,7 @@ module lt24_touchscreen_driver (
     input adc_penirq_n,
     input adc_dout,
     input adc_busy,
-    output reg adc_din,
+    output adc_din,
     output reg adc_cs_n,
     output adc_dclk
 );
@@ -38,32 +38,44 @@ module lt24_touchscreen_driver (
 
     reg [2:0] Sreg, Snext;
 
-    // Feed clock to ADC when not in IDLE state
-    assign adc_dclk = (Sreg != IDLE) ? ~clk : 1'b0;
-
     // Clock counter, to keep track of the current position in the conversion sequence
-    reg [3:0] clk_cnt;
+    localparam MAX_CLK_CNT = 4'd15;                 // Maximum number of clock cycles in a sequence
+    localparam CNT_NUM_BITS = $clog2(MAX_CLK_CNT);
+
+    reg clk_cnt_reset_reg; // Reset for the clock counter
+    reg clk_cnt_en_reg;    // Enable for the clock counter
+
+    wire [CNT_NUM_BITS-1:0] clk_cnt;    // Clock counter
+    wire clk_cnt_reset, clk_cnt_en;
+
+    assign clk_cnt_en = clk_cnt_en_reg;
+    assign clk_cnt_reset = clk_cnt_reset_reg;
+
+    counter #(
+        .MAX_VALUE(MAX_CLK_CNT)
+    ) clk_counter_instance (
+        .clk(clk),
+        .en(clk_cnt_en),
+        .reset(clk_cnt_reset),
+        .count(clk_cnt)
+    );
 
     // 8 bit serial data to set up ADC conversion
     // Format: {S, A2, A1, A0, MODE, SER/DFR_n, PD1, PD0}
-    localparam x_conversion_setup = 8'b10010000; // Conver X position, 12 bit resolution, differential reference, adc_penirq_n enabled, low power
-    localparam y_conversion_setup = 8'b11010000; // Conver Y position, 12 bit resolution, differential reference, adc_penirq_n enabled, low power
+    localparam x_conversion_setup = 8'b10010001; // Conver X position, 12 bit resolution, differential reference, adc_penirq_n enabled, low power
+    localparam y_conversion_setup = 8'b11010001; // Conver Y position, 12 bit resolution, differential reference, adc_penirq_n enabled, low power
+
+    // ADC interface
+    assign adc_dclk = (Sreg != IDLE) ? ~clk : 1'b0; // Feed clock to ADC when not in IDLE state
+    // Serialize X and Y conversion setup bits
+    assign adc_din = (Sreg == START) ? x_conversion_setup[4'd7 - clk_cnt] : (Sreg == GET_X && clk_cnt >= 4'd6) ? y_conversion_setup[4'd7 - (clk_cnt - 4'd6)] : 1'b0;
 
     // Update FSM state
     always @ (posedge clk)
         if (reset) begin
             Sreg <= IDLE;
-            clk_cnt <= 4'b0;
         end else begin
             Sreg <= Snext;
-
-            // Update clock counter
-            if (Sreg == START || Sreg == GET_X || Sreg == GET_Y) begin
-                clk_cnt <= clk_cnt + 4'b1;
-                if (clk_cnt == 4'd15)   // In case of implausible clock counter, go back to IDLE state
-                    Sreg <= IDLE;
-            end else if (Sreg == WAIT_X || Sreg == WAIT_Y)
-                clk_cnt <= 4'd0;
         end
 
     // Update the conversion output, considering that the clock is inverted
@@ -124,47 +136,52 @@ module lt24_touchscreen_driver (
             default: Snext = IDLE;
         endcase
 
-    always @ (Sreg, clk_cnt) begin
+    always @ (Sreg) begin
         pos_ready = 1'b0;
         adc_cs_n = 1'b1;
-        adc_din = 1'b0;
+
+        clk_cnt_en_reg = 1'b0;
+        clk_cnt_reset_reg = 1'b1;
 
         case (Sreg)
             IDLE: begin
                 adc_cs_n = 1'b1;
-                adc_din = 1'b0;
             end
 
             START: begin
                 adc_cs_n = 1'b0;
-                adc_din = x_conversion_setup[4'd7 - clk_cnt]; // Serialize x conversion setup bits
+                clk_cnt_en_reg = 1'b1;
+                clk_cnt_reset_reg = 1'b0;
             end
 
             WAIT_X: begin
                 adc_cs_n = 1'b0;
-                adc_din = 1'b0;
+                clk_cnt_en_reg = 1'b0;
+                clk_cnt_reset_reg = 1'b1;
             end
 
             GET_X: begin
                 adc_cs_n = 1'b0;
-                if (clk_cnt >= 4'd7)
-                    adc_din = y_conversion_setup[4'd7 - (clk_cnt - 4'd7)]; // Serialize y conversion setup bits (overlapped to X position reading)
+                clk_cnt_en_reg = 1'b1;
+                clk_cnt_reset_reg = 1'b0;
             end
 
             WAIT_Y: begin
                 adc_cs_n = 1'b0;
-                adc_din = 1'b0;
+                clk_cnt_en_reg = 1'b0;
+                clk_cnt_reset_reg = 1'b1;
             end
 
             GET_Y: begin
                 adc_cs_n = 1'b0;
+                clk_cnt_en_reg = 1'b1;
+                clk_cnt_reset_reg = 1'b0;
             end
 
             DONE: pos_ready = 1'b1;
 
             default: begin
                 adc_cs_n = 1'b1;
-                adc_din = 1'b0;
                 pos_ready = 1'b0;
             end
         endcase

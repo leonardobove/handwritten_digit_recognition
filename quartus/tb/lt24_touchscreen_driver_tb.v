@@ -61,7 +61,7 @@ module lt24_touchscreen_driver_tb();
             #10;
         end
 
-        #30;
+        #20;
         adc_busy = 1;
         #10;
         adc_busy = 0;
