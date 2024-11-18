@@ -50,7 +50,7 @@ module graphic_manager_tb;
         pixel_row = 0;
         bw_pixel_color = 1'b1;
 
-        #20;
+        #40;
         write_pixel = 1;
         #20;
         write_pixel = 0;
