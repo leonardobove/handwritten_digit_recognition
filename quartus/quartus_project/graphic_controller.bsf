@@ -1,0 +1,148 @@
+/*
+WARNING: Do NOT edit the input and output ports in this file in a text
+editor if you plan to continue editing the block that represents it in
+the Block Editor! File corruption is VERY likely to occur.
+*/
+/*
+Copyright (C) 2018  Intel Corporation. All rights reserved.
+Your use of Intel Corporation's design tools, logic functions 
+and other software and tools, and its AMPP partner logic 
+functions, and any output files from any of the foregoing 
+(including device programming or simulation files), and any 
+associated documentation or information are expressly subject 
+to the terms and conditions of the Intel Program License 
+Subscription Agreement, the Intel Quartus Prime License Agreement,
+the Intel FPGA IP License Agreement, or other applicable license
+agreement, including, without limitation, that your use is for
+the sole purpose of programming logic devices manufactured by
+Intel and sold by Intel or its authorized distributors.  Please
+refer to the applicable agreement for further details.
+*/
+(header "symbol" (version "1.2"))
+(symbol
+	(rect 64 64 288 272)
+	(text "graphic_controller" (rect 5 0 91 12)(font "Arial" ))
+	(text "inst" (rect 8 192 25 204)(font "Arial" ))
+	(port
+		(pt 0 32)
+		(input)
+		(text "clk" (rect 0 0 14 12)(font "Arial" ))
+		(text "clk" (rect 21 27 35 39)(font "Arial" ))
+		(line (pt 0 32)(pt 16 32))
+	)
+	(port
+		(pt 0 48)
+		(input)
+		(text "en" (rect 0 0 11 12)(font "Arial" ))
+		(text "en" (rect 21 43 32 55)(font "Arial" ))
+		(line (pt 0 48)(pt 16 48))
+	)
+	(port
+		(pt 0 64)
+		(input)
+		(text "reset" (rect 0 0 24 12)(font "Arial" ))
+		(text "reset" (rect 21 59 45 71)(font "Arial" ))
+		(line (pt 0 64)(pt 16 64))
+	)
+	(port
+		(pt 0 80)
+		(input)
+		(text "bw_pixel_color" (rect 0 0 70 12)(font "Arial" ))
+		(text "bw_pixel_color" (rect 21 75 91 87)(font "Arial" ))
+		(line (pt 0 80)(pt 16 80))
+	)
+	(port
+		(pt 0 96)
+		(input)
+		(text "pixel_col[8..0]" (rect 0 0 68 12)(font "Arial" ))
+		(text "pixel_col[8..0]" (rect 21 91 89 103)(font "Arial" ))
+		(line (pt 0 96)(pt 16 96)(line_width 3))
+	)
+	(port
+		(pt 0 112)
+		(input)
+		(text "pixel_row[7..0]" (rect 0 0 70 12)(font "Arial" ))
+		(text "pixel_row[7..0]" (rect 21 107 91 119)(font "Arial" ))
+		(line (pt 0 112)(pt 16 112)(line_width 3))
+	)
+	(port
+		(pt 0 136)
+		(input)
+		(text "write_pixel" (rect 0 0 50 12)(font "Arial" ))
+		(text "write_pixel" (rect 24 128 74 140)(font "Arial" ))
+		(line (pt 0 136)(pt 16 136))
+	)
+	(port
+		(pt 0 168)
+		(input)
+		(text "ram_q" (rect 0 0 30 12)(font "Arial" ))
+		(text "ram_q" (rect 21 163 51 175)(font "Arial" ))
+		(line (pt 0 168)(pt 16 168))
+	)
+	(port
+		(pt 224 128)
+		(input)
+		(text "driver_done" (rect 0 0 57 12)(font "Arial" ))
+		(text "driver_done" (rect 152 120 209 132)(font "Arial" ))
+		(line (pt 208 128)(pt 224 128))
+	)
+	(port
+		(pt 224 144)
+		(input)
+		(text "driver_initialized" (rect 0 0 77 12)(font "Arial" ))
+		(text "driver_initialized" (rect 136 136 213 148)(font "Arial" ))
+		(line (pt 208 144)(pt 224 144))
+	)
+	(port
+		(pt 0 152)
+		(output)
+		(text "initialized" (rect 0 0 43 12)(font "Arial" ))
+		(text "initialized" (rect 24 144 67 156)(font "Arial" ))
+		(line (pt 16 152)(pt 0 152))
+	)
+	(port
+		(pt 224 48)
+		(output)
+		(text "write_addr[16..0]" (rect 0 0 81 12)(font "Arial" ))
+		(text "write_addr[16..0]" (rect 135 43 216 55)(font "Arial" ))
+		(line (pt 224 48)(pt 208 48)(line_width 3))
+	)
+	(port
+		(pt 224 32)
+		(output)
+		(text "read_addr[16..0]" (rect 0 0 80 12)(font "Arial" ))
+		(text "read_addr[16..0]" (rect 136 24 216 36)(font "Arial" ))
+		(line (pt 224 32)(pt 208 32)(line_width 3))
+	)
+	(port
+		(pt 224 64)
+		(output)
+		(text "ram_data" (rect 0 0 46 12)(font "Arial" ))
+		(text "ram_data" (rect 165 59 211 71)(font "Arial" ))
+		(line (pt 224 64)(pt 208 64))
+	)
+	(port
+		(pt 224 80)
+		(output)
+		(text "write_enable" (rect 0 0 60 12)(font "Arial" ))
+		(text "write_enable" (rect 153 75 213 87)(font "Arial" ))
+		(line (pt 224 80)(pt 208 80))
+	)
+	(port
+		(pt 224 96)
+		(output)
+		(text "pixel_rgb[15..0]" (rect 0 0 75 12)(font "Arial" ))
+		(text "pixel_rgb[15..0]" (rect 140 91 215 103)(font "Arial" ))
+		(line (pt 224 96)(pt 208 96)(line_width 3))
+	)
+	(port
+		(pt 224 112)
+		(output)
+		(text "print" (rect 0 0 21 12)(font "Arial" ))
+		(text "print" (rect 186 107 207 119)(font "Arial" ))
+		(line (pt 224 112)(pt 208 112))
+	)
+	(drawing
+		(rectangle (rect 16 16 208 192))
+	)
+)
