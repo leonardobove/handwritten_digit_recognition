@@ -1,6 +1,5 @@
 quartus/quartus_project/db
 quartus/quartus_project/incremental_db/
-quartus/quartus_project/*.qsf
 quartus/quartus_project/*.qws
 quartus/quartus_project/*.done
 quartus/quartus_project/*.rpt
