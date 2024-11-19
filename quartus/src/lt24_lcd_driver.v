@@ -40,7 +40,7 @@ module lt24_lcd_driver (
     reg [3:0] Sreg, Snext;
 
     // Add counter to keep track of the number of clock cycles with tft_rst low (active)
-    localparam RST_LOW_CLKS = 24'd3;//300; // ~10us: reset low duration as specified in datasheet
+    localparam RST_LOW_CLKS = 24'd300; // ~10us: reset low duration as specified in datasheet
     localparam RST_LOW_CLKS_NUM_BITS = $clog2(RST_LOW_CLKS);
 
     reg rst_low_cnt_reset_reg; // Reset for the rst_low counter
@@ -62,7 +62,7 @@ module lt24_lcd_driver (
     );
 
     // Add counter to keep track of the delay number of clock cycles needed during reset
-    localparam RESET_CLKS = 24'd5;//1500000; // ~120ms: delay clocks as specified in datasheet
+    localparam RESET_CLKS = 24'd1500000; // ~120ms: delay clocks as specified in datasheet
     localparam RESET_CLKS_NUM_BITS = $clog2(RESET_CLKS);
 
     reg delay_cnt_reset_reg; // Reset for the delay counter
