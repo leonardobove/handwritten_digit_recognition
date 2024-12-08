@@ -1,8 +1,7 @@
 /*
- * This module controls loads into the LCD frame RAM through the graphic manager
- * a set of predefined constant frames. If the touchscreen input is enabled, it
- * draws the corresponding LCD pixels that have been touched by the pen.
- *
+ * This module loads into the LCD frame buffer memory a set of predefined constant frames. 
+ * If the touchscreen input is enabled, it draws the corresponding LCD pixels that have
+ * been touched by the pen.
  */
 module painter #(
     parameter integer N_FRAMES = 2,
@@ -19,12 +18,13 @@ module painter #(
     output [PIXEL_NUM_WIDTH + N_FRAMES_WIDTH - 1:0] rom_addr,
     input rom_q,
 
+    // Frame buffer memory interface
+    output ram_data,                                    // 1-bit pixel color to be loaded to the frame buffer
+    output reg [PIXEL_NUM_WIDTH - 1:0] ram_write_addr,  // Frame buffer write address
+    output reg ram_write_en,                            // Frame buffer write enable
+
     // Graphic manager interface
     input initialized,
-    output bw_pixel_color,
-    output [8:0] pixel_col,
-    output [7:0] pixel_row,
-    output reg write_pixel,
 
     // LT24 touchscreen driver interface
     input pos_ready,
@@ -36,12 +36,13 @@ module painter #(
     localparam COL_NUM = 9'd320;    // Columns number
 
     // FSM States
-    localparam RESET       = 2'd0,
-               IDLE        = 2'd1,
-               LOAD_FRAME  = 2'd2,
-               PAINT_PIXEL = 2'd3;
+    localparam RESET            = 3'd0,
+               IDLE             = 3'd1,
+               LOAD_FRAME       = 3'd2,
+               PAINT_PIXEL      = 3'd3,
+               WAIT_PAINT_PIXEL = 3'd4;
 
-    reg [1:0] Sreg, Snext;
+    reg [2:0] Sreg, Snext;
 
     // Buffer for the currently selected frame number
     reg [N_FRAMES_WIDTH-1:0] load_frame_sel_reg;
@@ -53,7 +54,7 @@ module painter #(
     wire [PIXEL_NUM_WIDTH-1:0] rom_pointer; // ROM pointer address without frame offset
     wire rom_pointer_en, rom_pointer_reset;
 
-    assign rom_pointer_en = rom_pointer_en_reg;
+    assign rom_pointer_en = rom_pointer_en_reg && en;
     assign rom_pointer_reset = rom_pointer_reset_reg;
 
     counter #(
@@ -69,13 +70,13 @@ module painter #(
     assign rom_addr = rom_pointer + load_frame_sel_reg*PIXEL_NUM; // ROM pointer address with frame offset
     reg rom_q_reg; // Buffer for ROM output data
 
-    // Graphic manager interface
+    // Frame buffer memory interface
 
     /*  If a new frame has to be loaded, the pixel color (black or white) will depend on the output of the ROM.
      *  If the screen has been touched, draw the corresponding pixel white (1'b1).
      *  Otherwise leave it to 0.
      */
-    assign bw_pixel_color = (Sreg == LOAD_FRAME) ? rom_q_reg : (Sreg == PAINT_PIXEL) ? 1'b1 : 1'b0;
+    assign ram_data = (Sreg == LOAD_FRAME) ? rom_q_reg : (Sreg == PAINT_PIXEL || Sreg == WAIT_PAINT_PIXEL) ? 1'b1 : 1'b0;
     /*  If the screen has been touched, add a white pixel at the coordinates given by the touchscreen driver, i.e.
      *  col = (x_pos/4096) * COL_NUM and row = (y_pos/4096) + ROW_NUM.
      *  If a new frame has to be loaded, the position pixel to be drawn comes from the current rom_pointer,
@@ -83,15 +84,39 @@ module painter #(
      *  Otherwise they are set to 0.
      */
 
-    // Pixel column and row calculations
-    wire [20:0] pixel_col_calc;
-    wire [19:0] pixel_row_calc;
+    reg [20:0] touchscreen_x;
+    reg [19:0] touchscreen_y;
 
-    assign pixel_col_calc = (Sreg == PAINT_PIXEL) ? (x_pos * COL_NUM) >> 12 : (Sreg == LOAD_FRAME) ? (rom_pointer % COL_NUM) : 9'b0;
-    assign pixel_row_calc = (Sreg == PAINT_PIXEL) ? (y_pos * ROW_NUM) >> 12 : (Sreg == LOAD_FRAME) ? (rom_pointer / COL_NUM) : 8'b0;
+    // Output ranges from touchscreen ADC
+    localparam TS_MINX = 0;
+    localparam TS_MAXX = 4000;
+    localparam TS_MINY = 0;
+    localparam TS_MAXY = 4000;
 
-    assign pixel_col = pixel_col_calc[8:0];
-    assign pixel_row = pixel_row_calc[7:0];
+    // Map touchscreen ADC values to pixel coordinates
+    always @ (*) begin
+        if (x_pos < TS_MINX)
+            touchscreen_x = 1'b0;
+        else if (x_pos > TS_MAXX)
+            touchscreen_x = COL_NUM - 1'b1;
+        else
+            touchscreen_x = (x_pos - TS_MINX) * (COL_NUM - 1'b1) / (TS_MAXX - TS_MINX);
+
+        if (y_pos < TS_MINY)
+            touchscreen_y = ROW_NUM - 1'b1;
+        else if (y_pos > TS_MAXY)
+            touchscreen_y = 1'b0;
+        else
+            touchscreen_y = (ROW_NUM - 1'b1) - (y_pos - TS_MINY) * (ROW_NUM - 1'b1) / (TS_MAXY - TS_MINY);
+
+        // Set frame buffer write address
+        if (Sreg == PAINT_PIXEL || Sreg == WAIT_PAINT_PIXEL)
+            ram_write_addr = (x_pos > 4096) ? 17'd3210 : 17'd3290;
+        else if (Sreg == LOAD_FRAME)
+            ram_write_addr = rom_pointer;
+        else
+            ram_write_addr = 17'd0;
+    end
 
     // Update current state
     always @ (posedge clk)
@@ -99,15 +124,20 @@ module painter #(
             Sreg <= RESET;
             rom_q_reg <= 1'b0;
             load_frame_sel_reg <= 1'b0;
-        end else begin
-            Sreg <= Snext;
+        end else
+            if (en) begin
+                Sreg <= Snext;
 
-            // Update current frame selection
-            load_frame_sel_reg <= load_frame_sel;
+                // Update current frame selection
+                load_frame_sel_reg <= load_frame_sel;
 
-            // Update output data from ROM
-            rom_q_reg <= rom_q;
-        end
+                // Update output data from ROM
+                rom_q_reg <= rom_q;
+            end else begin
+                Sreg <= Sreg;
+                load_frame_sel_reg <= load_frame_sel_reg;
+                rom_q_reg <= rom_q_reg;
+            end
 
     always @ (*)
         case (Sreg)
@@ -131,12 +161,15 @@ module painter #(
                 else
                     Snext = LOAD_FRAME;
 
-            PAINT_PIXEL:
-                Snext = IDLE;
+            PAINT_PIXEL: Snext = WAIT_PAINT_PIXEL;
+
+            WAIT_PAINT_PIXEL: Snext = IDLE;
+
+            default: Snext = RESET;
         endcase
 
     always @ (Sreg) begin
-        write_pixel = 1'b0;
+        ram_write_en = 1'b0;
         rom_pointer_en_reg = 1'b0;
         rom_pointer_reset_reg = 1'b1;
 
@@ -152,19 +185,25 @@ module painter #(
             end
 
             LOAD_FRAME: begin
-                write_pixel = 1'b1;
+                ram_write_en = 1'b1;
                 rom_pointer_en_reg = 1'b1;
                 rom_pointer_reset_reg = 1'b0;
             end
 
             PAINT_PIXEL: begin
-                write_pixel = 1'b1;
+                ram_write_en = 1'b1;
+                rom_pointer_en_reg = 1'b0;
+                rom_pointer_reset_reg = 1'b1;
+            end
+
+            WAIT_PAINT_PIXEL: begin
+                ram_write_en = 1'b1;
                 rom_pointer_en_reg = 1'b0;
                 rom_pointer_reset_reg = 1'b1;
             end
 
             default: begin
-                write_pixel = 1'b0;
+                ram_write_en = 1'b0;
                 rom_pointer_en_reg = 1'b0;
                 rom_pointer_reset_reg = 1'b1;
             end

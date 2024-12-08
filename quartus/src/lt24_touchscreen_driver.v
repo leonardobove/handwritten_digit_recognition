@@ -39,7 +39,7 @@ module lt24_touchscreen_driver (
     reg [2:0] Sreg, Snext;
 
     // Clock counter, to keep track of the current position in the conversion sequence
-    localparam MAX_CLK_CNT = 4'd15;                 // Maximum number of clock cycles in a sequence
+    localparam MAX_CLK_CNT = 7'd72;                 // Maximum number of clock cycles in a sequence
     localparam CNT_NUM_BITS = $clog2(MAX_CLK_CNT);
 
     reg clk_cnt_reset_reg; // Reset for the clock counter
@@ -48,7 +48,7 @@ module lt24_touchscreen_driver (
     wire [CNT_NUM_BITS-1:0] clk_cnt;    // Clock counter
     wire clk_cnt_reset, clk_cnt_en;
 
-    assign clk_cnt_en = clk_cnt_en_reg;
+    assign clk_cnt_en = clk_cnt_en_reg && en;
     assign clk_cnt_reset = clk_cnt_reset_reg;
 
     counter #(
@@ -60,73 +60,97 @@ module lt24_touchscreen_driver (
         .count(clk_cnt)
     );
 
+    // Useful parameters for sequence timing
+    localparam START_PHASE_END          = 7'd15;
+    localparam WAIT_X_PHASE_END         = 7'd17;
+    localparam GET_X_PHASE_END          = 7'd45;
+    localparam Y_CONVERSION_SETUP_START = 7'd30;
+    localparam WAIT_Y_PHASE_END         = 7'd47;
+    localparam GET_Y_PHASE_END          = 7'd71;
+
     // 8 bit serial data to set up ADC conversion
     // Format: {S, A2, A1, A0, MODE, SER/DFR_n, PD1, PD0}
-    localparam x_conversion_setup = 8'b10010001; // Conver X position, 12 bit resolution, differential reference, adc_penirq_n enabled, low power
-    localparam y_conversion_setup = 8'b11010001; // Conver Y position, 12 bit resolution, differential reference, adc_penirq_n enabled, low power
+    localparam x_conversion_setup = 8'b10010000; // Conver X position, 12 bit resolution, differential reference, adc_penirq_n enabled, low power
+    localparam y_conversion_setup = 8'b11010000; // Conver Y position, 12 bit resolution, differential reference, adc_penirq_n enabled, low power
 
     // ADC interface
-    assign adc_dclk = (Sreg != IDLE) ? ~clk : 1'b0; // Feed clock to ADC when not in IDLE state
+    // ADC clock generation
+    reg adc_dclk_reg;
+    always @ (posedge clk)
+        if (Sreg != IDLE)
+            if (en)
+                adc_dclk_reg <= ~adc_dclk_reg;
+            else
+                adc_dclk_reg <= adc_dclk_reg;
+        else
+            adc_dclk_reg <= 1'b0;
+
+    assign adc_dclk = adc_dclk_reg;
     // Serialize X and Y conversion setup bits
-    assign adc_din = (Sreg == START) ? x_conversion_setup[4'd7 - clk_cnt] : (Sreg == GET_X && clk_cnt >= 4'd6) ? y_conversion_setup[4'd7 - (clk_cnt - 4'd6)] : 1'b0;
+    assign adc_din = (Sreg == START) ? x_conversion_setup[4'd7 - (clk_cnt/2)] : (Sreg == GET_X && clk_cnt >= Y_CONVERSION_SETUP_START) ? y_conversion_setup[4'd7 - ((clk_cnt - Y_CONVERSION_SETUP_START)/2)] : 1'b0;
 
     // Update FSM state
     always @ (posedge clk)
-        if (reset) begin
+        if (reset)
             Sreg <= IDLE;
-        end else begin
+        else if (en)
             Sreg <= Snext;
-        end
+        else
+            Sreg <= Sreg;
 
-    // Update the conversion output, considering that the clock is inverted
-    // (Sample taken at negative edge of clk)
-    always @ (negedge clk)
+
+    // Update the conversion output
+    always @ (posedge clk)
         if (reset) begin
             x_pos <= 12'd0;
             y_pos <= 12'd0;
         end else begin
-            if (Sreg == GET_X)
-                x_pos[4'd11 - clk_cnt] <= adc_dout;
+            if (Sreg == GET_X && (adc_dclk_reg == 1'b0)) // Sample at the positive edge of adc_dclk
+                x_pos[5'd11 - ((clk_cnt - WAIT_X_PHASE_END)/2)] <= adc_dout;
+            else
+                x_pos <= x_pos;
 
-            if (Sreg == GET_Y)
-                y_pos[4'd11 - clk_cnt] <= adc_dout;
+            if (Sreg == GET_Y && (adc_dclk_reg == 1'b0))
+                y_pos[5'd11 - ((clk_cnt - WAIT_Y_PHASE_END)/2)] <= adc_dout;
+            else
+                y_pos <= y_pos;
         end
 
     // Evaluate next FSM state
     always @ (*)
         case (Sreg)
             IDLE:
-                if (en && ~adc_penirq_n)
+                if (~adc_penirq_n)
                     Snext = START;
                 else
                     Snext = IDLE;
 
             START:
-                if (clk_cnt == 4'd7)
+                if (clk_cnt == START_PHASE_END)
                     Snext = WAIT_X;
                 else
                     Snext = START;
 
             WAIT_X:
-                if (adc_busy)
+                if (clk_cnt == WAIT_X_PHASE_END)
                     Snext = GET_X;
                 else
                     Snext = WAIT_X;
 
             GET_X:
-                if (clk_cnt == 4'd13)
+                if (clk_cnt == GET_X_PHASE_END)
                     Snext = WAIT_Y;
                 else
                     Snext = GET_X;
 
             WAIT_Y:
-                if (adc_busy)
+                if (clk_cnt == WAIT_Y_PHASE_END)
                     Snext = GET_Y;
                 else
                     Snext = WAIT_Y;
 
             GET_Y:
-                if (clk_cnt == 4'd11)
+                if (clk_cnt == GET_Y_PHASE_END)
                     Snext = DONE;
                 else
                     Snext = GET_Y;
@@ -156,8 +180,8 @@ module lt24_touchscreen_driver (
 
             WAIT_X: begin
                 adc_cs_n = 1'b0;
-                clk_cnt_en_reg = 1'b0;
-                clk_cnt_reset_reg = 1'b1;
+                clk_cnt_en_reg = 1'b1;
+                clk_cnt_reset_reg = 1'b0;
             end
 
             GET_X: begin
@@ -168,8 +192,8 @@ module lt24_touchscreen_driver (
 
             WAIT_Y: begin
                 adc_cs_n = 1'b0;
-                clk_cnt_en_reg = 1'b0;
-                clk_cnt_reset_reg = 1'b1;
+                clk_cnt_en_reg = 1'b1;
+                clk_cnt_reset_reg = 1'b0;
             end
 
             GET_Y: begin

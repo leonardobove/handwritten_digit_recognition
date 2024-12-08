@@ -50,7 +50,7 @@ module lt24_lcd_driver (
     wire rst_low_cnt_reset, rst_low_cnt_en;
 
     assign rst_low_cnt_reset = rst_low_cnt_reset_reg;
-    assign rst_low_cnt_en = rst_low_cnt_en_reg;
+    assign rst_low_cnt_en = rst_low_cnt_en_reg && en;
 
     counter #(
         .MAX_VALUE(RST_LOW_CLKS)
@@ -72,7 +72,7 @@ module lt24_lcd_driver (
     wire delay_cnt_reset, delay_cnt_en;
 
     assign delay_cnt_reset = delay_cnt_reset_reg;
-    assign delay_cnt_en = delay_cnt_en_reg;
+    assign delay_cnt_en = delay_cnt_en_reg && en;
 
     counter #(
         .MAX_VALUE(RESET_CLKS)
@@ -94,7 +94,7 @@ module lt24_lcd_driver (
     wire init_cnt_reset, init_cnt_en;
     
     assign init_cnt_reset = init_cnt_reset_reg;
-    assign init_cnt_en = init_cnt_en_reg;
+    assign init_cnt_en = init_cnt_en_reg && en;
 
     counter #(
         .MAX_VALUE(INIT_LEN)
@@ -147,7 +147,7 @@ module lt24_lcd_driver (
             33:  init_data = {1'b0, 16'hC7};  // VCOM Control 2
             34:  init_data = {1'b1, 16'hC0};
             35:  init_data = {1'b0, 16'h36};  // Memory Access Control
-            36:  init_data = {1'b1, 16'h20}; // A4
+            36:  init_data = {1'b1, 16'h20};  // A4
             37:  init_data = {1'b0, 16'h3A};  // Pixel format
             38:  init_data = {1'b1, 16'h55};
             39:  init_data = {1'b0, 16'hB1};  // Frame Rate
@@ -197,12 +197,15 @@ module lt24_lcd_driver (
         if (reset) begin
             Sreg <= RESET_START;
             pixel_rgb_reg <= 16'b0;
-        end else begin
-            Sreg <= Snext;
-
-            // Update input RGB value
-            pixel_rgb_reg <= pixel_rgb;   
-        end
+        end else
+            if (en) begin
+                Sreg <= Snext;
+                // Update input RGB value
+                pixel_rgb_reg <= pixel_rgb;
+            end else begin
+                Sreg <= Sreg;
+                pixel_rgb_reg <= pixel_rgb;
+            end
 
     // Evaluate next state
     always @ (*)

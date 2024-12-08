@@ -33,13 +33,18 @@ module lt24_lcd_driver_tb;
         #5 clk_tb = ~clk_tb;
     end
 
+    // Enable generation
+    always begin
+        #40 en_tb = 1'b1;
+        #10 en_tb = 1'b0;
+    end
+
     // Testbench
     initial begin
         #10;
         reset_tb = 1;
         #10;
         reset_tb = 0;
-        en_tb = 1;
         
         wait(initialized_tb != 0);
 

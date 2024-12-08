@@ -34,6 +34,12 @@ module lt24_touchscreen_driver_tb();
         #5 clk = ~clk;
     end
 
+    // Enable generation
+    always begin
+        #30 en = 1'b1;
+        #10 en = 1'b0;
+    end
+
     localparam x = 12'b101010101010;
     localparam y = 12'b010101010101;
 
@@ -44,32 +50,33 @@ module lt24_touchscreen_driver_tb();
         reset = 1;
         #40;
         reset = 0;
-        en = 1;
         #40;
 
         adc_penirq_n = 0;
-        #40;
+        #80;
         adc_penirq_n = 1;
-        #45;
+        
+        #(80*7);
+        #15;
         adc_busy = 1;
-        #10
+        #(80);
         adc_busy = 0;
         
         // Simulate x position sample
         for (i = 0; i < 12; i = i + 1) begin
             adc_dout = x[11 - i];
-            #10;
+            #80;
         end
 
-        #20;
+        #(80*2)
         adc_busy = 1;
-        #10;
+        #80;
         adc_busy = 0;
 
         // Simulate y position sample
         for (i = 0; i < 12; i = i + 1) begin
             adc_dout = y[11 - i];
-            #10;
+            #80;
         end
 
     end
