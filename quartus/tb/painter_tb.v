@@ -11,10 +11,11 @@ module painter_tb();
 
     // Graphic manager interface
     reg initialized = 0;
-    wire bw_pixel_color;
-    wire [8:0] pixel_col;
-    wire [7:0] pixel_row;
-    wire write_pixel;
+
+    // Frame buffer memory interface
+    wire ram_write_en;
+    wire [16:0] ram_write_addr;
+    wire ram_data;
 
     // LT24 touchscreen driver interface
     reg pos_ready = 0;
@@ -30,10 +31,9 @@ module painter_tb();
         .rom_addr(rom_addr),
         .rom_q(rom_q),
         .initialized(initialized),
-        .bw_pixel_color(bw_pixel_color),
-        .pixel_col(pixel_col),
-        .pixel_row(pixel_row),
-        .write_pixel(write_pixel),
+        .ram_data(ram_data),
+        .ram_write_addr(ram_write_addr),
+        .ram_write_en(ram_write_en),
         .pos_ready(pos_ready),
         .x_pos(x_pos),
         .y_pos(y_pos)
@@ -44,7 +44,7 @@ module painter_tb();
     end
 
     initial begin
-        load_frame_sel = 1;
+        load_frame_sel = 0;
         rom_q = 1;
         reset = 1;
         #40;
@@ -58,7 +58,7 @@ module painter_tb();
         pos_ready = 1;
         x_pos = 12'b100000000000;
         y_pos = 12'b111111111111;
-        #60;
+        #10;
         pos_ready = 0;
 
 

@@ -104,8 +104,9 @@ set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME lt24_touchscreen_driver_t
 set_global_assignment -name EDA_TEST_BENCH_NAME painter_tb -section_id eda_simulation
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id painter_tb
 set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME painter_tb -section_id painter_tb
+set_global_assignment -name BDF_FILE graphic_manager.bdf
+set_global_assignment -name BDF_FILE graphic.bdf
 set_global_assignment -name VERILOG_FILE ../src/graphic_controller.v
-set_global_assignment -name BDF_FILE ../block_diagrams/graphic_manager.bdf
 set_global_assignment -name VERILOG_FILE ../src/enable_generator.v
 set_global_assignment -name SDC_FILE handwritten_digit_recognition.out.sdc
 set_global_assignment -name VERILOG_FILE ../src/counter.v
@@ -115,7 +116,6 @@ set_global_assignment -name VERILOG_FILE ../src/painter.v
 set_global_assignment -name VERILOG_FILE ../src/lt24_touchscreen_driver.v
 set_global_assignment -name VERILOG_FILE ../src/lt24_lcd_driver.v
 set_global_assignment -name VERILOG_FILE ../src/clk_divisor.v
-set_global_assignment -name BDF_FILE ../block_diagrams/graphic.bdf
 set_global_assignment -name EDA_TEST_BENCH_FILE ../tb/graphic_manager_tb.v -section_id graphic_manager_tb
 set_global_assignment -name EDA_TEST_BENCH_FILE ../tb/dp_ram_tb.v -section_id dp_ram_tb
 set_global_assignment -name EDA_TEST_BENCH_FILE ../tb/lt24_lcd_driver_tb.v -section_id lt24_lcd_driver_tb

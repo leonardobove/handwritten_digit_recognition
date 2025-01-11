@@ -107,13 +107,7 @@ refer to the applicable agreement for further details.
 		(text "adc_dclk" (rect 152 107 187 119)(font "Arial" ))
 		(line (pt 208 112)(pt 192 112)(line_width 1))
 	)
-	(parameter
-		"CLK_FREQ"
-		"50000000"
-		""
-		(type "PARAMETER_SIGNED_DEC")	)
 	(drawing
 		(rectangle (rect 16 16 192 128)(line_width 1))
 	)
-	(annotation_block (parameter)(rect 224 -64 324 16))
 )

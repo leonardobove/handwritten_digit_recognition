@@ -89,7 +89,7 @@ module painter #(
 
     // Output ranges from touchscreen ADC
     localparam TS_MINX = 0;
-    localparam TS_MAXX = 4000;
+    localparam TS_MAXX = 1000;
     localparam TS_MINY = 0;
     localparam TS_MAXY = 4000;
 
@@ -111,7 +111,7 @@ module painter #(
 
         // Set frame buffer write address
         if (Sreg == PAINT_PIXEL || Sreg == WAIT_PAINT_PIXEL)
-            ram_write_addr = (x_pos > 4096) ? 17'd3210 : 17'd3290;
+            ram_write_addr = 17'd3200 + touchscreen_x;
         else if (Sreg == LOAD_FRAME)
             ram_write_addr = rom_pointer;
         else
