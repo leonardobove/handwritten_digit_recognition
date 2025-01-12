@@ -1,0 +1,5 @@
+﻿-IC:\Users\leona\Desktop\PSD\handwritten_digit_recognition\matlab\codegen\lib\runQuantizedNet
+-IC:\Users\leona\Desktop\PSD\handwritten_digit_recognition\matlab
+-I$(ARM_COMPUTELIB)
+-I$(ARM_COMPUTELIB)\include
+-I"C:\Program Files\MATLAB\R2023b\extern\include"
