@@ -1,18 +1,21 @@
-module MLP #(
-    parameter averaged_pixels_nr = 196,
-    parameter resolution = 8
-    )(
+module MLP (
     input clk,
     input reset,
-    input signed [8*784-1:0] pixels,
-    output signed [8*10-1:0] output_activations
+    input signed [8*196-1:0] averaged_pixels,
+    input MLP_go,
+    output signed [8*10-1:0] output_activations,
+    output MLP_done
     );
 
     //constants
+    parameter averaged_pixels_nr = 196;
+    parameter resolution = 8;
     parameter HL_neurons = 30;
     parameter OL_neurons = 10;
 
     // Intermediate signals
+    wire signed [resolution*averaged_pixels_nr-1:0] averaged_pixels_w;
+    wire signed [resolution*OL_neurons-1:0] output_activations_w;
     wire signed [resolution*HL_neurons-1:0] zeds_HL;
     wire signed [resolution*HL_neurons-1:0] activations_HL;
     wire signed [resolution*OL_neurons-1:0] zeds_OL;
@@ -21,6 +24,17 @@ module MLP #(
     wire signed [resolution*HL_neurons-1:0] intermediate_biases_HL;
     wire signed [resolution*OL_neurons*HL_neurons-1:0] intermediate_weights_OL;
     wire signed [resolution*OL_neurons-1:0] intermediate_biases_OL;
+
+    // Instantiate the input flip-flops
+    dff_nbit #(
+        .nbit(averaged_pixels_nr)
+    ) dff_input (
+        .clk(clk),
+        .en(MLP_go),
+        .reset(reset),
+        .di(averaged_pixels),
+        .do(averaged_pixels_w)
+    );
 
     // Instantiate the hidden_layer_param
     hidden_layer_param i_hidden_layer_param (
@@ -78,6 +92,17 @@ module MLP #(
         .activations(activations_OL)
     );
 
-    assign output_activations = activations_OL;
+    assign output_activations_w = activations_OL;
+
+    // Instantiate the output flip-flops
+    dff_nbit #(
+        .nbit(OL_neurons)
+    ) dff_output (
+        .clk(clk),
+        .en(MLP_go),
+        .reset(reset),
+        .di(output_activations_w),
+        .do(output_activations)
+    );
 
 endmodule

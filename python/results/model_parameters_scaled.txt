@@ -66,7 +66,7 @@ module.linear_sigmoid_stack.2.bias = [
 {
   Shape: (10,)
   Scaled Weights/Biases:
-    c,
+    -8'sd40, -8'sd50, -8'sd25, -8'sd18, -8'sd39, -8'sd32, -8'sd32, -8'sd34, -8'sd18, -8'sd30,
 }
 ]
 

@@ -1,0 +1,141 @@
+/*
+WARNING: Do NOT edit the input and output ports in this file in a text
+editor if you plan to continue editing the block that represents it in
+the Block Editor! File corruption is VERY likely to occur.
+*/
+/*
+Copyright (C) 2018  Intel Corporation. All rights reserved.
+Your use of Intel Corporation's design tools, logic functions 
+and other software and tools, and its AMPP partner logic 
+functions, and any output files from any of the foregoing 
+(including device programming or simulation files), and any 
+associated documentation or information are expressly subject 
+to the terms and conditions of the Intel Program License 
+Subscription Agreement, the Intel Quartus Prime License Agreement,
+the Intel FPGA IP License Agreement, or other applicable license
+agreement, including, without limitation, that your use is for
+the sole purpose of programming logic devices manufactured by
+Intel and sold by Intel or its authorized distributors.  Please
+refer to the applicable agreement for further details.
+*/
+(header "symbol" (version "1.2"))
+(symbol
+	(rect 64 64 600 272)
+	(text "painter" (rect 5 0 38 12)(font "Arial" ))
+	(text "inst" (rect 8 192 25 204)(font "Arial" ))
+	(port
+		(pt 0 32)
+		(input)
+		(text "clk" (rect 0 0 14 12)(font "Arial" ))
+		(text "clk" (rect 21 27 35 39)(font "Arial" ))
+		(line (pt 0 32)(pt 16 32))
+	)
+	(port
+		(pt 0 48)
+		(input)
+		(text "en" (rect 0 0 11 12)(font "Arial" ))
+		(text "en" (rect 21 43 32 55)(font "Arial" ))
+		(line (pt 0 48)(pt 16 48))
+	)
+	(port
+		(pt 0 64)
+		(input)
+		(text "reset" (rect 0 0 24 12)(font "Arial" ))
+		(text "reset" (rect 21 59 45 71)(font "Arial" ))
+		(line (pt 0 64)(pt 16 64))
+	)
+	(port
+		(pt 0 80)
+		(input)
+		(text "load_frame_sel[N_FRAMES_WIDTH-1..0]" (rect 0 0 206 12)(font "Arial" ))
+		(text "load_frame_sel[N_FRAMES_WIDTH-1..0]" (rect 21 75 227 87)(font "Arial" ))
+		(line (pt 0 80)(pt 16 80)(line_width 3))
+	)
+	(port
+		(pt 536 184)
+		(input)
+		(text "rom_q" (rect 0 0 30 12)(font "Arial" ))
+		(text "rom_q" (rect 481 176 511 188)(font "Arial" ))
+		(line (pt 520 184)(pt 536 184))
+	)
+	(port
+		(pt 536 144)
+		(input)
+		(text "initialized" (rect 0 0 43 12)(font "Arial" ))
+		(text "initialized" (rect 468 136 511 148)(font "Arial" ))
+		(line (pt 520 144)(pt 536 144))
+	)
+	(port
+		(pt 0 128)
+		(input)
+		(text "pos_ready" (rect 0 0 51 12)(font "Arial" ))
+		(text "pos_ready" (rect 21 123 72 135)(font "Arial" ))
+		(line (pt 0 128)(pt 16 128))
+	)
+	(port
+		(pt 0 144)
+		(input)
+		(text "x_pos[11..0]" (rect 0 0 61 12)(font "Arial" ))
+		(text "x_pos[11..0]" (rect 21 139 82 151)(font "Arial" ))
+		(line (pt 0 144)(pt 16 144)(line_width 3))
+	)
+	(port
+		(pt 0 160)
+		(input)
+		(text "y_pos[11..0]" (rect 0 0 62 12)(font "Arial" ))
+		(text "y_pos[11..0]" (rect 21 155 83 167)(font "Arial" ))
+		(line (pt 0 160)(pt 16 160)(line_width 3))
+	)
+	(port
+		(pt 536 168)
+		(output)
+		(text "rom_addr[PIXEL_NUM_WIDTH+N_FRAMES_WIDTH-1..0]" (rect 0 0 285 12)(font "Arial" ))
+		(text "rom_addr[PIXEL_NUM_WIDTH+N_FRAMES_WIDTH-1..0]" (rect 274 163 559 175)(font "Arial" ))
+		(line (pt 536 168)(pt 520 168)(line_width 3))
+	)
+	(port
+		(pt 536 48)
+		(output)
+		(text "ram_data" (rect 0 0 46 12)(font "Arial" ))
+		(text "ram_data" (rect 477 43 523 55)(font "Arial" ))
+		(line (pt 536 48)(pt 520 48))
+	)
+	(port
+		(pt 536 64)
+		(output)
+		(text "ram_write_addr[PIXEL_NUM_WIDTH-1..0]" (rect 0 0 206 12)(font "Arial" ))
+		(text "ram_write_addr[PIXEL_NUM_WIDTH-1..0]" (rect 341 59 547 71)(font "Arial" ))
+		(line (pt 536 64)(pt 520 64)(line_width 3))
+	)
+	(port
+		(pt 536 80)
+		(output)
+		(text "ram_write_en" (rect 0 0 64 12)(font "Arial" ))
+		(text "ram_write_en" (rect 461 75 525 87)(font "Arial" ))
+		(line (pt 536 80)(pt 520 80))
+	)
+	(parameter
+		"N_FRAMES"
+		"2"
+		""
+		(type "PARAMETER_SIGNED_DEC")	)
+	(parameter
+		"N_FRAMES_WIDTH"
+		""
+		""
+		(type "PARAMETER_SIGNED_DEC")	)
+	(parameter
+		"PIXEL_NUM"
+		"10010110000000000"
+		""
+		(type "PARAMETER_UNSIGNED_BIN")	)
+	(parameter
+		"PIXEL_NUM_WIDTH"
+		""
+		""
+		(type "PARAMETER_SIGNED_DEC")	)
+	(drawing
+		(rectangle (rect 16 16 520 192))
+	)
+	(annotation_block (parameter)(rect 600 -32 920 64))
+)

@@ -18,7 +18,7 @@ module neuron #(parameter input_data_size=1, resolution=8, input_data_size_width
     output reg signed [resolution-1:0] output_neuron
     );
 
-    localparam input_data_size_width = ($clog2(input_data_size)+1);
+    localparam input_data_size_width = ($clog2(input_data_size));
 
     // Internal registers for calculations
     reg signed [2*resolution-1:0] product;
