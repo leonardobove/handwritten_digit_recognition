@@ -1,0 +1,3 @@
+[submodule "matlab/mnist_dataset"]
+	path = matlab/mnist_dataset
+	url = git@github.com:sunsided/mnist.git

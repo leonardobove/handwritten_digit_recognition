@@ -1,0 +1,89 @@
+#============================================================
+# Build by Terasic System Builder
+#============================================================
+
+set_global_assignment -name FAMILY "MAX 10 FPGA"
+set_global_assignment -name DEVICE 10M50DAF484C7G
+set_global_assignment -name TOP_LEVEL_ENTITY "DE10_LITE"
+set_global_assignment -name ORIGINAL_QUARTUS_VERSION "16.0.0"
+set_global_assignment -name LAST_QUARTUS_VERSION "16.0.0"
+set_global_assignment -name PROJECT_CREATION_TIME_DATE "16:32:17 NOVEMBER 11,2024"
+set_global_assignment -name DEVICE_FILTER_PACKAGE FBGA
+set_global_assignment -name DEVICE_FILTER_PIN_COUNT 484
+set_global_assignment -name DEVICE_FILTER_SPEED_GRADE 7
+set_global_assignment -name SDC_FILE DE10_LITE.SDC
+
+#============================================================
+# CLOCK
+#============================================================
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to ADC_CLK_10
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to MAX10_CLK1_50
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to MAX10_CLK2_50
+set_location_assignment PIN_N5 -to ADC_CLK_10
+set_location_assignment PIN_P11 -to MAX10_CLK1_50
+set_location_assignment PIN_N14 -to MAX10_CLK2_50
+
+#============================================================
+# GPIO, GPIO connect to LT24 - 2.4" LCD and Touch
+#============================================================
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_ADC_BUSY
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_ADC_CS_N
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_ADC_DCLK
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_ADC_DIN
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_ADC_DOUT
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_ADC_PENIRQ_N
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_CS_N
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_D[0]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_D[1]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_D[2]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_D[3]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_D[4]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_D[5]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_D[6]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_D[7]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_D[8]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_D[9]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_D[10]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_D[11]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_D[12]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_D[13]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_D[14]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_D[15]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_LCD_ON
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_RD_N
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_RESET_N
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_RS
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_WR_N
+set_location_assignment PIN_V9 -to LT24_ADC_BUSY
+set_location_assignment PIN_AB2 -to LT24_ADC_CS_N
+set_location_assignment PIN_V8 -to LT24_ADC_DCLK
+set_location_assignment PIN_W9 -to LT24_ADC_DIN
+set_location_assignment PIN_W10 -to LT24_ADC_DOUT
+set_location_assignment PIN_V10 -to LT24_ADC_PENIRQ_N
+set_location_assignment PIN_Y7 -to LT24_CS_N
+set_location_assignment PIN_W6 -to LT24_D[0]
+set_location_assignment PIN_W7 -to LT24_D[1]
+set_location_assignment PIN_V7 -to LT24_D[2]
+set_location_assignment PIN_W8 -to LT24_D[3]
+set_location_assignment PIN_W13 -to LT24_D[4]
+set_location_assignment PIN_W12 -to LT24_D[5]
+set_location_assignment PIN_AB13 -to LT24_D[6]
+set_location_assignment PIN_AB12 -to LT24_D[7]
+set_location_assignment PIN_Y11 -to LT24_D[8]
+set_location_assignment PIN_AB11 -to LT24_D[9]
+set_location_assignment PIN_W11 -to LT24_D[10]
+set_location_assignment PIN_AB10 -to LT24_D[11]
+set_location_assignment PIN_AA10 -to LT24_D[12]
+set_location_assignment PIN_AA9 -to LT24_D[13]
+set_location_assignment PIN_Y8 -to LT24_D[14]
+set_location_assignment PIN_AA8 -to LT24_D[15]
+set_location_assignment PIN_AA2 -to LT24_LCD_ON
+set_location_assignment PIN_W5 -to LT24_RD_N
+set_location_assignment PIN_Y3 -to LT24_RESET_N
+set_location_assignment PIN_AA14 -to LT24_RS
+set_location_assignment PIN_AA15 -to LT24_WR_N
+
+#============================================================
+# End of pin assignments by Terasic System Builder
+#============================================================
+
