@@ -6,6 +6,8 @@ module average_pooling #(
     parameter pixels_address_nr = ($clog2(pixels_number)),
     parameter averaged_pixels_address_nr = ($clog2(averaged_pixels_nr))
     )(
+    input clk,
+    input reset,
     input [resolution*pixels_number-1:0] pixels,
     output [resolution*averaged_pixels_nr-1:0] pixels_averaged
     );
@@ -20,6 +22,8 @@ module average_pooling #(
             pixels_averaging #(
                 .resolution(resolution)
             )avg_inst (
+                .clk(clk),
+                .reset(reset),
                 .in1(pixels[idx*resolution+:resolution]),                // Top-left pixel
                 .in2(pixels[(idx + 1)*resolution+:resolution]),            // Top-right pixel
                 .in3(pixels[(idx + 28)*resolution+:resolution]),  // Bottom-left pixel

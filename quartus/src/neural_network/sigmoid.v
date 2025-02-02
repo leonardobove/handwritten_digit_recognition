@@ -1,10 +1,12 @@
 module sigmoid(
+    input clk,
     input wire signed [7:0] zed,    // 8-bit input value (unsigned)
     output reg [7:0] activation     // 8-bit activationput value (unsigned)
     );
 
+    //LPM ROM
     // Initialize the LUT with precomputed sigmoid values
-    always @ * begin
+    always @ (posedge clk) begin
         case (zed)
             8'sb10000000: activation <= 8'sb00000000; // input: -128, activation: 0
             8'sb10000001: activation <= 8'sb00000000; // input: -127, activation: 0

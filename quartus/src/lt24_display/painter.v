@@ -7,7 +7,9 @@ module painter #(
     parameter integer N_FRAMES = 2,
     parameter integer N_FRAMES_WIDTH = $clog2(N_FRAMES),
     parameter PIXEL_NUM =  17'd76800, // Pixels number
-    parameter integer PIXEL_NUM_WIDTH = $clog2(PIXEL_NUM)
+    parameter integer PIXEL_NUM_WIDTH = $clog2(PIXEL_NUM),
+    parameter neural_network_resolution = 8,
+    parameter drawing_area_side_length = 28
 )(
     input clk,
     input en,
@@ -29,7 +31,14 @@ module painter #(
     // LT24 touchscreen driver interface
     input pos_ready,
     input [11:0] x_pos,     // X, Y position from the ADC, given with a resolution of 12 bits
-    input [11:0] y_pos
+    input [11:0] y_pos,
+
+    // Neural network interface
+    output reg [(drawing_area_side_length**2)*neural_network_resolution-1:0] neural_network_inputs,
+
+    // Main controller interface
+    input clear_display,
+    output reg painter_ready
 );  
 
     localparam ROW_NUM = 8'd240;    // Rows number
@@ -95,21 +104,31 @@ module painter #(
 
     // Map touchscreen ADC values to pixel coordinates
     always @ (*) begin
-        if (x_pos < TS_MINX)
-            touchscreen_x = 1'b0;
-        else if (x_pos > TS_MAXX)
-            touchscreen_x = COL_NUM - 1'b1;
-        else
-            touchscreen_x = (x_pos - TS_MINX) * (COL_NUM - 1'b1) / (TS_MAXX - TS_MINX);
+        if (0) begin
+            touchscreen_x <= 0;
+            touchscreen_y <= 0;
+        end else if (en) begin
+            if (x_pos < TS_MINX)
+                touchscreen_x = 1'b0;
+            else if (x_pos > TS_MAXX)
+                touchscreen_x = COL_NUM - 1'b1;
+            else
+                touchscreen_x = (x_pos - TS_MINX) * (COL_NUM - 1'b1) / (TS_MAXX - TS_MINX);
 
-        if (y_pos < TS_MINY)
-            touchscreen_y = ROW_NUM - 1'b1;
-        else if (y_pos > TS_MAXY)
-            touchscreen_y = 1'b0;
-        else
-            touchscreen_y = (ROW_NUM - 1'b1) - (y_pos - TS_MINY) * (ROW_NUM - 1'b1) / (TS_MAXY - TS_MINY);
+            if (y_pos < TS_MINY)
+                touchscreen_y = ROW_NUM - 1'b1;
+            else if (y_pos > TS_MAXY)
+                touchscreen_y = 1'b0;
+            else
+                touchscreen_y = (ROW_NUM - 1'b1) - (y_pos - TS_MINY) * (ROW_NUM - 1'b1) / (TS_MAXY - TS_MINY);
+        end else begin
+            touchscreen_x <= 21'd0;
+            touchscreen_y <= 20'd0;
+        end
+    end
 
-        // Set frame buffer write address
+    // Set frame buffer write address
+    always @ (*) begin
         if (Sreg == PAINT_PIXEL || Sreg == WAIT_PAINT_PIXEL)
             ram_write_addr = touchscreen_y*COL_NUM + touchscreen_x;
         else if (Sreg == LOAD_FRAME)
@@ -117,6 +136,22 @@ module painter #(
         else
             ram_write_addr = 17'd0;
     end
+
+    // Update neural network inputs
+    always @ (posedge clk)
+        if (reset)
+            neural_network_inputs <= 0; // Reset inputs to 0
+        else if (en)
+            // Add touched pixel to the neural network inputs array
+            // as a white pixel, i.e. value set to (2**neural_network_resolution)-1.
+            // Add it only if the touch happened inside a specific drawing area.
+            if (Sreg == PAINT_PIXEL && touchscreen_x >= 21'd0 && touchscreen_x <= drawing_area_side_length &&
+                touchscreen_y >= 20'd0 && touchscreen_y <= drawing_area_side_length)
+                neural_network_inputs[(touchscreen_y*COL_NUM+touchscreen_x) +: neural_network_resolution] <= (1 << neural_network_resolution) - 1'b1;
+            else
+                neural_network_inputs <= neural_network_inputs;
+        else
+            neural_network_inputs <= neural_network_inputs;
 
     // Update current state
     always @ (posedge clk)
@@ -148,9 +183,9 @@ module painter #(
                     Snext = RESET;
 
             IDLE:
-                if (pos_ready && en)
+                if (pos_ready && en) //TODO: remove these enable conditions
                     Snext = PAINT_PIXEL;
-                else if ((load_frame_sel_reg != load_frame_sel) && en)   // Check if frame selection has changed
+                else if ((load_frame_sel_reg != load_frame_sel) || clear_display)   // Check if frame selection has changed or if the display needs to be cleared
                     Snext = LOAD_FRAME;
                 else
                     Snext = IDLE;
@@ -172,6 +207,7 @@ module painter #(
         ram_write_en = 1'b0;
         rom_pointer_en_reg = 1'b0;
         rom_pointer_reset_reg = 1'b1;
+        painter_ready = 1'b0;
 
         case (Sreg)
             RESET: begin
@@ -182,6 +218,7 @@ module painter #(
             IDLE: begin
                 rom_pointer_en_reg = 1'b0;
                 rom_pointer_reset_reg = 1'b1;
+                painter_ready = 1'b1;
             end
 
             LOAD_FRAME: begin
@@ -206,6 +243,7 @@ module painter #(
                 ram_write_en = 1'b0;
                 rom_pointer_en_reg = 1'b0;
                 rom_pointer_reset_reg = 1'b1;
+                painter_ready = 1'b0;
             end
         endcase
     end

@@ -1,4 +1,4 @@
-module seven_segment_display(
+module seven_segment_display_driver(
     input [3:0] digit,         // 4-bit input representing the digit (0 to 9)
     output reg [6:0] seg       // 7-segment display output (a, b, c, d, e, f, g)
 );

@@ -1,25 +1,27 @@
-module average_pooling_tb;
+`timescale 1ns / 1ps
+module average_pooling_n_tb;
 
     parameter resolution = 8;
-    parameter pixels_number = 784;
-    parameter averaged_pixels_nr = 196;
+    parameter input_matrix_side_length = 28;
+    parameter output_matrix_side_length = 14;
 
     reg clk = 0;
     reg reset;
 
-    reg [resolution*pixels_number-1:0] pixels;
-    wire [resolution*averaged_pixels_nr-1:0] pixels_averaged;
+    reg [resolution*(input_matrix_side_length**2)-1:0] pixels;
+    wire [resolution*(output_matrix_side_length**2)-1:0] pixels_averaged;
 
     // Instantiate the DUT (Device Under Test)
-    average_pooling_wrapper #(
+    average_pooling_n #(
         .resolution(resolution),
-        .pixels_number(pixels_number),
-        .averaged_pixels_nr(averaged_pixels_nr)
-    )dut (
+        .n(2),
+        .input_matrix_side_length(input_matrix_side_length),
+        .output_matrix_side_length(output_matrix_side_length)
+    ) dut (
         .clk(clk),
         .reset(reset),
-        .pixels(pixels),
-        .pixels_averaged(pixels_averaged)
+        .input_pixels(pixels),
+        .output_pixels(pixels_averaged)
     );
 
     // Test Variables
@@ -34,7 +36,7 @@ module average_pooling_tb;
     initial begin
         // Initialize the inputs
         reset = 0;
-        pixels = {pixels_number{8'h00}}; // Initialize all pixels to zero
+        pixels = {(input_matrix_side_length**2){8'h00}}; // Initialize all pixels to zero
         #5;
         reset = 1;
         #5;
@@ -45,14 +47,14 @@ module average_pooling_tb;
         #100;
 
         // Apply test data to the input pixels
-        for (i = 0; i < pixels_number; i = i + 1) begin
+        for (i = 0; i < (input_matrix_side_length**2); i = i + 1) begin
             pixels[i*resolution +: resolution] = i; // Fill with values 0, 1, ..., 255, wrapping around
         end
 
         #100;
 
         // Apply test data to the input pixels
-        for (i = 0; i < pixels_number; i = i + 1) begin
+        for (i = 0; i < (input_matrix_side_length**2); i = i + 1) begin
             pixels[i*resolution +: resolution] = 3; // Fill with values 0, 1, ..., 255, wrapping around
         end
 

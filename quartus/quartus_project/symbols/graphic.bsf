@@ -1,0 +1,180 @@
+/*
+WARNING: Do NOT edit the input and output ports in this file in a text
+editor if you plan to continue editing the block that represents it in
+the Block Editor! File corruption is VERY likely to occur.
+*/
+/*
+Copyright (C) 2018  Intel Corporation. All rights reserved.
+Your use of Intel Corporation's design tools, logic functions 
+and other software and tools, and its AMPP partner logic 
+functions, and any output files from any of the foregoing 
+(including device programming or simulation files), and any 
+associated documentation or information are expressly subject 
+to the terms and conditions of the Intel Program License 
+Subscription Agreement, the Intel Quartus Prime License Agreement,
+the Intel FPGA IP License Agreement, or other applicable license
+agreement, including, without limitation, that your use is for
+the sole purpose of programming logic devices manufactured by
+Intel and sold by Intel or its authorized distributors.  Please
+refer to the applicable agreement for further details.
+*/
+(header "symbol" (version "1.2"))
+(symbol
+	(rect 64 64 768 320)
+	(text "graphic" (rect 5 0 48 19)(font "Intel Clear" (font_size 8)))
+	(text "inst" (rect 8 235 24 252)(font "Intel Clear" ))
+	(port
+		(pt 0 32)
+		(input)
+		(text "graphic_en" (rect 0 0 64 19)(font "Intel Clear" (font_size 8)))
+		(text "graphic_en" (rect 21 27 85 46)(font "Intel Clear" (font_size 8)))
+		(line (pt 0 32)(pt 16 32))
+	)
+	(port
+		(pt 0 48)
+		(input)
+		(text "MAX10_CLK1_50" (rect 0 0 106 19)(font "Intel Clear" (font_size 8)))
+		(text "MAX10_CLK1_50" (rect 21 43 127 62)(font "Intel Clear" (font_size 8)))
+		(line (pt 0 48)(pt 16 48))
+	)
+	(port
+		(pt 704 200)
+		(input)
+		(text "LT24_ADC_PENIRQ_N" (rect 0 0 134 19)(font "Intel Clear" (font_size 8)))
+		(text "LT24_ADC_PENIRQ_N" (rect 545 192 679 211)(font "Intel Clear" (font_size 8)))
+		(line (pt 688 200)(pt 704 200))
+	)
+	(port
+		(pt 0 64)
+		(input)
+		(text "reset_display" (rect 0 0 80 19)(font "Intel Clear" (font_size 8)))
+		(text "reset_display" (rect 21 59 101 78)(font "Intel Clear" (font_size 8)))
+		(line (pt 0 64)(pt 16 64))
+	)
+	(port
+		(pt 0 88)
+		(input)
+		(text "clear_display" (rect 0 0 79 19)(font "Intel Clear" (font_size 8)))
+		(text "clear_display" (rect 21 83 100 102)(font "Intel Clear" (font_size 8)))
+		(line (pt 0 88)(pt 16 88))
+	)
+	(port
+		(pt 704 232)
+		(input)
+		(text "LT24_ADC_DOUT" (rect 0 0 108 19)(font "Intel Clear" (font_size 8)))
+		(text "LT24_ADC_DOUT" (rect 571 224 679 243)(font "Intel Clear" (font_size 8)))
+		(line (pt 688 232)(pt 704 232))
+	)
+	(port
+		(pt 704 216)
+		(input)
+		(text "LT24_ADC_BUSY" (rect 0 0 106 19)(font "Intel Clear" (font_size 8)))
+		(text "LT24_ADC_BUSY" (rect 573 208 679 227)(font "Intel Clear" (font_size 8)))
+		(line (pt 688 216)(pt 704 216))
+	)
+	(port
+		(pt 0 104)
+		(output)
+		(text "painter_ready" (rect 0 0 83 19)(font "Intel Clear" (font_size 8)))
+		(text "painter_ready" (rect 24 96 107 115)(font "Intel Clear" (font_size 8)))
+		(line (pt 16 104)(pt 0 104))
+	)
+	(port
+		(pt 0 224)
+		(output)
+		(text "neural_network_inputs[(drawing_area_side_length**2 * neural_network_resolution)-1..0]" (rect 0 0 518 19)(font "Intel Clear" (font_size 8)))
+		(text "neural_network_inputs[(drawing_area_side_length**2 * neural_network_resolution)-1..0]" (rect 24 216 542 235)(font "Intel Clear" (font_size 8)))
+		(line (pt 16 224)(pt 0 224)(line_width 3))
+	)
+	(port
+		(pt 704 32)
+		(output)
+		(text "LT24_RESET_N" (rect 0 0 94 19)(font "Intel Clear" (font_size 8)))
+		(text "LT24_RESET_N" (rect 589 27 683 46)(font "Intel Clear" (font_size 8)))
+		(line (pt 704 32)(pt 688 32))
+	)
+	(port
+		(pt 704 48)
+		(output)
+		(text "LT24_CS_N" (rect 0 0 71 19)(font "Intel Clear" (font_size 8)))
+		(text "LT24_CS_N" (rect 612 43 683 62)(font "Intel Clear" (font_size 8)))
+		(line (pt 704 48)(pt 688 48))
+	)
+	(port
+		(pt 704 64)
+		(output)
+		(text "LT24_RS" (rect 0 0 55 19)(font "Intel Clear" (font_size 8)))
+		(text "LT24_RS" (rect 628 59 683 78)(font "Intel Clear" (font_size 8)))
+		(line (pt 704 64)(pt 688 64))
+	)
+	(port
+		(pt 704 80)
+		(output)
+		(text "LT24_WR_N" (rect 0 0 75 19)(font "Intel Clear" (font_size 8)))
+		(text "LT24_WR_N" (rect 608 75 683 94)(font "Intel Clear" (font_size 8)))
+		(line (pt 704 80)(pt 688 80))
+	)
+	(port
+		(pt 704 96)
+		(output)
+		(text "LT24_RD_N" (rect 0 0 73 19)(font "Intel Clear" (font_size 8)))
+		(text "LT24_RD_N" (rect 610 91 683 110)(font "Intel Clear" (font_size 8)))
+		(line (pt 704 96)(pt 688 96))
+	)
+	(port
+		(pt 704 112)
+		(output)
+		(text "LT24_D[15..0]" (rect 0 0 87 19)(font "Intel Clear" (font_size 8)))
+		(text "LT24_D[15..0]" (rect 596 107 683 126)(font "Intel Clear" (font_size 8)))
+		(line (pt 704 112)(pt 688 112)(line_width 3))
+	)
+	(port
+		(pt 704 152)
+		(output)
+		(text "LT24_ADC_DIN" (rect 0 0 94 19)(font "Intel Clear" (font_size 8)))
+		(text "LT24_ADC_DIN" (rect 589 147 683 166)(font "Intel Clear" (font_size 8)))
+		(line (pt 704 152)(pt 688 152))
+	)
+	(port
+		(pt 704 168)
+		(output)
+		(text "LT24_ADC_CS_N" (rect 0 0 105 19)(font "Intel Clear" (font_size 8)))
+		(text "LT24_ADC_CS_N" (rect 578 163 683 182)(font "Intel Clear" (font_size 8)))
+		(line (pt 704 168)(pt 688 168))
+	)
+	(port
+		(pt 704 184)
+		(output)
+		(text "LT24_ADC_DCLK" (rect 0 0 105 19)(font "Intel Clear" (font_size 8)))
+		(text "LT24_ADC_DCLK" (rect 578 179 683 198)(font "Intel Clear" (font_size 8)))
+		(line (pt 704 184)(pt 688 184))
+	)
+	(port
+		(pt 704 128)
+		(output)
+		(text "LT24_LCD_ON" (rect 0 0 89 19)(font "Intel Clear" (font_size 8)))
+		(text "LT24_LCD_ON" (rect 594 123 683 142)(font "Intel Clear" (font_size 8)))
+		(line (pt 704 128)(pt 688 128))
+	)
+	(port
+		(pt 0 120)
+		(output)
+		(text "graphic_driver_initialized" (rect 0 0 151 19)(font "Intel Clear" (font_size 8)))
+		(text "graphic_driver_initialized" (rect 24 112 175 131)(font "Intel Clear" (font_size 8)))
+		(line (pt 16 120)(pt 0 120))
+	)
+	(parameter
+		"neural_network_resolution"
+		"8"
+		""
+		(type "PARAMETER_UNSIGNED_DEC")	)
+	(parameter
+		"drawing_area_side_length"
+		"28"
+		""
+		(type "PARAMETER_UNSIGNED_DEC")	)
+	(drawing
+		(rectangle (rect 16 16 688 240))
+	)
+	(annotation_block (parameter)(rect 720 -48 992 16))
+)

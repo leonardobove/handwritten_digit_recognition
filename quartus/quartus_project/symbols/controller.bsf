@@ -1,0 +1,141 @@
+/*
+WARNING: Do NOT edit the input and output ports in this file in a text
+editor if you plan to continue editing the block that represents it in
+the Block Editor! File corruption is VERY likely to occur.
+*/
+/*
+Copyright (C) 2018  Intel Corporation. All rights reserved.
+Your use of Intel Corporation's design tools, logic functions 
+and other software and tools, and its AMPP partner logic 
+functions, and any output files from any of the foregoing 
+(including device programming or simulation files), and any 
+associated documentation or information are expressly subject 
+to the terms and conditions of the Intel Program License 
+Subscription Agreement, the Intel Quartus Prime License Agreement,
+the Intel FPGA IP License Agreement, or other applicable license
+agreement, including, without limitation, that your use is for
+the sole purpose of programming logic devices manufactured by
+Intel and sold by Intel or its authorized distributors.  Please
+refer to the applicable agreement for further details.
+*/
+(header "symbol" (version "1.2"))
+(symbol
+	(rect 64 64 352 272)
+	(text "controller" (rect 5 0 49 12)(font "Arial" ))
+	(text "inst" (rect 8 192 25 204)(font "Arial" ))
+	(port
+		(pt 0 32)
+		(input)
+		(text "clk" (rect 0 0 14 12)(font "Arial" ))
+		(text "clk" (rect 21 27 35 39)(font "Arial" ))
+		(line (pt 0 32)(pt 16 32))
+	)
+	(port
+		(pt 0 48)
+		(input)
+		(text "en" (rect 0 0 11 12)(font "Arial" ))
+		(text "en" (rect 21 43 32 55)(font "Arial" ))
+		(line (pt 0 48)(pt 16 48))
+	)
+	(port
+		(pt 0 64)
+		(input)
+		(text "reset" (rect 0 0 24 12)(font "Arial" ))
+		(text "reset" (rect 21 59 45 71)(font "Arial" ))
+		(line (pt 0 64)(pt 16 64))
+	)
+	(port
+		(pt 0 80)
+		(input)
+		(text "button1" (rect 0 0 36 12)(font "Arial" ))
+		(text "button1" (rect 21 75 57 87)(font "Arial" ))
+		(line (pt 0 80)(pt 16 80))
+	)
+	(port
+		(pt 0 96)
+		(input)
+		(text "button2" (rect 0 0 36 12)(font "Arial" ))
+		(text "button2" (rect 21 91 57 103)(font "Arial" ))
+		(line (pt 0 96)(pt 16 96))
+	)
+	(port
+		(pt 288 168)
+		(input)
+		(text "graphic_driver_initialized" (rect 0 0 119 12)(font "Arial" ))
+		(text "graphic_driver_initialized" (rect 168 160 287 172)(font "Arial" ))
+		(line (pt 272 168)(pt 288 168))
+	)
+	(port
+		(pt 288 152)
+		(input)
+		(text "painter_ready" (rect 0 0 67 12)(font "Arial" ))
+		(text "painter_ready" (rect 208 144 275 156)(font "Arial" ))
+		(line (pt 272 152)(pt 288 152))
+	)
+	(port
+		(pt 0 128)
+		(input)
+		(text "neural_network_done" (rect 0 0 102 12)(font "Arial" ))
+		(text "neural_network_done" (rect 21 123 123 135)(font "Arial" ))
+		(line (pt 0 128)(pt 16 128))
+	)
+	(port
+		(pt 288 184)
+		(input)
+		(text "predicted_digit[3..0]" (rect 0 0 96 12)(font "Arial" ))
+		(text "predicted_digit[3..0]" (rect 184 176 280 188)(font "Arial" ))
+		(line (pt 272 184)(pt 288 184)(line_width 3))
+	)
+	(port
+		(pt 288 32)
+		(output)
+		(text "output_digit[3..0]" (rect 0 0 82 12)(font "Arial" ))
+		(text "output_digit[3..0]" (rect 198 27 280 39)(font "Arial" ))
+		(line (pt 288 32)(pt 272 32)(line_width 3))
+	)
+	(port
+		(pt 288 136)
+		(output)
+		(text "clear_display" (rect 0 0 64 12)(font "Arial" ))
+		(text "clear_display" (rect 213 131 277 143)(font "Arial" ))
+		(line (pt 288 136)(pt 272 136))
+	)
+	(port
+		(pt 288 120)
+		(output)
+		(text "reset_display" (rect 0 0 66 12)(font "Arial" ))
+		(text "reset_display" (rect 212 115 278 127)(font "Arial" ))
+		(line (pt 288 120)(pt 272 120))
+	)
+	(port
+		(pt 288 104)
+		(output)
+		(text "enable_graphics" (rect 0 0 79 12)(font "Arial" ))
+		(text "enable_graphics" (rect 201 99 280 111)(font "Arial" ))
+		(line (pt 288 104)(pt 272 104))
+	)
+	(port
+		(pt 0 144)
+		(output)
+		(text "start_neural_network" (rect 0 0 101 12)(font "Arial" ))
+		(text "start_neural_network" (rect 24 136 125 148)(font "Arial" ))
+		(line (pt 16 144)(pt 0 144))
+	)
+	(port
+		(pt 0 160)
+		(output)
+		(text "enable_neural_network" (rect 0 0 110 12)(font "Arial" ))
+		(text "enable_neural_network" (rect 24 152 134 164)(font "Arial" ))
+		(line (pt 16 160)(pt 0 160))
+	)
+	(port
+		(pt 0 176)
+		(output)
+		(text "reset_neural_network" (rect 0 0 103 12)(font "Arial" ))
+		(text "reset_neural_network" (rect 24 168 127 180)(font "Arial" ))
+		(line (pt 16 176)(pt 0 176))
+	)
+	(drawing
+		(rectangle (rect 16 16 272 192))
+	)
+)

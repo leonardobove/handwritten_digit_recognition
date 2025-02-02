@@ -79,7 +79,7 @@ set_global_assignment -name EDA_SIMULATION_TOOL "ModelSim-Altera (Verilog)"
 set_global_assignment -name EDA_TIME_SCALE "1 ps" -section_id eda_simulation
 set_global_assignment -name EDA_OUTPUT_DATA_FORMAT "VERILOG HDL" -section_id eda_simulation
 set_global_assignment -name EDA_TEST_BENCH_ENABLE_STATUS TEST_BENCH_MODE -section_id eda_simulation
-set_global_assignment -name EDA_NATIVELINK_SIMULATION_TEST_BENCH lt24_touchscreen_driver_tb -section_id eda_simulation
+set_global_assignment -name EDA_NATIVELINK_SIMULATION_TEST_BENCH average_pooling_tb -section_id eda_simulation
 set_global_assignment -name EDA_TEST_BENCH_NAME graphic_manager_tb -section_id eda_simulation
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id graphic_manager_tb
 set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME graphic_manager_tb -section_id graphic_manager_tb
@@ -104,23 +104,72 @@ set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME lt24_touchscreen_driver_t
 set_global_assignment -name EDA_TEST_BENCH_NAME painter_tb -section_id eda_simulation
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id painter_tb
 set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME painter_tb -section_id painter_tb
-set_global_assignment -name BDF_FILE graphic_manager.bdf
-set_global_assignment -name BDF_FILE graphic.bdf
-set_global_assignment -name VERILOG_FILE ../src/graphic_controller.v
-set_global_assignment -name VERILOG_FILE ../src/enable_generator.v
-set_global_assignment -name SDC_FILE handwritten_digit_recognition.out.sdc
-set_global_assignment -name VERILOG_FILE ../src/counter.v
-set_global_assignment -name VERILOG_FILE ../src/simple_dual_port_ram_single_clock.v
-set_global_assignment -name MIF_FILE ../python/merged_frames.mif
-set_global_assignment -name VERILOG_FILE ../src/painter.v
-set_global_assignment -name VERILOG_FILE ../src/lt24_touchscreen_driver.v
-set_global_assignment -name VERILOG_FILE ../src/lt24_lcd_driver.v
-set_global_assignment -name VERILOG_FILE ../src/clk_divisor.v
+set_global_assignment -name EDA_TEST_BENCH_NAME average_pooling_n_tb -section_id eda_simulation
+set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id average_pooling_n_tb
+set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME average_pooling_n_tb -section_id average_pooling_n_tb
+set_global_assignment -name EDA_TEST_BENCH_NAME average_pooling_tb -section_id eda_simulation
+set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id average_pooling_tb
+set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME average_pooling_tb -section_id average_pooling_tb
 set_global_assignment -name EDA_TEST_BENCH_FILE ../tb/graphic_manager_tb.v -section_id graphic_manager_tb
 set_global_assignment -name EDA_TEST_BENCH_FILE ../tb/dp_ram_tb.v -section_id dp_ram_tb
 set_global_assignment -name EDA_TEST_BENCH_FILE ../tb/lt24_lcd_driver_tb.v -section_id lt24_lcd_driver_tb
 set_global_assignment -name EDA_TEST_BENCH_FILE ../tb/lt24_touchscreen_driver_tb.v -section_id lt24_touchscreen_driver_tb
 set_global_assignment -name EDA_TEST_BENCH_FILE ../tb/painter_tb.v -section_id painter_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE ../tb/average_pooling_n_tb.v -section_id average_pooling_n_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE ../tb/average_pooling_tb.v -section_id average_pooling_tb
+set_location_assignment PIN_C14 -to HEX0[0] -disable
+set_location_assignment PIN_E15 -to HEX0[1] -disable
+set_location_assignment PIN_C15 -to HEX0[2] -disable
+set_location_assignment PIN_C16 -to HEX0[3] -disable
+set_location_assignment PIN_E16 -to HEX0[4] -disable
+set_location_assignment PIN_D17 -to HEX0[5] -disable
+set_location_assignment PIN_C17 -to HEX0[6] -disable
+set_location_assignment PIN_B8 -to KEY[0] -disable
+set_location_assignment PIN_A7 -to KEY[1] -disable
+set_location_assignment PIN_V9 -to LT24LT24_ADC_BUSY -disable
+set_location_assignment PIN_AB2 -to LT24LT24_ADC_CS_N -disable
+set_location_assignment PIN_V8 -to LT24LT24_ADC_DCLK -disable
+set_location_assignment PIN_W9 -to LT24LT24_ADC_DIN -disable
+set_location_assignment PIN_W10 -to LT24LT24_ADC_DOUT -disable
+set_location_assignment PIN_V10 -to LT24LT24_ADC_PENIRQ_N -disable
+set_location_assignment PIN_Y7 -to LT24LT24_CS_N -disable
+set_location_assignment PIN_W6 -to LT24LT24_D[0] -disable
+set_location_assignment PIN_W7 -to LT24LT24_D[1] -disable
+set_location_assignment PIN_V7 -to LT24LT24_D[2] -disable
+set_location_assignment PIN_W8 -to LT24LT24_D[3] -disable
+set_location_assignment PIN_W13 -to LT24LT24_D[4] -disable
+set_location_assignment PIN_W12 -to LT24LT24_D[5] -disable
+set_location_assignment PIN_AB13 -to LT24LT24_D[6] -disable
+set_location_assignment PIN_AB12 -to LT24LT24_D[7] -disable
+set_location_assignment PIN_Y11 -to LT24LT24_D[8] -disable
+set_location_assignment PIN_AB11 -to LT24LT24_D[9] -disable
+set_location_assignment PIN_W11 -to LT24LT24_D[10] -disable
+set_location_assignment PIN_AB10 -to LT24LT24_D[11] -disable
+set_location_assignment PIN_AA10 -to LT24LT24_D[12] -disable
+set_location_assignment PIN_AA9 -to LT24LT24_D[13] -disable
+set_location_assignment PIN_Y8 -to LT24LT24_D[14] -disable
+set_location_assignment PIN_AA8 -to LT24LT24_D[15] -disable
+set_location_assignment PIN_AA2 -to LT24LT24_LCD_ON -disable
+set_location_assignment PIN_W5 -to LT24LT24_RD_N -disable
+set_location_assignment PIN_Y3 -to LT24LT24_RESET_N -disable
+set_location_assignment PIN_AA14 -to LT24LT24_RS -disable
+set_location_assignment PIN_AA15 -to LT24LT24_WR_N -disable
+set_global_assignment -name VERILOG_FILE ../src/average_pooling_n.v
+set_global_assignment -name VERILOG_FILE ../src/average_n_pixels.v
+set_global_assignment -name VERILOG_FILE ../src/seven_segment_display_driver.v
+set_global_assignment -name VERILOG_FILE ../src/controller.v
+set_global_assignment -name VERILOG_FILE ../src/counter.v
+set_global_assignment -name BDF_FILE block_designs/graphic_manager.bdf
+set_global_assignment -name BDF_FILE block_designs/graphic.bdf
+set_global_assignment -name SDC_FILE handwritten_digit_recognition.out.sdc
+set_global_assignment -name VERILOG_FILE ../src/lt24_display/simple_dual_port_ram_single_clock.v
+set_global_assignment -name VERILOG_FILE ../src/lt24_display/painter.v
+set_global_assignment -name VERILOG_FILE ../src/lt24_display/lt24_touchscreen_driver.v
+set_global_assignment -name VERILOG_FILE ../src/lt24_display/lt24_lcd_driver.v
+set_global_assignment -name VERILOG_FILE ../src/lt24_display/graphic_controller.v
+set_global_assignment -name VERILOG_FILE ../src/lt24_display/enable_generator.v
+set_global_assignment -name VERILOG_FILE ../src/lt24_display/clk_divisor.v
+set_global_assignment -name BDF_FILE block_designs/edge_triggered_debouncer.bdf
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top

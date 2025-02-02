@@ -29,6 +29,8 @@ module average_pooling_wrapper #(
         .pixels_number(pixels_number),
         .averaged_pixels_nr(averaged_pixels_nr)
     ) i_average_pooling (
+        .clk(clk),
+        .reset(reset),
         .pixels(pixels_w),
         .pixels_averaged(pixels_averaged_w)
     );
