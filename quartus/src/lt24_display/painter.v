@@ -6,9 +6,8 @@
 module painter #(
     parameter integer N_FRAMES = 2,
     parameter integer N_FRAMES_WIDTH = $clog2(N_FRAMES),
-    parameter PIXEL_NUM =  17'd76800, // Pixels number
+    parameter integer PIXEL_NUM =  76800, // Pixels number
     parameter integer PIXEL_NUM_WIDTH = $clog2(PIXEL_NUM),
-    parameter neural_network_resolution = 8,
     parameter drawing_area_side_length = 28
 )(
     input clk,
@@ -34,7 +33,7 @@ module painter #(
     input [11:0] y_pos,
 
     // Neural network interface
-    output reg [(drawing_area_side_length**2)*neural_network_resolution-1:0] neural_network_inputs,
+    output reg [(drawing_area_side_length**2)-1:0] neural_network_inputs,
 
     // Main controller interface
     input clear_display,
@@ -97,34 +96,26 @@ module painter #(
     reg [19:0] touchscreen_y;
 
     // Output ranges from touchscreen ADC
-    localparam TS_MINX = 600;
-    localparam TS_MAXX = 1500;
-    localparam TS_MINY = 2000;
-    localparam TS_MAXY = 3000;
+    localparam TS_MINX = 12'd600;
+    localparam TS_MAXX = 12'd1624;
+    localparam TS_MINY = 12'd2048;
+    localparam TS_MAXY = 12'd3072;
 
     // Map touchscreen ADC values to pixel coordinates
     always @ (*) begin
-        if (0) begin
-            touchscreen_x <= 0;
-            touchscreen_y <= 0;
-        end else if (en) begin
-            if (x_pos < TS_MINX)
-                touchscreen_x = 1'b0;
-            else if (x_pos > TS_MAXX)
-                touchscreen_x = COL_NUM - 1'b1;
-            else
-                touchscreen_x = (x_pos - TS_MINX) * (COL_NUM - 1'b1) / (TS_MAXX - TS_MINX);
-
-            if (y_pos < TS_MINY)
-                touchscreen_y = ROW_NUM - 1'b1;
-            else if (y_pos > TS_MAXY)
-                touchscreen_y = 1'b0;
-            else
-                touchscreen_y = (ROW_NUM - 1'b1) - (y_pos - TS_MINY) * (ROW_NUM - 1'b1) / (TS_MAXY - TS_MINY);
-        end else begin
-            touchscreen_x <= 21'd0;
-            touchscreen_y <= 20'd0;
-        end
+        if (x_pos < TS_MINX)
+            touchscreen_x = 1'b0;
+        else if (x_pos > TS_MAXX)
+            touchscreen_x = COL_NUM - 1'b1;
+        else
+            touchscreen_x = ((x_pos - TS_MINX) * (COL_NUM - 1'b1)) >> 11;
+            
+        if (y_pos < TS_MINY)
+            touchscreen_y = ROW_NUM - 1'b1;
+        else if (y_pos > TS_MAXY)
+            touchscreen_y = 1'b0;
+        else
+            touchscreen_y = (ROW_NUM - 1'b1) - ((y_pos - TS_MINY) * (ROW_NUM - 1'b1)) >> 11;
     end
 
     // Set frame buffer write address
@@ -143,11 +134,11 @@ module painter #(
             neural_network_inputs <= 0; // Reset inputs to 0
         else if (en)
             // Add touched pixel to the neural network inputs array
-            // as a white pixel, i.e. value set to (2**neural_network_resolution)-1.
+            // as a white pixel (1).
             // Add it only if the touch happened inside a specific drawing area.
             if (Sreg == PAINT_PIXEL && touchscreen_x >= 21'd0 && touchscreen_x <= drawing_area_side_length &&
                 touchscreen_y >= 20'd0 && touchscreen_y <= drawing_area_side_length)
-                neural_network_inputs[(touchscreen_y*COL_NUM+touchscreen_x) +: neural_network_resolution] <= (1 << neural_network_resolution) - 1'b1;
+                neural_network_inputs[touchscreen_y*COL_NUM+touchscreen_x] <= 1'b1;
             else
                 neural_network_inputs <= neural_network_inputs;
         else

@@ -38,7 +38,7 @@
 
 set_global_assignment -name FAMILY "MAX 10"
 set_global_assignment -name DEVICE 10M50DAF484C7G
-set_global_assignment -name TOP_LEVEL_ENTITY graphic
+set_global_assignment -name TOP_LEVEL_ENTITY predict_digit
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 18.1.0
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "12:58:47  NOVEMBER 11, 2024"
 set_global_assignment -name LAST_QUARTUS_VERSION "18.1.0 Lite Edition"
@@ -79,7 +79,7 @@ set_global_assignment -name EDA_SIMULATION_TOOL "ModelSim-Altera (Verilog)"
 set_global_assignment -name EDA_TIME_SCALE "1 ps" -section_id eda_simulation
 set_global_assignment -name EDA_OUTPUT_DATA_FORMAT "VERILOG HDL" -section_id eda_simulation
 set_global_assignment -name EDA_TEST_BENCH_ENABLE_STATUS TEST_BENCH_MODE -section_id eda_simulation
-set_global_assignment -name EDA_NATIVELINK_SIMULATION_TEST_BENCH average_pooling_tb -section_id eda_simulation
+set_global_assignment -name EDA_NATIVELINK_SIMULATION_TEST_BENCH predict_digit_tb -section_id eda_simulation
 set_global_assignment -name EDA_TEST_BENCH_NAME graphic_manager_tb -section_id eda_simulation
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id graphic_manager_tb
 set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME graphic_manager_tb -section_id graphic_manager_tb
@@ -110,50 +110,35 @@ set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME average_pooling_n_tb -sec
 set_global_assignment -name EDA_TEST_BENCH_NAME average_pooling_tb -section_id eda_simulation
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id average_pooling_tb
 set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME average_pooling_tb -section_id average_pooling_tb
-set_global_assignment -name EDA_TEST_BENCH_FILE ../tb/graphic_manager_tb.v -section_id graphic_manager_tb
-set_global_assignment -name EDA_TEST_BENCH_FILE ../tb/dp_ram_tb.v -section_id dp_ram_tb
-set_global_assignment -name EDA_TEST_BENCH_FILE ../tb/lt24_lcd_driver_tb.v -section_id lt24_lcd_driver_tb
-set_global_assignment -name EDA_TEST_BENCH_FILE ../tb/lt24_touchscreen_driver_tb.v -section_id lt24_touchscreen_driver_tb
-set_global_assignment -name EDA_TEST_BENCH_FILE ../tb/painter_tb.v -section_id painter_tb
-set_global_assignment -name EDA_TEST_BENCH_FILE ../tb/average_pooling_n_tb.v -section_id average_pooling_n_tb
-set_global_assignment -name EDA_TEST_BENCH_FILE ../tb/average_pooling_tb.v -section_id average_pooling_tb
-set_location_assignment PIN_C14 -to HEX0[0] -disable
-set_location_assignment PIN_E15 -to HEX0[1] -disable
-set_location_assignment PIN_C15 -to HEX0[2] -disable
-set_location_assignment PIN_C16 -to HEX0[3] -disable
-set_location_assignment PIN_E16 -to HEX0[4] -disable
-set_location_assignment PIN_D17 -to HEX0[5] -disable
-set_location_assignment PIN_C17 -to HEX0[6] -disable
-set_location_assignment PIN_B8 -to KEY[0] -disable
-set_location_assignment PIN_A7 -to KEY[1] -disable
-set_location_assignment PIN_V9 -to LT24LT24_ADC_BUSY -disable
-set_location_assignment PIN_AB2 -to LT24LT24_ADC_CS_N -disable
-set_location_assignment PIN_V8 -to LT24LT24_ADC_DCLK -disable
-set_location_assignment PIN_W9 -to LT24LT24_ADC_DIN -disable
-set_location_assignment PIN_W10 -to LT24LT24_ADC_DOUT -disable
-set_location_assignment PIN_V10 -to LT24LT24_ADC_PENIRQ_N -disable
-set_location_assignment PIN_Y7 -to LT24LT24_CS_N -disable
-set_location_assignment PIN_W6 -to LT24LT24_D[0] -disable
-set_location_assignment PIN_W7 -to LT24LT24_D[1] -disable
-set_location_assignment PIN_V7 -to LT24LT24_D[2] -disable
-set_location_assignment PIN_W8 -to LT24LT24_D[3] -disable
-set_location_assignment PIN_W13 -to LT24LT24_D[4] -disable
-set_location_assignment PIN_W12 -to LT24LT24_D[5] -disable
-set_location_assignment PIN_AB13 -to LT24LT24_D[6] -disable
-set_location_assignment PIN_AB12 -to LT24LT24_D[7] -disable
-set_location_assignment PIN_Y11 -to LT24LT24_D[8] -disable
-set_location_assignment PIN_AB11 -to LT24LT24_D[9] -disable
-set_location_assignment PIN_W11 -to LT24LT24_D[10] -disable
-set_location_assignment PIN_AB10 -to LT24LT24_D[11] -disable
-set_location_assignment PIN_AA10 -to LT24LT24_D[12] -disable
-set_location_assignment PIN_AA9 -to LT24LT24_D[13] -disable
-set_location_assignment PIN_Y8 -to LT24LT24_D[14] -disable
-set_location_assignment PIN_AA8 -to LT24LT24_D[15] -disable
-set_location_assignment PIN_AA2 -to LT24LT24_LCD_ON -disable
-set_location_assignment PIN_W5 -to LT24LT24_RD_N -disable
-set_location_assignment PIN_Y3 -to LT24LT24_RESET_N -disable
-set_location_assignment PIN_AA14 -to LT24LT24_RS -disable
-set_location_assignment PIN_AA15 -to LT24LT24_WR_N -disable
+set_location_assignment PIN_B8 -to KEY[0]
+set_location_assignment PIN_A7 -to KEY[1]
+set_location_assignment PIN_C18 -to HEX1[0]
+set_location_assignment PIN_D18 -to HEX1[1]
+set_location_assignment PIN_E18 -to HEX1[2]
+set_location_assignment PIN_B16 -to HEX1[3]
+set_location_assignment PIN_A17 -to HEX1[4]
+set_location_assignment PIN_A18 -to HEX1[5]
+set_location_assignment PIN_B17 -to HEX1[6]
+set_location_assignment PIN_A16 -to HEX1[7]
+set_global_assignment -name VERILOG_FILE ../src/neural_network/predict_digit.v
+set_global_assignment -name MIF_FILE ../python/merged_frames.mif
+set_global_assignment -name BDF_FILE ../src/handwritten_digit_recognition.bdf
+set_global_assignment -name VERILOG_FILE ../src/neural_network/signed_multiply_accumulate.v
+set_global_assignment -name VERILOG_FILE ../src/neural_network/sigmoid_layer.v
+set_global_assignment -name VERILOG_FILE ../src/neural_network/sigmoid.v
+set_global_assignment -name VERILOG_FILE ../src/neural_network/predicted_digit.v
+set_global_assignment -name VERILOG_FILE ../src/neural_network/pixels_averaging.v
+set_global_assignment -name VERILOG_FILE ../src/neural_network/neuron_wrapper.v
+set_global_assignment -name VERILOG_FILE ../src/neural_network/neuron.v
+set_global_assignment -name VERILOG_FILE ../src/neural_network/neural_network.v
+set_global_assignment -name VERILOG_FILE ../src/neural_network/MLP.v
+set_global_assignment -name VERILOG_FILE ../src/neural_network/layer.v
+set_global_assignment -name VERILOG_FILE ../src/neural_network/FW_logic_FSM.v
+set_global_assignment -name VERILOG_FILE ../src/neural_network/extract_elements.v
+set_global_assignment -name VERILOG_FILE ../src/neural_network/dff_nbit.v
+set_global_assignment -name VERILOG_FILE ../src/neural_network/comparator.v
+set_global_assignment -name VERILOG_FILE ../src/neural_network/average_pooling_wrapper.v
+set_global_assignment -name VERILOG_FILE ../src/neural_network/average_pooling.v
 set_global_assignment -name VERILOG_FILE ../src/average_pooling_n.v
 set_global_assignment -name VERILOG_FILE ../src/average_n_pixels.v
 set_global_assignment -name VERILOG_FILE ../src/seven_segment_display_driver.v
@@ -170,9 +155,62 @@ set_global_assignment -name VERILOG_FILE ../src/lt24_display/graphic_controller.
 set_global_assignment -name VERILOG_FILE ../src/lt24_display/enable_generator.v
 set_global_assignment -name VERILOG_FILE ../src/lt24_display/clk_divisor.v
 set_global_assignment -name BDF_FILE block_designs/edge_triggered_debouncer.bdf
+set_global_assignment -name BDF_FILE block_designs/rising_edge_detector.bdf
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HEX1[0]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HEX1[1]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HEX1[2]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HEX1[3]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HEX1[4]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HEX1[5]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HEX1[6]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HEX1[7]
+set_instance_assignment -name IO_STANDARD "3.3 V SCHMITT TRIGGER" -to KEY[0]
+set_instance_assignment -name IO_STANDARD "3.3 V SCHMITT TRIGGER" -to KEY[1]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to MAX10_CLK1_50
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HEX1
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_ADC_BUSY
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_ADC_CS_N
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_ADC_DCLK
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_ADC_DIN
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_ADC_DOUT
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_ADC_PENIRQ_N
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_CS_N
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_D[15]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_D[14]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_D[13]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_D[12]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_D[11]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_D[10]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_D[9]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_D[8]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_D[7]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_D[6]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_D[5]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_D[4]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_D[3]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_D[2]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_D[1]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_D[0]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_RD_N
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_LCD_ON
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_RESET_N
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_RS
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_WR_N
+set_global_assignment -name EDA_TEST_BENCH_NAME predict_digit_tb -section_id eda_simulation
+set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id predict_digit_tb
+set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME predict_digit_tb -section_id predict_digit_tb
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
 set_global_assignment -name LL_ROOT_REGION ON -section_id "Root Region"
 set_global_assignment -name LL_MEMBER_STATE LOCKED -section_id "Root Region"
+set_global_assignment -name SDC_FILE sdc_files/predict_digit.sdc
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
+set_global_assignment -name EDA_TEST_BENCH_FILE ../tb/graphic_manager_tb.v -section_id graphic_manager_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE ../tb/dp_ram_tb.v -section_id dp_ram_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE ../tb/lt24_lcd_driver_tb.v -section_id lt24_lcd_driver_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE ../tb/lt24_touchscreen_driver_tb.v -section_id lt24_touchscreen_driver_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE ../tb/painter_tb.v -section_id painter_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE ../tb/average_pooling_n_tb.v -section_id average_pooling_n_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE ../tb/average_pooling_tb.v -section_id average_pooling_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE ../tb/predict_digit_tb.v -section_id predict_digit_tb

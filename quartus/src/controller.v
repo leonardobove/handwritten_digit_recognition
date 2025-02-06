@@ -8,11 +8,10 @@ module controller (
     input clk,
     input en,
     input reset,
-    input button1,
-    input button2,
+    input button,
 
     // Seven segments display interface
-    output [3:0] output_digit,
+    output reg [3:0] output_digit,
 
     // Graphics interface
     input graphic_driver_initialized,
@@ -52,12 +51,12 @@ module controller (
             predicted_digit_reg <= predicted_digit_reg;
 
     // Seven segments display. When predicted digit is ready, display it, as long as the current state
-    // is DISPLAY_DIGIT. Otherwise, keep all LEDs turned off.
-    assign output_digit = (Sreg == DISPLAY_DIGIT) ? predicted_digit_reg : 4'd10; // 4'd10 corresponds to all the LEDs turned off
+    // is DISPLAY_DIGIT. Otherwise, keep all LEDs turned off, except for the decimal point.
+    assign output_digit = (Sreg == DISPLAY_DIGIT) ? predicted_digit_reg : 4'd10; // 4'd10 corresponds to only the decimal point LED turned on
 
     // Update current state
     always @ (posedge clk)
-        if (reset)
+        if (~reset)
             Sreg <= RESET;
         else
             if (en)
@@ -69,29 +68,19 @@ module controller (
     always @ (*)
         case (Sreg)
             RESET:
-                if (graphic_driver_initialized)
-                    Snext = CLEAR_DISPLAY_START;
-                else
-                    Snext = RESET;
+                Snext = CLEAR_DISPLAY_WAIT;
 
             CLEAR_DISPLAY_START:
-                if (button2)
-                    Snext = RESET;
-                else
-                    Snext = CLEAR_DISPLAY_WAIT;
+                Snext = CLEAR_DISPLAY_WAIT;
 
             CLEAR_DISPLAY_WAIT:
-                if (button2)
-                    Snext = RESET;
-                else if (painter_ready)
+                if (painter_ready)
                     Snext = IDLE;
                 else
                     Snext = CLEAR_DISPLAY_WAIT;
 
             IDLE:
-                if (button2)
-                    Snext = RESET;
-                else if (button1)
+                if (button)
                     Snext = FORWARD_STEP;
                 else
                     Snext = IDLE;
@@ -99,15 +88,11 @@ module controller (
             FORWARD_STEP:
                 if (neural_network_done)
                     Snext = DISPLAY_DIGIT;
-                else if (button2)
-                    Snext = RESET;
                 else
                     Snext = FORWARD_STEP;
 
             DISPLAY_DIGIT:
-                if (button2)
-                    Snext = RESET;
-                else if (button2)
+                if (button)
                     Snext = CLEAR_DISPLAY_START;
                 else
                     Snext = DISPLAY_DIGIT;
@@ -119,7 +104,7 @@ module controller (
         case (Sreg)
             RESET: begin
                 enable_neural_network = 1'b0;
-                enable_graphics = 1'b0;
+                enable_graphics = 1'b1;
                 reset_neural_network = 1'b1;
                 reset_display = 1'b1;
                 clear_display = 1'b1;
@@ -151,7 +136,6 @@ module controller (
                 reset_display = 1'b0;
                 clear_display = 1'b0;
                 start_neural_network = 1'b0;
-
             end
 
             FORWARD_STEP: begin

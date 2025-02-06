@@ -20,7 +20,7 @@ refer to the applicable agreement for further details.
 */
 (header "symbol" (version "1.2"))
 (symbol
-	(rect 64 64 664 272)
+	(rect 64 64 600 272)
 	(text "painter" (rect 5 0 38 12)(font "Arial" ))
 	(text "inst" (rect 8 192 25 204)(font "Arial" ))
 	(port
@@ -52,18 +52,18 @@ refer to the applicable agreement for further details.
 		(line (pt 0 80)(pt 16 80)(line_width 3))
 	)
 	(port
-		(pt 600 184)
+		(pt 536 184)
 		(input)
 		(text "rom_q" (rect 0 0 30 12)(font "Arial" ))
-		(text "rom_q" (rect 545 176 575 188)(font "Arial" ))
-		(line (pt 584 184)(pt 600 184))
+		(text "rom_q" (rect 481 176 511 188)(font "Arial" ))
+		(line (pt 520 184)(pt 536 184))
 	)
 	(port
-		(pt 600 144)
+		(pt 536 144)
 		(input)
 		(text "initialized" (rect 0 0 43 12)(font "Arial" ))
-		(text "initialized" (rect 532 136 575 148)(font "Arial" ))
-		(line (pt 584 144)(pt 600 144))
+		(text "initialized" (rect 468 136 511 148)(font "Arial" ))
+		(line (pt 520 144)(pt 536 144))
 	)
 	(port
 		(pt 0 128)
@@ -94,46 +94,46 @@ refer to the applicable agreement for further details.
 		(line (pt 0 96)(pt 16 96))
 	)
 	(port
-		(pt 600 168)
+		(pt 536 168)
 		(output)
 		(text "rom_addr[PIXEL_NUM_WIDTH+N_FRAMES_WIDTH-1..0]" (rect 0 0 285 12)(font "Arial" ))
-		(text "rom_addr[PIXEL_NUM_WIDTH+N_FRAMES_WIDTH-1..0]" (rect 338 163 623 175)(font "Arial" ))
-		(line (pt 600 168)(pt 584 168)(line_width 3))
+		(text "rom_addr[PIXEL_NUM_WIDTH+N_FRAMES_WIDTH-1..0]" (rect 274 163 515 175)(font "Arial" ))
+		(line (pt 536 168)(pt 520 168)(line_width 3))
 	)
 	(port
-		(pt 600 64)
+		(pt 536 64)
 		(output)
 		(text "ram_data" (rect 0 0 46 12)(font "Arial" ))
-		(text "ram_data" (rect 541 59 587 71)(font "Arial" ))
-		(line (pt 600 64)(pt 584 64))
+		(text "ram_data" (rect 477 59 515 71)(font "Arial" ))
+		(line (pt 536 64)(pt 520 64))
 	)
 	(port
-		(pt 600 80)
+		(pt 536 80)
 		(output)
 		(text "ram_write_addr[PIXEL_NUM_WIDTH-1..0]" (rect 0 0 206 12)(font "Arial" ))
-		(text "ram_write_addr[PIXEL_NUM_WIDTH-1..0]" (rect 384 72 590 84)(font "Arial" ))
-		(line (pt 600 80)(pt 584 80)(line_width 3))
+		(text "ram_write_addr[PIXEL_NUM_WIDTH-1..0]" (rect 341 75 515 87)(font "Arial" ))
+		(line (pt 536 80)(pt 520 80)(line_width 3))
 	)
 	(port
-		(pt 600 96)
+		(pt 536 96)
 		(output)
 		(text "ram_write_en" (rect 0 0 64 12)(font "Arial" ))
-		(text "ram_write_en" (rect 525 91 589 103)(font "Arial" ))
-		(line (pt 600 96)(pt 584 96))
+		(text "ram_write_en" (rect 461 91 515 103)(font "Arial" ))
+		(line (pt 536 96)(pt 520 96))
 	)
 	(port
-		(pt 600 48)
+		(pt 536 48)
 		(output)
-		(text "neural_network_inputs[drawing_area_side_length**2*neural_network_resolution-1..0]" (rect 0 0 409 12)(font "Arial" ))
-		(text "neural_network_inputs[drawing_area_side_length**2*neural_network_resolution-1..0]" (rect 233 43 642 55)(font "Arial" ))
-		(line (pt 600 48)(pt 584 48)(line_width 3))
+		(text "neural_network_inputs[drawing_area_side_length**2-1..0]" (rect 0 0 278 12)(font "Arial" ))
+		(text "neural_network_inputs[drawing_area_side_length**2-1..0]" (rect 280 43 515 55)(font "Arial" ))
+		(line (pt 536 48)(pt 520 48)(line_width 3))
 	)
 	(port
-		(pt 600 32)
+		(pt 536 32)
 		(output)
 		(text "painter_ready" (rect 0 0 67 12)(font "Arial" ))
-		(text "painter_ready" (rect 523 27 590 39)(font "Arial" ))
-		(line (pt 600 32)(pt 584 32))
+		(text "painter_ready" (rect 459 27 515 39)(font "Arial" ))
+		(line (pt 536 32)(pt 520 32))
 	)
 	(parameter
 		"N_FRAMES"
@@ -147,17 +147,12 @@ refer to the applicable agreement for further details.
 		(type "PARAMETER_SIGNED_DEC")	)
 	(parameter
 		"PIXEL_NUM"
-		"10010110000000000"
-		""
-		(type "PARAMETER_UNSIGNED_BIN")	)
-	(parameter
-		"PIXEL_NUM_WIDTH"
-		""
+		"76800"
 		""
 		(type "PARAMETER_SIGNED_DEC")	)
 	(parameter
-		"neural_network_resolution"
-		"8"
+		"PIXEL_NUM_WIDTH"
+		""
 		""
 		(type "PARAMETER_SIGNED_DEC")	)
 	(parameter
@@ -166,7 +161,7 @@ refer to the applicable agreement for further details.
 		""
 		(type "PARAMETER_SIGNED_DEC")	)
 	(drawing
-		(rectangle (rect 16 16 584 192))
+		(rectangle (rect 16 16 520 192))
 	)
-	(annotation_block (parameter)(rect 664 -72 1024 64))
+	(annotation_block (parameter)(rect 552 -104 816 16))
 )

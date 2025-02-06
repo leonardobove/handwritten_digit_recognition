@@ -9,6 +9,14 @@ quartus/quartus_project/.qsys_edit/
 **/*.summary
 **/.vscode/
 **/*.bak
+**/*.log
+**/*.htm
+**/*.cdf
+**/*.pin
+**/*.jdi
+**/*.sld
+**/*.pof
+**/*.sof
 python/bin/
 python/include/
 python/lib/

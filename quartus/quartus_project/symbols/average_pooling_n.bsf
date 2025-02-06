@@ -20,7 +20,7 @@ refer to the applicable agreement for further details.
 */
 (header "symbol" (version "1.2"))
 (symbol
-	(rect 64 64 592 176)
+	(rect 64 64 640 176)
 	(text "average_pooling_n" (rect 5 0 97 12)(font "Arial" ))
 	(text "inst" (rect 8 96 25 108)(font "Arial" ))
 	(port
@@ -34,25 +34,30 @@ refer to the applicable agreement for further details.
 		(pt 0 48)
 		(input)
 		(text "reset" (rect 0 0 24 12)(font "Arial" ))
-		(text "reset" (rect 21 43 45 55)(font "Arial" ))
+		(text "reset" (rect 24 40 48 52)(font "Arial" ))
 		(line (pt 0 48)(pt 16 48))
 	)
 	(port
-		(pt 528 32)
+		(pt 576 48)
 		(input)
-		(text "input_pixels[input_matrix_side_length**2*resolution-1..0]" (rect 0 0 276 12)(font "Arial" ))
-		(text "input_pixels[input_matrix_side_length**2*resolution-1..0]" (rect 248 24 524 36)(font "Arial" ))
-		(line (pt 512 32)(pt 528 32)(line_width 3))
+		(text "input_pixels[input_resolution*input_matrix_side_length**2-1..0]" (rect 0 0 305 12)(font "Arial" ))
+		(text "input_pixels[input_resolution*input_matrix_side_length**2-1..0]" (rect 264 40 569 52)(font "Arial" ))
+		(line (pt 560 48)(pt 576 48)(line_width 3))
 	)
 	(port
-		(pt 0 64)
+		(pt 0 72)
 		(output)
-		(text "output_pixels[output_matrix_side_length**2*resolution-1..0]" (rect 0 0 290 12)(font "Arial" ))
-		(text "output_pixels[output_matrix_side_length**2*resolution-1..0]" (rect 24 56 314 68)(font "Arial" ))
-		(line (pt 16 64)(pt 0 64)(line_width 3))
+		(text "output_pixels[output_matrix_side_length**2*output_resolution-1..0]" (rect 0 0 326 12)(font "Arial" ))
+		(text "output_pixels[output_matrix_side_length**2*output_resolution-1..0]" (rect 24 64 350 76)(font "Arial" ))
+		(line (pt 16 72)(pt 0 72)(line_width 3))
 	)
 	(parameter
-		"resolution"
+		"input_resolution"
+		"1"
+		""
+		(type "PARAMETER_SIGNED_DEC")	)
+	(parameter
+		"output_resolution"
 		"8"
 		""
 		(type "PARAMETER_SIGNED_DEC")	)
@@ -72,7 +77,7 @@ refer to the applicable agreement for further details.
 		""
 		(type "PARAMETER_SIGNED_DEC")	)
 	(drawing
-		(rectangle (rect 16 16 512 96))
+		(rectangle (rect 16 16 560 96))
 	)
-	(annotation_block (parameter)(rect 544 -80 808 16))
+	(annotation_block (parameter)(rect 640 -56 904 64))
 )

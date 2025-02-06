@@ -18,26 +18,33 @@ the sole purpose of programming logic devices manufactured by
 Intel and sold by Intel or its authorized distributors.  Please
 refer to the applicable agreement for further details.
 */
-(header "symbol" (version "1.1"))
+(header "symbol" (version "1.2"))
 (symbol
-	(rect 16 16 184 96)
-	(text "seven_segment_display_driver" (rect 5 0 132 12)(font "Arial" ))
-	(text "inst" (rect 8 64 20 76)(font "Arial" ))
+	(rect 16 16 136 112)
+	(text "rising_edge_detector" (rect 5 0 130 19)(font "Intel Clear" (font_size 8)))
+	(text "inst" (rect 8 75 24 92)(font "Intel Clear" ))
 	(port
 		(pt 0 32)
 		(input)
-		(text "digit[3..0]" (rect 0 0 34 12)(font "Arial" ))
-		(text "digit[3..0]" (rect 21 27 55 39)(font "Arial" ))
-		(line (pt 0 32)(pt 16 32)(line_width 3))
+		(text "input" (rect 0 0 30 19)(font "Intel Clear" (font_size 8)))
+		(text "input" (rect 21 27 51 46)(font "Intel Clear" (font_size 8)))
+		(line (pt 0 32)(pt 16 32))
 	)
 	(port
-		(pt 168 32)
+		(pt 0 48)
+		(input)
+		(text "clk" (rect 0 0 16 19)(font "Intel Clear" (font_size 8)))
+		(text "clk" (rect 21 43 37 62)(font "Intel Clear" (font_size 8)))
+		(line (pt 0 48)(pt 16 48))
+	)
+	(port
+		(pt 120 32)
 		(output)
-		(text "seg[7..0]" (rect 0 0 34 12)(font "Arial" ))
-		(text "seg[7..0]" (rect 113 27 147 39)(font "Arial" ))
-		(line (pt 168 32)(pt 152 32)(line_width 3))
+		(text "output" (rect 0 0 38 19)(font "Intel Clear" (font_size 8)))
+		(text "output" (rect 61 27 99 46)(font "Intel Clear" (font_size 8)))
+		(line (pt 120 32)(pt 104 32))
 	)
 	(drawing
-		(rectangle (rect 16 16 152 64)(line_width 1))
+		(rectangle (rect 16 16 104 80))
 	)
 )
