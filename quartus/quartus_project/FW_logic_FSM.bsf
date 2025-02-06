@@ -20,7 +20,7 @@ refer to the applicable agreement for further details.
 */
 (header "symbol" (version "1.2"))
 (symbol
-	(rect 64 64 376 208)
+	(rect 64 64 432 208)
 	(text "FW_logic_FSM" (rect 5 0 79 12)(font "Arial" ))
 	(text "inst" (rect 8 128 25 140)(font "Arial" ))
 	(port
@@ -34,7 +34,7 @@ refer to the applicable agreement for further details.
 		(pt 0 80)
 		(input)
 		(text "reset" (rect 0 0 24 12)(font "Arial" ))
-		(text "reset" (rect 24 72 48 84)(font "Arial" ))
+		(text "reset" (rect 21 75 45 87)(font "Arial" ))
 		(line (pt 0 80)(pt 16 80))
 	)
 	(port
@@ -45,11 +45,11 @@ refer to the applicable agreement for further details.
 		(line (pt 0 64)(pt 16 64))
 	)
 	(port
-		(pt 312 112)
+		(pt 368 112)
 		(input)
-		(text "pixels[pixels_number*resolution-1..0]" (rect 0 0 180 12)(font "Arial" ))
-		(text "pixels[pixels_number*resolution-1..0]" (rect 107 104 287 116)(font "Arial" ))
-		(line (pt 296 112)(pt 312 112)(line_width 3))
+		(text "averaged_pixels[pixels_averaged_nr*WIDTH-1..0]" (rect 0 0 246 12)(font "Arial" ))
+		(text "averaged_pixels[pixels_averaged_nr*WIDTH-1..0]" (rect 120 104 366 116)(font "Arial" ))
+		(line (pt 352 112)(pt 368 112)(line_width 3))
 	)
 	(port
 		(pt 0 48)
@@ -59,36 +59,31 @@ refer to the applicable agreement for further details.
 		(line (pt 0 48)(pt 16 48))
 	)
 	(port
-		(pt 312 48)
+		(pt 368 48)
 		(output)
-		(text "predicted_digit[3..0]" (rect 0 0 96 12)(font "Arial" ))
-		(text "predicted_digit[3..0]" (rect 210 43 306 55)(font "Arial" ))
-		(line (pt 312 48)(pt 296 48)(line_width 3))
+		(text "predict_digit[3..0]" (rect 0 0 84 12)(font "Arial" ))
+		(text "predict_digit[3..0]" (rect 276 43 347 55)(font "Arial" ))
+		(line (pt 368 48)(pt 352 48)(line_width 3))
 	)
 	(port
-		(pt 312 32)
+		(pt 368 32)
 		(output)
 		(text "done" (rect 0 0 23 12)(font "Arial" ))
-		(text "done" (rect 272 27 295 39)(font "Arial" ))
-		(line (pt 312 32)(pt 296 32))
+		(text "done" (rect 328 27 347 39)(font "Arial" ))
+		(line (pt 368 32)(pt 352 32))
 	)
-	(parameter
-		"pixels_number"
-		"784"
-		""
-		(type "PARAMETER_SIGNED_DEC")	)
 	(parameter
 		"pixels_averaged_nr"
 		"196"
 		""
 		(type "PARAMETER_SIGNED_DEC")	)
 	(parameter
-		"resolution"
+		"WIDTH"
 		"8"
 		""
 		(type "PARAMETER_SIGNED_DEC")	)
 	(drawing
-		(rectangle (rect 16 16 296 128))
+		(rectangle (rect 16 16 352 128))
 	)
-	(annotation_block (parameter)(rect 376 -16 592 64))
+	(annotation_block (parameter)(rect 384 -48 600 16))
 )

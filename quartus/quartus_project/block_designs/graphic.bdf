@@ -319,22 +319,6 @@ refer to the applicable agreement for further details.
 )
 (pin
 	(output)
-	(rect 1536 264 1750 280)
-	(text "OUTPUT" (rect 1 0 39 10)(font "Arial" (font_size 6)))
-	(text "graphic_driver_initialized" (rect 90 0 208 17)(font "Intel Clear" ))
-	(pt 0 8)
-	(drawing
-		(line (pt 0 8)(pt 52 8))
-		(line (pt 52 4)(pt 78 4))
-		(line (pt 52 12)(pt 78 12))
-		(line (pt 52 12)(pt 52 4))
-		(line (pt 78 4)(pt 82 8))
-		(line (pt 82 8)(pt 78 12))
-		(line (pt 78 12)(pt 82 8))
-	)
-)
-(pin
-	(output)
 	(rect 1016 -112 1192 -96)
 	(text "OUTPUT" (rect 1 0 39 10)(font "Arial" (font_size 6)))
 	(text "painter_ready" (rect 90 0 157 12)(font "Arial" ))
@@ -1381,10 +1365,6 @@ refer to the applicable agreement for further details.
 	(pt 1424 272)
 )
 (connector
-	(pt 1424 272)
-	(pt 1536 272)
-)
-(connector
 	(pt 1360 112)
 	(pt 1536 112)
 )
@@ -1498,4 +1478,3 @@ refer to the applicable agreement for further details.
 (junction (pt -400 144))
 (junction (pt -488 176))
 (junction (pt 136 -176))
-(junction (pt 1424 272))

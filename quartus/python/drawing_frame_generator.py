@@ -1,7 +1,7 @@
 # Set the dimensions for the memory array
 rows = 240
 columns = 320
-side_length = 28*8
+side_length = 14*8
 border_thickness = 1
 
 # Top-left corner of the square (now at (0,0))

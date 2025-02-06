@@ -11,14 +11,19 @@ module controller (
     input button,
 
     // Seven segments display interface
-    output reg [3:0] output_digit,
+    output [3:0] output_digit,
 
     // Graphics interface
-    input graphic_driver_initialized,
     input painter_ready,
     output reg clear_display,
     output reg reset_display,
     output reg enable_graphics,
+
+    // Average pooling interface
+    output reg start_average_pooling,
+    output reg enable_average_pooling,
+    output reg reset_average_pooling,
+    input average_pooling_done,
 
     // Neural network interface
     output reg start_neural_network,
@@ -29,30 +34,22 @@ module controller (
 );
 
     // FSM States
-    localparam RESET               = 3'd0,
-               CLEAR_DISPLAY_START = 3'd1,
-               CLEAR_DISPLAY_WAIT  = 3'd2,
-               IDLE                = 3'd3,
-               FORWARD_STEP        = 3'd4,
-               DISPLAY_DIGIT       = 3'd5;
+    localparam RESET                 = 4'd0,
+               CLEAR_DISPLAY_START   = 4'd1,
+               CLEAR_DISPLAY_WAIT    = 4'd2,
+               IDLE                  = 4'd3,
+               AVERAGE_POOLING_START = 4'd4, 
+               AVERAGE_POOLING_WAIT  = 4'd5,
+               NEURAL_NETWORK_START  = 4'd6,
+               NEURAL_NETWORK_WAIT   = 4'd7,
+               DISPLAY_DIGIT         = 4'd8;
 
     // Current state and future state
-    reg [2:0] Sreg, Snext;
-
-    // Sample output predicted digit from the neural network.
-    // The digit is valid when neural_network_done is active.
-    reg [3:0] predicted_digit_reg;
-    always @ (posedge clk)
-        if (reset)
-            predicted_digit_reg <= 0;
-        else if (en && neural_network_done)
-            predicted_digit_reg <= predicted_digit;
-        else
-            predicted_digit_reg <= predicted_digit_reg;
+    reg [3:0] Sreg, Snext;
 
     // Seven segments display. When predicted digit is ready, display it, as long as the current state
     // is DISPLAY_DIGIT. Otherwise, keep all LEDs turned off, except for the decimal point.
-    assign output_digit = (Sreg == DISPLAY_DIGIT) ? predicted_digit_reg : 4'd10; // 4'd10 corresponds to only the decimal point LED turned on
+    assign output_digit = (Sreg == DISPLAY_DIGIT) ? predicted_digit : 4'd10; // 4'd10 corresponds to only the decimal point LED turned on
 
     // Update current state
     always @ (posedge clk)
@@ -81,15 +78,27 @@ module controller (
 
             IDLE:
                 if (button)
-                    Snext = FORWARD_STEP;
+                    Snext = AVERAGE_POOLING_START;
                 else
                     Snext = IDLE;
 
-            FORWARD_STEP:
+            AVERAGE_POOLING_START:
+                Snext = AVERAGE_POOLING_WAIT;
+
+            AVERAGE_POOLING_WAIT:
+                if (average_pooling_done)
+                    Snext = NEURAL_NETWORK_START;
+                else
+                    Snext = AVERAGE_POOLING_WAIT;
+
+            NEURAL_NETWORK_START:
+                Snext = NEURAL_NETWORK_WAIT;
+
+            NEURAL_NETWORK_WAIT:
                 if (neural_network_done)
                     Snext = DISPLAY_DIGIT;
                 else
-                    Snext = FORWARD_STEP;
+                    Snext = NEURAL_NETWORK_WAIT;
 
             DISPLAY_DIGIT:
                 if (button)
@@ -104,65 +113,142 @@ module controller (
         case (Sreg)
             RESET: begin
                 enable_neural_network = 1'b0;
-                enable_graphics = 1'b1;
+                enable_graphics = 1'b0;
+                enable_average_pooling = 1'b0;
+
                 reset_neural_network = 1'b1;
                 reset_display = 1'b1;
+                reset_average_pooling = 1'b1;
+
                 clear_display = 1'b1;
                 start_neural_network = 1'b0;
+                start_average_pooling = 1'b0;
             end
 
             CLEAR_DISPLAY_START: begin
                 enable_neural_network = 1'b0;
                 enable_graphics = 1'b1;
+                enable_average_pooling = 1'b0;
+
                 reset_neural_network = 1'b1;
                 reset_display = 1'b0;
+                reset_average_pooling = 1'b1;
+
                 clear_display = 1'b1;
                 start_neural_network = 1'b0;
+                start_average_pooling = 1'b0;
             end
 
             CLEAR_DISPLAY_WAIT: begin
                 enable_neural_network = 1'b0;
                 enable_graphics = 1'b1;
+                enable_average_pooling = 1'b0;
+
                 reset_neural_network = 1'b1;
                 reset_display = 1'b0;
+                reset_average_pooling = 1'b1;
+
                 clear_display = 1'b0;
                 start_neural_network = 1'b0;
+                start_average_pooling = 1'b0;
             end
 
             IDLE: begin
                 enable_neural_network = 1'b0;
                 enable_graphics = 1'b1;
+                enable_average_pooling = 1'b0;
+
                 reset_neural_network = 1'b1;
                 reset_display = 1'b0;
+                reset_average_pooling = 1'b1;
+
                 clear_display = 1'b0;
                 start_neural_network = 1'b0;
+                start_average_pooling = 1'b0;
             end
 
-            FORWARD_STEP: begin
+            AVERAGE_POOLING_START: begin
+                enable_neural_network = 1'b0;
+                enable_graphics = 1'b0;
+                enable_average_pooling = 1'b1;
+
+                reset_neural_network = 1'b1;
+                reset_display = 1'b0;
+                reset_average_pooling = 1'b0;
+
+                clear_display = 1'b0;
+                start_neural_network = 1'b0;
+                start_average_pooling = 1'b1;
+            end
+
+            AVERAGE_POOLING_WAIT: begin
+                enable_neural_network = 1'b0;
+                enable_graphics = 1'b0;
+                enable_average_pooling = 1'b1;
+
+                reset_neural_network = 1'b1;
+                reset_display = 1'b0;
+                reset_average_pooling = 1'b0;
+
+                clear_display = 1'b0;
+                start_neural_network = 1'b0;
+                start_average_pooling = 1'b0;
+            end
+
+            NEURAL_NETWORK_START: begin
                 enable_neural_network = 1'b1;
                 enable_graphics = 1'b0;
+                enable_average_pooling = 1'b0;
+
                 reset_neural_network = 1'b0;
                 reset_display = 1'b0;
+                reset_average_pooling = 1'b0;
+
                 clear_display = 1'b0;
                 start_neural_network = 1'b1;
+                start_average_pooling = 1'b0;
+            end
+
+            NEURAL_NETWORK_WAIT: begin
+                enable_neural_network = 1'b1;
+                enable_graphics = 1'b0;
+                enable_average_pooling = 1'b0;
+
+                reset_neural_network = 1'b0;
+                reset_display = 1'b0;
+                reset_average_pooling = 1'b0;
+
+                clear_display = 1'b0;
+                start_neural_network = 1'b0;
+                start_average_pooling = 1'b0;
             end
 
             DISPLAY_DIGIT: begin
                 enable_neural_network = 1'b0;
                 enable_graphics = 1'b0;
+                enable_average_pooling = 1'b0;
+
                 reset_neural_network = 1'b0;
                 reset_display = 1'b0;
+                reset_average_pooling = 1'b0;
+
                 clear_display = 1'b0;
                 start_neural_network = 1'b0;
+                start_average_pooling = 1'b0;
             end
 
             default: begin
                 enable_neural_network = 1'b0;
                 enable_graphics = 1'b0;
+                enable_average_pooling = 1'b0;
+
                 reset_neural_network = 1'b1;
                 reset_display = 1'b1;
+                reset_average_pooling = 1'b1;
+
                 clear_display = 1'b1;
                 start_neural_network = 1'b0;
+                start_average_pooling = 1'b0;
             end
 
         endcase

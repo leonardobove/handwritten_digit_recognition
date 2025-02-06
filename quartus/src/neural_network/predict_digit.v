@@ -19,7 +19,7 @@ reg [3:0] max_step1, max_step1_reg, max_step2, max_step2_reg, max_step3, max_ste
 reg done_step0_reg, done_step1_reg, done_step2_reg, done_step3_reg;
 integer i;
 
-assign predicted_digit = max_step3_reg;
+assign predicted_digit = 4'd9 - max_step3_reg;
 assign done = done_step3_reg;
 
 // Sample input data

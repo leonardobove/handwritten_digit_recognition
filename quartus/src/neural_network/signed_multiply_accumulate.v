@@ -1,16 +1,18 @@
 // Signed multiply-accumulate
 
-module signed_multiply_accumulate
-#(parameter WIDTH=8, input_data_size = 1)
-(
+module signed_multiply_accumulate #(
+	parameter WIDTH_A = 32,
+	parameter WIDTH_B = 8,
+	parameter WIDTH_OUT = 32
+	)(
 	input clk, aclr, clken, sload,
-	input signed [WIDTH-1:0] dataa,
-	input signed [WIDTH-1:0] datab,
-	output reg signed [2*WIDTH+$clog2(input_data_size):0] adder_out
-);
+	input signed [WIDTH_A-1:0] dataa,
+	input signed [WIDTH_B-1:0] datab,
+	output reg signed [WIDTH_OUT-1:0] adder_out
+	);
 
-	reg	 signed [2*WIDTH+$clog2(input_data_size):0] old_result;
-	wire signed [2*WIDTH-1:0] multa;
+	reg	 signed [WIDTH_OUT-1:0] old_result;
+	wire signed [WIDTH_OUT-1:0] multa;
 
 	// Store the results of the operations on the current data
 	assign multa = dataa * datab;

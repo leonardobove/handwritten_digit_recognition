@@ -1,91 +1,63 @@
 module neuron #(
-    parameter input_data_size = 1,
-    parameter resolution = 8,
-    parameter input_data_size_width = ($clog2(input_data_size))
+    parameter IN_SIZE = 196,
+    parameter WIDTH = 8,
+    parameter WIDTH_IN = 8,
+    parameter WIDTH_OUT = 32
 )(
-    input clk,                   // Clock signal
-    input reset,                 // Reset signal
-    input neuron_go,             // Start signal to begin processing
-    input [resolution*input_data_size-1:0] input_data, // Flattened input data
-    input [resolution*input_data_size-1:0] weight,     // Flattened weights
-    input signed [resolution-1:0] bias,               // Bias input
-    output reg neuron_done,
-    output signed [resolution-1:0] output_neuron // Output neuron value
+    input clk,                                     // Clock signal
+    input reset,                                   // Reset signal
+    input neuron_go,                               // Start signal to begin processing
+    input [WIDTH_IN*IN_SIZE-1:0] in_data,          // Flattened input data
+    input [WIDTH*IN_SIZE-1:0] weight,              // Flattened weights
+    input signed [WIDTH-1:0] bias,                 // Bias input
+    output signed [WIDTH_OUT-1:0] output_neuron,   // Output neuron value
+    output neuron_done
 );
 
     // FSM States
-    localparam IDLE = 3'b000;
-    localparam LOAD = 3'b001;
-    localparam MAC  = 3'b010;
-    localparam WAIT = 3'b011;
-    localparam OUTPUT = 3'b100;
+    localparam IDLE = 2'b00;
+    localparam MAC  = 2'b01;
+    localparam OUTPUT = 2'b10;
 
-    reg [resolution*input_data_size-1:0] input_data_intern;
-
-    reg [2:0] current_state, next_state;
-    reg [input_data_size_width-1:0] index; // Counter for input/weight processing
+    reg [1:0] current_state, next_state;
     reg mac_clken, mac_sload;
-    reg count_en, count_reset; 
-    reg extract_en;
+    reg count_en, count_reset;
 
-    wire signed [resolution-1:0] input_data_element, weight_element;
-    wire signed [2*resolution+input_data_size_width:0] mac_result;
-    wire [input_data_size_width-1:0] count_element;
+    wire signed [WIDTH_OUT-1:0] mac_result;
+    wire [$clog2(IN_SIZE)-1:0] index;
 
-    reg signed [2*resolution+input_data_size_width:0] output_neuron_intern;
-    wire signed [resolution+input_data_size_width:0] shifted_output = output_neuron_intern >>> 8;
-    wire signed [resolution+input_data_size_width:0] output_neuron_temp;
-
-    // Input-weight extraction module instance
-    extract_elements #(
-        .resolution(resolution),
-        .input_data_size(input_data_size)
-    ) extract_inst (
-        .clk(clk),
-        .extract_en(extract_en),
-        .index(count_element),
-        .input_data(input_data_intern),
-        .weight(weight),
-        .input_data_element(input_data_element),
-        .weight_element(weight_element)
-    );
+    assign neuron_done = (current_state == OUTPUT);
+    assign output_neuron = (current_state == OUTPUT) ? mac_result + {{24{bias[7]}}, bias[7:0]} : 32'd0;
 
     // MAC module instance
     signed_multiply_accumulate #(
-        .WIDTH(resolution),
-        .input_data_size(input_data_size)
+        .WIDTH_A(WIDTH_IN),
+        .WIDTH_B(WIDTH),
+        .WIDTH_OUT(WIDTH_OUT)
     ) mac_inst (
         .clk(clk),
         .aclr(reset),
         .clken(mac_clken),
         .sload(mac_sload),
-        .dataa(input_data_element),
-        .datab(weight_element),
+        .dataa(in_data[(index+1)*WIDTH_IN-1 -: WIDTH_IN]),
+        .datab(weight[(index+1)*WIDTH-1 -: WIDTH]),
         .adder_out(mac_result)
     );
 
-    // Counter instance for tracking input/weight elements
     counter #(
-        .MAX_VALUE(input_data_size)
+        .MAX_VALUE(IN_SIZE)
     ) count_input_data_element (
         .clk(clk),
         .en(count_en),
         .reset(count_reset),
-        .count(count_element)
+        .count(index)
     );
-
-    always @(posedge clk) begin
-        if (neuron_go)
-            input_data_intern <= input_data;
-        else 
-            input_data_intern <= input_data_intern;
-    end
 
     // FSM: State Transitions
     always @(posedge clk) begin
         if (reset) 
             current_state <= IDLE;
-        else 
+        else
             current_state <= next_state;
     end
 
@@ -95,21 +67,15 @@ module neuron #(
         case (current_state)
             IDLE:
                 if (neuron_go)
-                    next_state = LOAD;
+                    next_state = MAC;
 
-            LOAD:
-                next_state = MAC;
-
-            MAC:  
-                if (count_element == input_data_size - 1)
-                    next_state = WAIT;  // Move to WAIT after processing all inputs
+            MAC:
+                if (index == IN_SIZE-1)
+                    next_state = OUTPUT;  // Move to WAIT after processing all inputs
                 else
-                    next_state = LOAD; // Continue loading
+                    next_state = MAC; // Continue loading
 
-            WAIT:
-                next_state = OUTPUT;
-
-            OUTPUT:
+            OUTPUT:  
                 next_state = IDLE;
 
             default:
@@ -117,73 +83,36 @@ module neuron #(
         endcase
     end
 
-    // FSM: Output Control Logic
-    always @(*) begin
+    //Output Assignment
+    always @(current_state) begin
         // Default signal values
         mac_clken = 1'b0;
         mac_sload = 1'b1;
         count_en = 1'b0;
-        count_reset = 1'b0;
-        extract_en = 1'b0;
-
+        
         case (current_state)
             IDLE: begin
+                mac_sload = 1'b1;
+                mac_clken = 1'b0;
                 count_reset = 1'b1;
-            end
-
-            LOAD: begin
-                extract_en = 1'b1;
-                count_reset = 1'b0;
-                count_en = 1'b1;
-                mac_clken = 1'b1;
-                mac_sload = 1'b0;
+                count_en = 1'b0;
             end
 
             MAC: begin
-                extract_en = 1'b1;
+                mac_sload = 1'b0;
+                mac_clken = 1'b1;
+                count_reset = 1'b0;
                 count_en = 1'b1;
-                mac_clken = 1'b1;
-                mac_sload = 1'b0;
-            end
-
-            WAIT: begin
-                count_reset = 1'b1;
-                mac_clken = 1'b1;
-                mac_sload = 1'b0;
             end
 
             OUTPUT: begin
-                count_reset = 1'b1;
-                mac_clken = 1'b1;
-                mac_sload = 1'b1;
+                mac_sload = 1'b0;
+                mac_clken = 1'b0;
+                count_reset = 1'b0;
+                count_en = 1'b0;
             end
 
-        endcase
+        endcase  
     end
-
-    // Sequential Output Assignment
-    always @(*) begin
-        case (current_state)
-            IDLE: begin
-                output_neuron_intern = {2*resolution+input_data_size_width{1'b0}};
-                neuron_done = 1'b0;
-            end
-
-            OUTPUT: begin
-                output_neuron_intern = mac_result + bias;
-                neuron_done = 1'b1;
-            end
-
-            default: begin
-                output_neuron_intern = {2*resolution+input_data_size_width{1'b0}};
-                neuron_done = 1'b0;
-            end
-        endcase
-        
-    end
-
-    //assign shifted_output = output_neuron_intern >>> 8;
-    assign output_neuron_temp = (shifted_output > 8'sb01111111) ? 8'sb01111111 : shifted_output;
-    assign output_neuron = (output_neuron_temp < 8'sb10000000) ? 8'sb10000000 : output_neuron_temp[7:0];
 
 endmodule
