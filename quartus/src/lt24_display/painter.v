@@ -8,7 +8,8 @@ module painter #(
     parameter integer N_FRAMES_WIDTH = $clog2(N_FRAMES),
     parameter integer PIXEL_NUM =  76800, // Pixels number
     parameter integer PIXEL_NUM_WIDTH = $clog2(PIXEL_NUM),
-    parameter drawing_area_side_length = 28
+    parameter integer DRAWING_AREA_SIDE_LENGTH = 28,
+	parameter integer DRAWING_AREA_ADDR_WIDTH = $clog2(DRAWING_AREA_SIDE_LENGTH**2)
 )(
     input clk,
     input en,
@@ -32,8 +33,10 @@ module painter #(
     input [11:0] x_pos,     // X, Y position from the ADC, given with a resolution of 12 bits
     input [11:0] y_pos,
 
-    // Neural network interface
-    output reg [(drawing_area_side_length**2)-1:0] neural_network_inputs,
+    // Neural network inputs buffer RAM memory
+    output reg nn_ram_data,          // Single 1-bit pixel to be written into the buffer memory
+    output reg [DRAWING_AREA_ADDR_WIDTH-1:0] nn_ram_write_addr,
+    output reg nn_ram_we,
 
     // Main controller interface
     input clear_display,
@@ -54,6 +57,25 @@ module painter #(
 
     // Buffer for the currently selected frame number
     reg [N_FRAMES_WIDTH-1:0] load_frame_sel_reg;
+
+    // Counter to be used as a pointer address to the neural network inputs buffer RAM
+    reg nn_ram_pointer_en_reg;          // Enable for the pointer counter
+    reg nn_ram_pointer_reset_reg;       // Reset for the pointer counter
+
+    wire [$clog2(DRAWING_AREA_SIDE_LENGTH**2)-1:0] nn_ram_pointer;  // NN RAM pointer address
+    wire nn_ram_pointer_en, nn_ram_pointer_reset;
+
+    assign nn_ram_pointer_en = nn_ram_pointer_en_reg && en;
+    assign nn_ram_pointer_reset = nn_ram_pointer_reset_reg;
+
+    counter #(
+        .MAX_VALUE(DRAWING_AREA_SIDE_LENGTH**2)
+    ) nn_ram_pointer_instance (
+        .clk(clk),
+        .en(nn_ram_pointer_en),
+        .reset(nn_ram_pointer_reset),
+        .count(nn_ram_pointer)
+    );
 
     // Counter to be used as a pointer address to the frames ROM
     reg rom_pointer_en_reg;     // Enable for the pointer counter
@@ -128,21 +150,20 @@ module painter #(
             ram_write_addr = 17'd0;
     end
 
-    // Update neural network inputs
-    always @ (posedge clk)
-        if (reset)
-            neural_network_inputs <= 0; // Reset inputs to 0
-        else if (en)
-            // Add touched pixel to the neural network inputs array
-            // as a white pixel (1).
-            // Add it only if the touch happened inside a specific drawing area.
-            if (Sreg == PAINT_PIXEL && touchscreen_x >= 21'd0 && touchscreen_x <= drawing_area_side_length &&
-                touchscreen_y >= 20'd0 && touchscreen_y <= drawing_area_side_length)
-                neural_network_inputs[touchscreen_y*COL_NUM+touchscreen_x] <= 1'b1;
-            else
-                neural_network_inputs <= neural_network_inputs;
+    // Neural network inputs buffer RAM memory interface
+    always @ (*) begin
+        // Add touched pixel to the neural network inputs array
+        // as a white pixel (1).
+        // Add it only if the touch happened inside a specific drawing area.
+        if ((Sreg == PAINT_PIXEL || Sreg == WAIT_PAINT_PIXEL) &&
+            touchscreen_x >= 21'd0 && touchscreen_x < DRAWING_AREA_SIDE_LENGTH &&
+            touchscreen_y >= 20'd0 && touchscreen_y < DRAWING_AREA_SIDE_LENGTH)
+            nn_ram_write_addr = touchscreen_y*COL_NUM + touchscreen_x;
+        else if (Sreg == LOAD_FRAME)
+            nn_ram_write_addr = nn_ram_pointer;
         else
-            neural_network_inputs <= neural_network_inputs;
+            nn_ram_write_addr = 0;
+    end
 
     // Update current state
     always @ (posedge clk)
@@ -198,7 +219,13 @@ module painter #(
         ram_write_en = 1'b0;
         rom_pointer_en_reg = 1'b0;
         rom_pointer_reset_reg = 1'b1;
+
         painter_ready = 1'b0;
+
+        nn_ram_we = 1'b0;
+        nn_ram_data = 1'b0;
+        nn_ram_pointer_en_reg = 1'b0;
+        nn_ram_pointer_reset_reg = 1'b1;
 
         case (Sreg)
             RESET: begin
@@ -216,18 +243,29 @@ module painter #(
                 ram_write_en = 1'b1;
                 rom_pointer_en_reg = 1'b1;
                 rom_pointer_reset_reg = 1'b0;
+
+                nn_ram_data = 1'b0;
+                nn_ram_we = 1'b1;
+                nn_ram_pointer_reset_reg = 1'b0;
+                nn_ram_pointer_en_reg = 1'b1;
             end
 
             PAINT_PIXEL: begin
                 ram_write_en = 1'b1;
                 rom_pointer_en_reg = 1'b0;
                 rom_pointer_reset_reg = 1'b1;
+
+                nn_ram_we = 1'b1;
+                nn_ram_data = 1'b1;
             end
 
             WAIT_PAINT_PIXEL: begin
                 ram_write_en = 1'b1;
                 rom_pointer_en_reg = 1'b0;
                 rom_pointer_reset_reg = 1'b1;
+
+                nn_ram_we = 1'b1;
+                nn_ram_data = 1'b1;
             end
 
             default: begin
@@ -235,6 +273,11 @@ module painter #(
                 rom_pointer_en_reg = 1'b0;
                 rom_pointer_reset_reg = 1'b1;
                 painter_ready = 1'b0;
+
+                nn_ram_we = 1'b0;
+                nn_ram_data = 1'b0;
+                nn_ram_pointer_en_reg = 1'b0;
+                nn_ram_pointer_reset_reg = 1'b1;
             end
         endcase
     end

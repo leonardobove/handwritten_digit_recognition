@@ -20,13 +20,25 @@ refer to the applicable agreement for further details.
 */
 (header "graphic" (version "1.4"))
 (global
-	(rect 384 -184 672 -144)
+	(rect 368 -264 656 -224)
 	(parameter)
 	(text "PARAM" (rect 3 -1 46 13)(font "Arial" (font_size 8)))
 	(text "DEFAULT VALUE" (rect 141 0 229 12)(font "Arial" ))
-	(text "drawing_area_side_length" (rect 3 16 155 30)(font "Arial" (font_size 8)))
+	(text "DRAWING_AREA_SIDE_LENGTH" (rect 3 16 189 30)(font "Arial" (font_size 8)))
 	(text " NAME" (rect 108 0 142 12)(font "Arial" ))
 	(text "UD\"2\"" (rect 141 16 148 30)(font "Arial" (font_size 8)))
+	(drawing
+		(line (pt 138 40)(pt 138 0))
+	)
+)
+(global
+	(rect 368 -208 656 -168)
+	(parameter)
+	(text "PARAM" (rect 3 -1 46 13)(font "Arial" (font_size 8)))
+	(text "DEFAULT VALUE" (rect 141 0 229 12)(font "Arial" ))
+	(text "NN_INPUT_ADDR_WIDTH" (rect 3 16 145 30)(font "Arial" (font_size 8)))
+	(text " NAME" (rect 108 0 142 12)(font "Arial" ))
+	(text "UD\"14\"" (rect 141 16 155 30)(font "Arial" (font_size 8)))
 	(drawing
 		(line (pt 138 40)(pt 138 0))
 	)
@@ -146,6 +158,23 @@ refer to the applicable agreement for further details.
 	)
 	(text "VCC" (rect 128 7 148 17)(font "Arial" (font_size 6)))
 	(annotation_block (location)(rect -376 -152 -312 -128))
+)
+(pin
+	(input)
+	(rect 1440 -88 1789 -72)
+	(text "INPUT" (rect 15 0 43 10)(font "Arial" (font_size 6)))
+	(text "nn_input_address[NN_INPUT_ADDR_WIDTH-1..0]" (rect 109 0 343 17)(font "Intel Clear" ))
+	(pt 0 8)
+	(drawing
+		(line (pt 84 12)(pt 59 12))
+		(line (pt 84 4)(pt 59 4))
+		(line (pt 55 8)(pt 0 8))
+		(line (pt 84 12)(pt 84 4))
+		(line (pt 59 4)(pt 55 8))
+		(line (pt 59 12)(pt 55 8))
+	)
+	(flipy)
+	(text "VCC" (rect 20 7 40 17)(font "Arial" (font_size 6)))
 )
 (pin
 	(output)
@@ -319,7 +348,7 @@ refer to the applicable agreement for further details.
 )
 (pin
 	(output)
-	(rect 1016 -112 1192 -96)
+	(rect 872 -144 1048 -128)
 	(text "OUTPUT" (rect 1 0 39 10)(font "Arial" (font_size 6)))
 	(text "painter_ready" (rect 90 0 157 12)(font "Arial" ))
 	(pt 0 8)
@@ -335,9 +364,9 @@ refer to the applicable agreement for further details.
 )
 (pin
 	(output)
-	(rect 1016 -80 1398 -64)
+	(rect 1448 -104 1624 -88)
 	(text "OUTPUT" (rect 1 0 39 10)(font "Arial" (font_size 6)))
-	(text "neural_network_inputs[(drawing_area_side_length**2)-1..0]" (rect 90 0 376 17)(font "Intel Clear" ))
+	(text "nn_input" (rect 90 0 131 12)(font "Arial" ))
 	(pt 0 8)
 	(drawing
 		(line (pt 0 8)(pt 52 8))
@@ -598,7 +627,7 @@ refer to the applicable agreement for further details.
 	(drawing
 		(rectangle (rect 16 16 312 128))
 	)
-	(annotation_block (parameter)(rect 1024 8 1213 65))
+	(annotation_block (parameter)(rect 1128 16 1317 73))
 )
 (symbol
 	(rect 1024 352 1056 368)
@@ -976,9 +1005,70 @@ refer to the applicable agreement for further details.
 	(rotate270)
 )
 (symbol
-	(rect 320 48 856 256)
+	(rect 1048 -128 1376 16)
+	(text "simple_dual_port_ram_single_clock" (rect 5 0 178 12)(font "Arial" ))
+	(text "nn_inputs_ram" (rect 8 128 78 145)(font "Intel Clear" ))
+	(port
+		(pt 0 32)
+		(input)
+		(text "data[DATA_WIDTH-1..0]" (rect 0 0 121 12)(font "Arial" ))
+		(text "data[DATA_WIDTH-1..0]" (rect 21 27 142 39)(font "Arial" ))
+		(line (pt 0 32)(pt 16 32)(line_width 3))
+	)
+	(port
+		(pt 328 48)
+		(input)
+		(text "read_addr[ADDR_WIDTH-1..0]" (rect 0 0 152 12)(font "Arial" ))
+		(text "read_addr[ADDR_WIDTH-1..0]" (rect 176 40 328 52)(font "Arial" ))
+		(line (pt 312 48)(pt 328 48)(line_width 3))
+	)
+	(port
+		(pt 0 48)
+		(input)
+		(text "write_addr[ADDR_WIDTH-1..0]" (rect 0 0 153 12)(font "Arial" ))
+		(text "write_addr[ADDR_WIDTH-1..0]" (rect 21 43 174 55)(font "Arial" ))
+		(line (pt 0 48)(pt 16 48)(line_width 3))
+	)
+	(port
+		(pt 0 64)
+		(input)
+		(text "we" (rect 0 0 12 12)(font "Arial" ))
+		(text "we" (rect 21 59 33 71)(font "Arial" ))
+		(line (pt 0 64)(pt 16 64))
+	)
+	(port
+		(pt 0 96)
+		(input)
+		(text "clk" (rect 0 0 14 12)(font "Arial" ))
+		(text "clk" (rect 21 91 35 103)(font "Arial" ))
+		(line (pt 0 96)(pt 16 96))
+	)
+	(port
+		(pt 328 32)
+		(output)
+		(text "q[DATA_WIDTH-1..0]" (rect 0 0 106 12)(font "Arial" ))
+		(text "q[DATA_WIDTH-1..0]" (rect 218 27 324 39)(font "Arial" ))
+		(line (pt 328 32)(pt 312 32)(line_width 3))
+	)
+	(parameter
+		"DATA_WIDTH"
+		"1"
+		""
+		(type "PARAMETER_SIGNED_DEC")	)
+	(parameter
+		"ADDR_WIDTH"
+		"NN_INPUT_ADDR_WIDTH"
+		""
+		(type "PARAMETER_SIGNED_DEC")	)
+	(drawing
+		(rectangle (rect 16 16 312 128))
+	)
+	(annotation_block (parameter)(rect 1048 -200 1342 -143))
+)
+(symbol
+	(rect 312 48 856 256)
 	(text "painter" (rect 5 0 38 12)(font "Arial" ))
-	(text "inst1" (rect 8 192 31 204)(font "Arial" ))
+	(text "painter_inst" (rect 8 192 64 204)(font "Arial" ))
 	(port
 		(pt 0 32)
 		(input)
@@ -1008,18 +1098,18 @@ refer to the applicable agreement for further details.
 		(line (pt 0 80)(pt 16 80)(line_width 3))
 	)
 	(port
-		(pt 536 184)
+		(pt 544 184)
 		(input)
 		(text "rom_q" (rect 0 0 30 12)(font "Arial" ))
-		(text "rom_q" (rect 481 176 511 188)(font "Arial" ))
-		(line (pt 520 184)(pt 536 184))
+		(text "rom_q" (rect 489 176 519 188)(font "Arial" ))
+		(line (pt 528 184)(pt 544 184))
 	)
 	(port
-		(pt 536 144)
+		(pt 544 152)
 		(input)
 		(text "initialized" (rect 0 0 43 12)(font "Arial" ))
-		(text "initialized" (rect 468 136 511 148)(font "Arial" ))
-		(line (pt 520 144)(pt 536 144))
+		(text "initialized" (rect 476 144 519 156)(font "Arial" ))
+		(line (pt 528 152)(pt 544 152))
 	)
 	(port
 		(pt 0 128)
@@ -1050,46 +1140,60 @@ refer to the applicable agreement for further details.
 		(line (pt 0 96)(pt 16 96))
 	)
 	(port
-		(pt 536 168)
+		(pt 544 168)
 		(output)
 		(text "rom_addr[PIXEL_NUM_WIDTH+N_FRAMES_WIDTH-1..0]" (rect 0 0 285 12)(font "Arial" ))
-		(text "rom_addr[PIXEL_NUM_WIDTH+N_FRAMES_WIDTH-1..0]" (rect 274 163 559 175)(font "Arial" ))
-		(line (pt 536 168)(pt 520 168)(line_width 3))
+		(text "rom_addr[PIXEL_NUM_WIDTH+N_FRAMES_WIDTH-1..0]" (rect 282 163 567 175)(font "Arial" ))
+		(line (pt 544 168)(pt 528 168)(line_width 3))
 	)
 	(port
-		(pt 536 64)
+		(pt 544 96)
 		(output)
 		(text "ram_data" (rect 0 0 46 12)(font "Arial" ))
-		(text "ram_data" (rect 477 59 523 71)(font "Arial" ))
-		(line (pt 536 64)(pt 520 64))
+		(text "ram_data" (rect 485 91 531 103)(font "Arial" ))
+		(line (pt 544 96)(pt 528 96))
 	)
 	(port
-		(pt 536 80)
+		(pt 544 112)
 		(output)
 		(text "ram_write_addr[PIXEL_NUM_WIDTH-1..0]" (rect 0 0 206 12)(font "Arial" ))
-		(text "ram_write_addr[PIXEL_NUM_WIDTH-1..0]" (rect 341 75 547 87)(font "Arial" ))
-		(line (pt 536 80)(pt 520 80)(line_width 3))
+		(text "ram_write_addr[PIXEL_NUM_WIDTH-1..0]" (rect 349 107 555 119)(font "Arial" ))
+		(line (pt 544 112)(pt 528 112)(line_width 3))
 	)
 	(port
-		(pt 536 96)
+		(pt 544 128)
 		(output)
 		(text "ram_write_en" (rect 0 0 64 12)(font "Arial" ))
-		(text "ram_write_en" (rect 461 91 525 103)(font "Arial" ))
-		(line (pt 536 96)(pt 520 96))
+		(text "ram_write_en" (rect 469 123 533 135)(font "Arial" ))
+		(line (pt 544 128)(pt 528 128))
 	)
 	(port
-		(pt 536 48)
+		(pt 544 40)
 		(output)
-		(text "neural_network_inputs[drawing_area_side_length**2-1..0]" (rect 0 0 278 12)(font "Arial" ))
-		(text "neural_network_inputs[drawing_area_side_length**2-1..0]" (rect 280 43 558 55)(font "Arial" ))
-		(line (pt 536 48)(pt 520 48)(line_width 3))
+		(text "nn_ram_data" (rect 0 0 63 12)(font "Arial" ))
+		(text "nn_ram_data" (rect 470 35 533 47)(font "Arial" ))
+		(line (pt 544 40)(pt 528 40))
 	)
 	(port
-		(pt 536 32)
+		(pt 544 56)
+		(output)
+		(text "nn_ram_write_addr[DRAWING_AREA_ADDR_WIDTH-1..0]" (rect 0 0 291 12)(font "Arial" ))
+		(text "nn_ram_write_addr[DRAWING_AREA_ADDR_WIDTH-1..0]" (rect 277 51 568 63)(font "Arial" ))
+		(line (pt 544 56)(pt 528 56)(line_width 3))
+	)
+	(port
+		(pt 544 72)
+		(output)
+		(text "nn_ram_we" (rect 0 0 55 12)(font "Arial" ))
+		(text "nn_ram_we" (rect 464 64 519 76)(font "Arial" ))
+		(line (pt 544 72)(pt 528 72))
+	)
+	(port
+		(pt 544 24)
 		(output)
 		(text "painter_ready" (rect 0 0 67 12)(font "Arial" ))
-		(text "painter_ready" (rect 459 27 526 39)(font "Arial" ))
-		(line (pt 536 32)(pt 520 32))
+		(text "painter_ready" (rect 467 19 534 31)(font "Arial" ))
+		(line (pt 544 24)(pt 528 24))
 	)
 	(parameter
 		"N_FRAMES"
@@ -1112,14 +1216,19 @@ refer to the applicable agreement for further details.
 		""
 		(type "PARAMETER_SIGNED_DEC")	)
 	(parameter
-		"drawing_area_side_length"
-		"drawing_area_side_length"
+		"DRAWING_AREA_SIDE_LENGTH"
+		"DRAWING_AREA_SIDE_LENGTH"
+		""
+		(type "PARAMETER_SIGNED_DEC")	)
+	(parameter
+		"DRAWING_AREA_ADDR_WIDTH"
+		"14"
 		""
 		(type "PARAMETER_SIGNED_DEC")	)
 	(drawing
-		(rectangle (rect 16 16 520 192))
+		(rectangle (rect 16 16 528 192))
 	)
-	(annotation_block (parameter)(rect 440 -88 799 26))
+	(annotation_block (parameter)(rect 344 -104 765 29))
 )
 (connector
 	(pt 968 328)
@@ -1233,11 +1342,6 @@ refer to the applicable agreement for further details.
 	(pt -296 72)
 )
 (connector
-	(pt 32 208)
-	(pt 320 208)
-	(bus)
-)
-(connector
 	(pt -128 -160)
 	(pt -104 -160)
 )
@@ -1286,11 +1390,6 @@ refer to the applicable agreement for further details.
 	(pt 136 -40)
 )
 (connector
-	(pt 1016 -72)
-	(pt 960 -72)
-	(bus)
-)
-(connector
 	(text "touchscreen_en" (rect -262 176 -188 193)(font "Intel Clear" ))
 	(pt -264 192)
 	(pt -176 192)
@@ -1304,10 +1403,6 @@ refer to the applicable agreement for further details.
 	(text "global_reset" (rect -249 192 -189 209)(font "Intel Clear" ))
 	(pt -264 208)
 	(pt -176 208)
-)
-(connector
-	(pt 1016 -104)
-	(pt 944 -104)
 )
 (connector
 	(pt 1424 272)
@@ -1384,32 +1479,69 @@ refer to the applicable agreement for further details.
 	(pt 1536 96)
 )
 (connector
-	(text "global_reset" (rect 245 96 305 113)(font "Intel Clear" ))
+	(pt 968 144)
+	(pt 1032 144)
+)
+(connector
+	(pt 952 128)
+	(pt 1032 128)
+	(bus)
+)
+(connector
+	(pt 1032 112)
+	(pt 936 112)
+	(bus)
+)
+(connector
+	(pt 920 -64)
+	(pt 1048 -64)
+)
+(connector
+	(pt 904 -80)
+	(pt 1048 -80)
+	(bus)
+)
+(connector
+	(pt 880 -96)
+	(pt 1048 -96)
+)
+(connector
+	(text "clk_50" (rect 1009 -48 1040 -31)(font "Intel Clear" ))
+	(pt 1048 -32)
+	(pt 1008 -32)
+)
+(connector
+	(text "global_reset" (rect 237 96 297 113)(font "Intel Clear" ))
 	(pt 224 112)
-	(pt 320 112)
+	(pt 312 112)
 )
 (connector
-	(text "clk_50" (rect 272 64 303 81)(font "Intel Clear" ))
-	(pt 216 80)
-	(pt 320 80)
-)
-(connector
-	(pt 32 192)
-	(pt 320 192)
-	(bus)
-)
-(connector
-	(pt 320 128)
 	(pt 256 128)
+	(pt 312 128)
 	(bus)
-)
-(connector
-	(pt 32 176)
-	(pt 320 176)
 )
 (connector
 	(pt 224 144)
-	(pt 320 144)
+	(pt 312 144)
+)
+(connector
+	(pt 32 176)
+	(pt 312 176)
+)
+(connector
+	(pt 32 208)
+	(pt 312 208)
+	(bus)
+)
+(connector
+	(text "clk_50" (rect 264 64 295 81)(font "Intel Clear" ))
+	(pt 208 80)
+	(pt 312 80)
+)
+(connector
+	(pt 32 192)
+	(pt 312 192)
+	(bus)
 )
 (connector
 	(pt 952 288)
@@ -1421,49 +1553,56 @@ refer to the applicable agreement for further details.
 	(bus)
 )
 (connector
+	(text "global_graphic_en" (rect 224 80 312 97)(font "Intel Clear" ))
+	(pt 312 96)
+	(pt 208 96)
+)
+(connector
 	(pt 984 272)
-	(pt 984 192)
+	(pt 984 200)
 )
 (connector
-	(pt 960 -72)
-	(pt 960 96)
+	(pt 968 144)
+	(pt 968 176)
+)
+(connector
+	(pt 952 128)
+	(pt 952 160)
 	(bus)
 )
 (connector
-	(pt 944 -104)
-	(pt 944 80)
-)
-(connector
-	(text "global_graphic_en" (rect 232 80 320 97)(font "Intel Clear" ))
-	(pt 320 96)
-	(pt 216 96)
-)
-(connector
-	(pt 856 80)
-	(pt 944 80)
-)
-(connector
-	(pt 856 96)
-	(pt 960 96)
+	(pt 936 112)
+	(pt 936 144)
 	(bus)
 )
 (connector
-	(pt 856 112)
-	(pt 1032 112)
+	(pt 872 -136)
+	(pt 856 -136)
+)
+(connector
+	(pt 856 -136)
+	(pt 856 72)
+)
+(connector
+	(pt 920 -64)
+	(pt 920 120)
+)
+(connector
+	(pt 904 -80)
+	(pt 904 104)
 	(bus)
 )
 (connector
-	(pt 1032 128)
-	(pt 856 128)
-	(bus)
+	(pt 880 -96)
+	(pt 880 88)
 )
 (connector
-	(pt 856 144)
-	(pt 1032 144)
+	(pt 856 232)
+	(pt 952 232)
 )
 (connector
-	(pt 856 192)
-	(pt 984 192)
+	(pt 856 200)
+	(pt 984 200)
 )
 (connector
 	(pt 856 216)
@@ -1471,8 +1610,41 @@ refer to the applicable agreement for further details.
 	(bus)
 )
 (connector
-	(pt 856 232)
-	(pt 952 232)
+	(pt 856 144)
+	(pt 936 144)
+	(bus)
+)
+(connector
+	(pt 856 160)
+	(pt 952 160)
+	(bus)
+)
+(connector
+	(pt 856 176)
+	(pt 968 176)
+)
+(connector
+	(pt 856 88)
+	(pt 880 88)
+)
+(connector
+	(pt 856 104)
+	(pt 904 104)
+	(bus)
+)
+(connector
+	(pt 856 120)
+	(pt 920 120)
+)
+(connector
+	(pt 1376 -96)
+	(pt 1448 -96)
+	(bus)
+)
+(connector
+	(pt 1376 -80)
+	(pt 1440 -80)
+	(bus)
 )
 (junction (pt -448 40))
 (junction (pt -400 144))

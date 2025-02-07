@@ -20,7 +20,7 @@ refer to the applicable agreement for further details.
 */
 (header "symbol" (version "1.2"))
 (symbol
-	(rect 64 64 584 208)
+	(rect 64 64 456 208)
 	(text "average_pooling_n" (rect 5 0 97 12)(font "Arial" ))
 	(text "inst" (rect 8 128 25 140)(font "Arial" ))
 	(port
@@ -31,46 +31,53 @@ refer to the applicable agreement for further details.
 		(line (pt 0 32)(pt 16 32))
 	)
 	(port
-		(pt 520 40)
+		(pt 392 40)
 		(input)
 		(text "reset" (rect 0 0 24 12)(font "Arial" ))
-		(text "reset" (rect 471 32 495 44)(font "Arial" ))
-		(line (pt 504 40)(pt 520 40))
+		(text "reset" (rect 343 32 367 44)(font "Arial" ))
+		(line (pt 376 40)(pt 392 40))
 	)
 	(port
-		(pt 520 56)
+		(pt 392 56)
 		(input)
 		(text "en" (rect 0 0 11 12)(font "Arial" ))
-		(text "en" (rect 484 48 495 60)(font "Arial" ))
-		(line (pt 504 56)(pt 520 56))
+		(text "en" (rect 356 48 367 60)(font "Arial" ))
+		(line (pt 376 56)(pt 392 56))
 	)
 	(port
-		(pt 520 72)
+		(pt 392 72)
 		(input)
 		(text "start" (rect 0 0 22 12)(font "Arial" ))
-		(text "start" (rect 473 64 495 76)(font "Arial" ))
-		(line (pt 504 72)(pt 520 72))
+		(text "start" (rect 345 64 367 76)(font "Arial" ))
+		(line (pt 376 72)(pt 392 72))
 	)
 	(port
-		(pt 520 112)
+		(pt 392 112)
 		(input)
-		(text "input_pixels[input_matrix_side_length**2-1..0]" (rect 0 0 224 12)(font "Arial" ))
-		(text "input_pixels[input_matrix_side_length**2-1..0]" (rect 288 104 512 116)(font "Arial" ))
-		(line (pt 504 112)(pt 520 112)(line_width 3))
+		(text "input_pixel" (rect 0 0 51 12)(font "Arial" ))
+		(text "input_pixel" (rect 316 104 367 116)(font "Arial" ))
+		(line (pt 376 112)(pt 392 112))
 	)
 	(port
-		(pt 0 96)
+		(pt 392 96)
+		(output)
+		(text "input_pixel_addr[input_pixel_addr_width-1..0]" (rect 0 0 218 12)(font "Arial" ))
+		(text "input_pixel_addr[input_pixel_addr_width-1..0]" (rect 187 91 371 103)(font "Arial" ))
+		(line (pt 392 96)(pt 376 96)(line_width 3))
+	)
+	(port
+		(pt 0 72)
 		(output)
 		(text "output_pixels[output_matrix_side_length**2*output_resolution-1..0]" (rect 0 0 326 12)(font "Arial" ))
-		(text "output_pixels[output_matrix_side_length**2*output_resolution-1..0]" (rect 24 88 350 100)(font "Arial" ))
-		(line (pt 16 96)(pt 0 96)(line_width 3))
+		(text "output_pixels[output_matrix_side_length**2*output_resolution-1..0]" (rect 24 64 350 76)(font "Arial" ))
+		(line (pt 16 72)(pt 0 72)(line_width 3))
 	)
 	(port
-		(pt 520 24)
+		(pt 392 24)
 		(output)
 		(text "done" (rect 0 0 23 12)(font "Arial" ))
-		(text "done" (rect 480 19 503 31)(font "Arial" ))
-		(line (pt 520 24)(pt 504 24))
+		(text "done" (rect 352 19 371 31)(font "Arial" ))
+		(line (pt 392 24)(pt 376 24))
 	)
 	(parameter
 		"output_resolution"
@@ -92,8 +99,13 @@ refer to the applicable agreement for further details.
 		""
 		""
 		(type "PARAMETER_SIGNED_DEC")	)
+	(parameter
+		"input_pixel_addr_width"
+		""
+		""
+		(type "PARAMETER_SIGNED_DEC")	)
 	(drawing
-		(rectangle (rect 16 16 504 128))
+		(rectangle (rect 16 16 376 128))
 	)
-	(annotation_block (parameter)(rect 584 -32 848 64))
+	(annotation_block (parameter)(rect 408 -104 672 16))
 )

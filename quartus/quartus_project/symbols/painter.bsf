@@ -20,7 +20,7 @@ refer to the applicable agreement for further details.
 */
 (header "symbol" (version "1.2"))
 (symbol
-	(rect 64 64 600 272)
+	(rect 64 64 608 272)
 	(text "painter" (rect 5 0 38 12)(font "Arial" ))
 	(text "inst" (rect 8 192 25 204)(font "Arial" ))
 	(port
@@ -52,18 +52,18 @@ refer to the applicable agreement for further details.
 		(line (pt 0 80)(pt 16 80)(line_width 3))
 	)
 	(port
-		(pt 536 184)
+		(pt 544 184)
 		(input)
 		(text "rom_q" (rect 0 0 30 12)(font "Arial" ))
-		(text "rom_q" (rect 481 176 511 188)(font "Arial" ))
-		(line (pt 520 184)(pt 536 184))
+		(text "rom_q" (rect 489 176 519 188)(font "Arial" ))
+		(line (pt 528 184)(pt 544 184))
 	)
 	(port
-		(pt 536 144)
+		(pt 544 152)
 		(input)
 		(text "initialized" (rect 0 0 43 12)(font "Arial" ))
-		(text "initialized" (rect 468 136 511 148)(font "Arial" ))
-		(line (pt 520 144)(pt 536 144))
+		(text "initialized" (rect 476 144 519 156)(font "Arial" ))
+		(line (pt 528 152)(pt 544 152))
 	)
 	(port
 		(pt 0 128)
@@ -94,46 +94,60 @@ refer to the applicable agreement for further details.
 		(line (pt 0 96)(pt 16 96))
 	)
 	(port
-		(pt 536 168)
+		(pt 544 168)
 		(output)
 		(text "rom_addr[PIXEL_NUM_WIDTH+N_FRAMES_WIDTH-1..0]" (rect 0 0 285 12)(font "Arial" ))
-		(text "rom_addr[PIXEL_NUM_WIDTH+N_FRAMES_WIDTH-1..0]" (rect 274 163 515 175)(font "Arial" ))
-		(line (pt 536 168)(pt 520 168)(line_width 3))
+		(text "rom_addr[PIXEL_NUM_WIDTH+N_FRAMES_WIDTH-1..0]" (rect 282 163 523 175)(font "Arial" ))
+		(line (pt 544 168)(pt 528 168)(line_width 3))
 	)
 	(port
-		(pt 536 64)
+		(pt 544 96)
 		(output)
 		(text "ram_data" (rect 0 0 46 12)(font "Arial" ))
-		(text "ram_data" (rect 477 59 515 71)(font "Arial" ))
-		(line (pt 536 64)(pt 520 64))
+		(text "ram_data" (rect 485 91 523 103)(font "Arial" ))
+		(line (pt 544 96)(pt 528 96))
 	)
 	(port
-		(pt 536 80)
+		(pt 544 112)
 		(output)
 		(text "ram_write_addr[PIXEL_NUM_WIDTH-1..0]" (rect 0 0 206 12)(font "Arial" ))
-		(text "ram_write_addr[PIXEL_NUM_WIDTH-1..0]" (rect 341 75 515 87)(font "Arial" ))
-		(line (pt 536 80)(pt 520 80)(line_width 3))
+		(text "ram_write_addr[PIXEL_NUM_WIDTH-1..0]" (rect 349 107 523 119)(font "Arial" ))
+		(line (pt 544 112)(pt 528 112)(line_width 3))
 	)
 	(port
-		(pt 536 96)
+		(pt 544 128)
 		(output)
 		(text "ram_write_en" (rect 0 0 64 12)(font "Arial" ))
-		(text "ram_write_en" (rect 461 91 515 103)(font "Arial" ))
-		(line (pt 536 96)(pt 520 96))
+		(text "ram_write_en" (rect 469 123 523 135)(font "Arial" ))
+		(line (pt 544 128)(pt 528 128))
 	)
 	(port
-		(pt 536 48)
+		(pt 544 40)
 		(output)
-		(text "neural_network_inputs[drawing_area_side_length**2-1..0]" (rect 0 0 278 12)(font "Arial" ))
-		(text "neural_network_inputs[drawing_area_side_length**2-1..0]" (rect 280 43 515 55)(font "Arial" ))
-		(line (pt 536 48)(pt 520 48)(line_width 3))
+		(text "nn_ram_data" (rect 0 0 63 12)(font "Arial" ))
+		(text "nn_ram_data" (rect 470 35 523 47)(font "Arial" ))
+		(line (pt 544 40)(pt 528 40))
 	)
 	(port
-		(pt 536 32)
+		(pt 544 56)
+		(output)
+		(text "nn_ram_write_addr[DRAWING_AREA_ADDR_WIDTH-1..0]" (rect 0 0 291 12)(font "Arial" ))
+		(text "nn_ram_write_addr[DRAWING_AREA_ADDR_WIDTH-1..0]" (rect 277 51 523 63)(font "Arial" ))
+		(line (pt 544 56)(pt 528 56)(line_width 3))
+	)
+	(port
+		(pt 544 72)
+		(output)
+		(text "nn_ram_we" (rect 0 0 55 12)(font "Arial" ))
+		(text "nn_ram_we" (rect 464 64 519 76)(font "Arial" ))
+		(line (pt 544 72)(pt 528 72))
+	)
+	(port
+		(pt 544 24)
 		(output)
 		(text "painter_ready" (rect 0 0 67 12)(font "Arial" ))
-		(text "painter_ready" (rect 459 27 515 39)(font "Arial" ))
-		(line (pt 536 32)(pt 520 32))
+		(text "painter_ready" (rect 467 19 523 31)(font "Arial" ))
+		(line (pt 544 24)(pt 528 24))
 	)
 	(parameter
 		"N_FRAMES"
@@ -156,12 +170,17 @@ refer to the applicable agreement for further details.
 		""
 		(type "PARAMETER_SIGNED_DEC")	)
 	(parameter
-		"drawing_area_side_length"
+		"DRAWING_AREA_SIDE_LENGTH"
 		"28"
 		""
 		(type "PARAMETER_SIGNED_DEC")	)
+	(parameter
+		"DRAWING_AREA_ADDR_WIDTH"
+		""
+		""
+		(type "PARAMETER_SIGNED_DEC")	)
 	(drawing
-		(rectangle (rect 16 16 520 192))
+		(rectangle (rect 16 16 528 192))
 	)
-	(annotation_block (parameter)(rect 552 -104 816 16))
+	(annotation_block (parameter)(rect 560 -120 856 16))
 )
