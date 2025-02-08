@@ -15,9 +15,10 @@ module neuron #(
 );
 
     // FSM States
-    localparam IDLE = 2'b00;
-    localparam MAC  = 2'b01;
-    localparam OUTPUT = 2'b10;
+    localparam RESET  = 2'd0,
+               IDLE   = 2'd1,
+               MAC    = 2'd2,
+               OUTPUT = 2'd3;
 
     reg [1:0] current_state, next_state;
     reg mac_clken, mac_sload;
@@ -27,7 +28,7 @@ module neuron #(
     wire [$clog2(IN_SIZE)-1:0] index;
 
     assign neuron_done = (current_state == OUTPUT);
-    assign output_neuron = (current_state == OUTPUT) ? mac_result + {{24{bias[7]}}, bias[7:0]} : 32'd0;
+    assign output_neuron = (current_state == OUTPUT) ? mac_result + {{(WIDTH_OUT-WIDTH_IN){bias[7]}}, bias[7:0]} : 32'd0;
 
     // MAC module instance
     signed_multiply_accumulate #(
@@ -56,15 +57,17 @@ module neuron #(
     // FSM: State Transitions
     always @(posedge clk) begin
         if (reset) 
-            current_state <= IDLE;
+            current_state <= RESET;
         else
             current_state <= next_state;
     end
 
     // FSM: State Transition Logic
     always @(*) begin
-        next_state = current_state; // Default next state
         case (current_state)
+            RESET:
+                next_state = IDLE;
+
             IDLE:
                 if (neuron_go)
                     next_state = MAC;
@@ -79,7 +82,7 @@ module neuron #(
                 next_state = IDLE;
 
             default:
-                next_state = IDLE;
+                next_state = RESET;
         endcase
     end
 

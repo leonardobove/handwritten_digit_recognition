@@ -21,12 +21,13 @@ module FW_logic_FSM #(
     wire predict_digit_done;
 
     // FSM states
-    localparam IDLE = 3'b000;
-    localparam MLP_START = 3'b001;
-    localparam MLP_WAIT = 3'b010;
-    localparam PREDICT_DIGIT_START  = 3'b011;
-    localparam PREDICT_DIGIT_WAIT  = 3'b100;
-    localparam DIGIT_OUT = 3'b101;
+    localparam RESET               = 3'd0,
+               IDLE                = 3'd1,
+               MLP_START           = 3'd2,
+               MLP_WAIT            = 3'd3,
+               PREDICT_DIGIT_START = 3'd4, 
+               PREDICT_DIGIT_WAIT  = 3'd5,
+               DIGIT_OUT           = 3'd6;
 
     reg [2:0] current_state, next_state;
 
@@ -60,7 +61,7 @@ module FW_logic_FSM #(
     // FSM: State transitions
     always @(posedge clk) begin
         if (reset) 
-            current_state <= IDLE;
+            current_state <= RESET;
         else if (en)
             current_state <= next_state;
         else
@@ -69,8 +70,10 @@ module FW_logic_FSM #(
 
     // FSM: State transition logic
     always @(*) begin
-
         case (current_state)
+            RESET:
+                next_state = IDLE;
+
             IDLE:
                 if (start)
                     next_state = MLP_START;
@@ -99,13 +102,19 @@ module FW_logic_FSM #(
                     next_state = IDLE;
 
             default: 
-                next_state = IDLE;
+                next_state = RESET;
         endcase
     end
 
     // FSM: Output control signals
     always @(current_state) begin
             case (current_state)
+                RESET: begin
+                    MLP_go = 1'b0;
+                    predict_digit_go = 1'b0;
+                    done = 1'b0; 
+                end
+
                 IDLE: begin
                     MLP_go = 1'b0;
                     predict_digit_go = 1'b0;
