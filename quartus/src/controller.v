@@ -11,7 +11,7 @@ module controller (
     input button,
 
     // Seven segments display interface
-    output reg [3:0] output_digit,
+    output [3:0] output_digit,
 
     // Graphics interface
     input painter_ready,
@@ -49,7 +49,7 @@ module controller (
 
     // Seven segments display. When predicted digit is ready, display it, as long as the current state
     // is DISPLAY_DIGIT. Otherwise, keep all LEDs turned off, except for the decimal point.
-    //assign output_digit = (Sreg == DISPLAY_DIGIT) ? predicted_digit : 4'd10; // 4'd10 corresponds to only the decimal point LED turned on
+    assign output_digit = (Sreg == DISPLAY_DIGIT) ? predicted_digit : 4'd10; // 4'd10 corresponds to only the decimal point LED turned on
 
     // Update current state
     always @ (posedge clk)
@@ -124,7 +124,7 @@ module controller (
                 start_neural_network = 1'b0;
                 start_average_pooling = 1'b0;
 
-                output_digit = 4'd0;
+                //output_digit = 4'd0;
             end
 
             CLEAR_DISPLAY_START: begin
@@ -140,7 +140,7 @@ module controller (
                 start_neural_network = 1'b0;
                 start_average_pooling = 1'b0;
 
-                output_digit = 4'd1;
+                //output_digit = 4'd1;
             end
 
             CLEAR_DISPLAY_WAIT: begin
@@ -156,7 +156,7 @@ module controller (
                 start_neural_network = 1'b0;
                 start_average_pooling = 1'b0;
 
-                output_digit = 4'd2;
+                //output_digit = 4'd2;
             end
 
             IDLE: begin
@@ -172,7 +172,7 @@ module controller (
                 start_neural_network = 1'b0;
                 start_average_pooling = 1'b0;
 
-                output_digit = 4'd3;
+                //output_digit = 4'd3;
             end
 
             AVERAGE_POOLING_START: begin
@@ -188,7 +188,7 @@ module controller (
                 start_neural_network = 1'b0;
                 start_average_pooling = 1'b1;
 
-                output_digit = 4'd4;
+                //output_digit = 4'd4;
             end
 
             AVERAGE_POOLING_WAIT: begin
@@ -204,7 +204,7 @@ module controller (
                 start_neural_network = 1'b0;
                 start_average_pooling = 1'b0;
 
-                output_digit = 4'd5;
+                //output_digit = 4'd5;
             end
 
             NEURAL_NETWORK_START: begin
@@ -220,7 +220,7 @@ module controller (
                 start_neural_network = 1'b1;
                 start_average_pooling = 1'b0;
 
-                output_digit = 4'd6;
+                //output_digit = 4'd6;
             end
 
             NEURAL_NETWORK_WAIT: begin
@@ -236,7 +236,7 @@ module controller (
                 start_neural_network = 1'b0;
                 start_average_pooling = 1'b0;
 
-                output_digit = 4'd7;
+                //output_digit = 4'd7;
             end
 
             DISPLAY_DIGIT: begin
@@ -252,7 +252,7 @@ module controller (
                 start_neural_network = 1'b0;
                 start_average_pooling = 1'b0;
 
-                output_digit = 4'd8;
+                //output_digit = 4'd8;
             end
 
             default: begin
@@ -268,7 +268,7 @@ module controller (
                 start_neural_network = 1'b0;
                 start_average_pooling = 1'b0;
 
-                output_digit = 4'd10;
+                //output_digit = 4'd10;
             end
 
         endcase

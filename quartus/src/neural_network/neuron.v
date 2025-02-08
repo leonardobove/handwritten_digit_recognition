@@ -71,6 +71,8 @@ module neuron #(
             IDLE:
                 if (neuron_go)
                     next_state = MAC;
+                else
+                    next_state = IDLE;
 
             MAC:
                 if (index == IN_SIZE-1)
@@ -87,34 +89,42 @@ module neuron #(
     end
 
     //Output Assignment
-    always @(current_state) begin
-        // Default signal values
-        mac_clken = 1'b0;
-        mac_sload = 1'b1;
-        count_en = 1'b0;
-        
+    always @(current_state) begin      
         case (current_state)
-            IDLE: begin
-                mac_sload = 1'b1;
+            RESET: begin
                 mac_clken = 1'b0;
+                mac_sload = 1'b1;
+                count_reset = 1'b1;
+                count_en = 1'b0;
+            end
+
+            IDLE: begin
+                mac_clken = 1'b0;
+                mac_sload = 1'b1;
                 count_reset = 1'b1;
                 count_en = 1'b0;
             end
 
             MAC: begin
-                mac_sload = 1'b0;
                 mac_clken = 1'b1;
+                mac_sload = 1'b0;
                 count_reset = 1'b0;
                 count_en = 1'b1;
             end
 
             OUTPUT: begin
+                mac_clken = 1'b0;               
                 mac_sload = 1'b0;
-                mac_clken = 1'b0;
                 count_reset = 1'b0;
                 count_en = 1'b0;
             end
 
+            default: begin
+                mac_clken = 1'b0;
+                mac_sload = 1'b1;
+                count_reset = 1'b1;
+                count_en = 1'b0;
+            end
         endcase  
     end
 

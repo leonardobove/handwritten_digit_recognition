@@ -26,7 +26,7 @@ refer to the applicable agreement for further details.
 	(text "DEFAULT VALUE" (rect 141 0 229 12)(font "Arial" ))
 	(text "DRAWING_AREA_SIDE_LENGTH" (rect 3 16 189 30)(font "Arial" (font_size 8)))
 	(text " NAME" (rect 108 0 142 12)(font "Arial" ))
-	(text "UD\"2\"" (rect 141 16 148 30)(font "Arial" (font_size 8)))
+	(text "UD\"224\"" (rect 141 16 162 30)(font "Arial" (font_size 8)))
 	(drawing
 		(line (pt 138 40)(pt 138 0))
 	)
@@ -38,7 +38,7 @@ refer to the applicable agreement for further details.
 	(text "DEFAULT VALUE" (rect 141 0 229 12)(font "Arial" ))
 	(text "NN_INPUT_ADDR_WIDTH" (rect 3 16 145 30)(font "Arial" (font_size 8)))
 	(text " NAME" (rect 108 0 142 12)(font "Arial" ))
-	(text "UD\"14\"" (rect 141 16 155 30)(font "Arial" (font_size 8)))
+	(text "UD\"16\"" (rect 141 16 155 30)(font "Arial" (font_size 8)))
 	(drawing
 		(line (pt 138 40)(pt 138 0))
 	)
@@ -1222,7 +1222,7 @@ refer to the applicable agreement for further details.
 		(type "PARAMETER_SIGNED_DEC")	)
 	(parameter
 		"DRAWING_AREA_ADDR_WIDTH"
-		"14"
+		"NN_INPUT_ADDR_WIDTH"
 		""
 		(type "PARAMETER_SIGNED_DEC")	)
 	(drawing

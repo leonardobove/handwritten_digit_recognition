@@ -38,7 +38,7 @@
 
 set_global_assignment -name FAMILY "MAX 10"
 set_global_assignment -name DEVICE 10M50DAF484C7G
-set_global_assignment -name TOP_LEVEL_ENTITY controller
+set_global_assignment -name TOP_LEVEL_ENTITY handwritten_digit_recognition
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 18.1.0
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "12:58:47  NOVEMBER 11, 2024"
 set_global_assignment -name LAST_QUARTUS_VERSION "18.1.0 Lite Edition"
@@ -154,6 +154,18 @@ set_global_assignment -name VERILOG_FILE ../src/lt24_display/clk_divisor.v
 set_global_assignment -name BDF_FILE block_designs/edge_triggered_debouncer.bdf
 set_global_assignment -name BDF_FILE block_designs/rising_edge_detector.bdf
 set_global_assignment -name SDC_FILE sdc_files/predict_digit.sdc
+set_global_assignment -name EDA_TEST_BENCH_FILE ../tb/graphic_manager_tb.v -section_id graphic_manager_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE ../tb/dp_ram_tb.v -section_id dp_ram_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE ../tb/lt24_lcd_driver_tb.v -section_id lt24_lcd_driver_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE ../tb/lt24_touchscreen_driver_tb.v -section_id lt24_touchscreen_driver_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE ../tb/painter_tb.v -section_id painter_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE ../tb/average_pooling_n_tb.v -section_id average_pooling_n_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE ../tb/average_pooling_tb.v -section_id average_pooling_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE ../tb/predict_digit_tb.v -section_id predict_digit_tb
+set_global_assignment -name EDA_TEST_BENCH_NAME controller_tb -section_id eda_simulation
+set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id controller_tb
+set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME controller_tb -section_id controller_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE ../tb/controller_tb.v -section_id controller_tb
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
@@ -200,16 +212,4 @@ set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_RESET_N
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_RS
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LT24_WR_N
 set_instance_assignment -name IO_STANDARD "3.3 V SCHMITT TRIGGER" -to KEY
-set_global_assignment -name EDA_TEST_BENCH_FILE ../tb/graphic_manager_tb.v -section_id graphic_manager_tb
-set_global_assignment -name EDA_TEST_BENCH_FILE ../tb/dp_ram_tb.v -section_id dp_ram_tb
-set_global_assignment -name EDA_TEST_BENCH_FILE ../tb/lt24_lcd_driver_tb.v -section_id lt24_lcd_driver_tb
-set_global_assignment -name EDA_TEST_BENCH_FILE ../tb/lt24_touchscreen_driver_tb.v -section_id lt24_touchscreen_driver_tb
-set_global_assignment -name EDA_TEST_BENCH_FILE ../tb/painter_tb.v -section_id painter_tb
-set_global_assignment -name EDA_TEST_BENCH_FILE ../tb/average_pooling_n_tb.v -section_id average_pooling_n_tb
-set_global_assignment -name EDA_TEST_BENCH_FILE ../tb/average_pooling_tb.v -section_id average_pooling_tb
-set_global_assignment -name EDA_TEST_BENCH_FILE ../tb/predict_digit_tb.v -section_id predict_digit_tb
-set_global_assignment -name EDA_TEST_BENCH_NAME controller_tb -section_id eda_simulation
-set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id controller_tb
-set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME controller_tb -section_id controller_tb
-set_global_assignment -name EDA_TEST_BENCH_FILE ../tb/controller_tb.v -section_id controller_tb
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
