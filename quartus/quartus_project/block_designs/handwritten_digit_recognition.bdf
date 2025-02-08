@@ -815,7 +815,7 @@ refer to the applicable agreement for further details.
 (symbol
 	(rect 1144 256 1600 512)
 	(text "graphic" (rect 5 0 48 19)(font "Intel Clear" (font_size 8)))
-	(text "inst7" (rect 8 235 30 252)(font "Intel Clear" ))
+	(text "graphic_inst" (rect 8 235 64 252)(font "Intel Clear" ))
 	(port
 		(pt 0 48)
 		(input)

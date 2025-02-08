@@ -158,9 +158,9 @@ module controller (
                 enable_graphics = 1'b1;
                 enable_average_pooling = 1'b0;
 
-                reset_neural_network = 1'b1;
+                reset_neural_network = 1'b0;
                 reset_display = 1'b0;
-                reset_average_pooling = 1'b1;
+                reset_average_pooling = 1'b0;
 
                 clear_display = 1'b0;
                 start_neural_network = 1'b0;
@@ -172,7 +172,7 @@ module controller (
                 enable_graphics = 1'b0;
                 enable_average_pooling = 1'b1;
 
-                reset_neural_network = 1'b1;
+                reset_neural_network = 1'b0;
                 reset_display = 1'b0;
                 reset_average_pooling = 1'b0;
 
@@ -186,7 +186,7 @@ module controller (
                 enable_graphics = 1'b0;
                 enable_average_pooling = 1'b1;
 
-                reset_neural_network = 1'b1;
+                reset_neural_network = 1'b0;
                 reset_display = 1'b0;
                 reset_average_pooling = 1'b0;
 
