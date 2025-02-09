@@ -144,23 +144,6 @@ refer to the applicable agreement for further details.
 )
 (pin
 	(input)
-	(rect -296 -168 -128 -152)
-	(text "INPUT" (rect 125 0 153 10)(font "Arial" (font_size 6)))
-	(text "clk" (rect 5 0 19 12)(font "Arial" ))
-	(pt 168 8)
-	(drawing
-		(line (pt 84 12)(pt 109 12))
-		(line (pt 84 4)(pt 109 4))
-		(line (pt 113 8)(pt 168 8))
-		(line (pt 84 12)(pt 84 4))
-		(line (pt 109 4)(pt 113 8))
-		(line (pt 109 12)(pt 113 8))
-	)
-	(text "VCC" (rect 128 7 148 17)(font "Arial" (font_size 6)))
-	(annotation_block (location)(rect -376 -152 -312 -128))
-)
-(pin
-	(input)
 	(rect 1440 -88 1789 -72)
 	(text "INPUT" (rect 15 0 43 10)(font "Arial" (font_size 6)))
 	(text "nn_input_address[NN_INPUT_ADDR_WIDTH-1..0]" (rect 109 0 343 17)(font "Intel Clear" ))
@@ -175,6 +158,23 @@ refer to the applicable agreement for further details.
 	)
 	(flipy)
 	(text "VCC" (rect 20 7 40 17)(font "Arial" (font_size 6)))
+)
+(pin
+	(input)
+	(rect -296 -168 -128 -152)
+	(text "INPUT" (rect 125 0 153 10)(font "Arial" (font_size 6)))
+	(text "clk" (rect 5 0 20 12)(font "Arial" ))
+	(pt 168 8)
+	(drawing
+		(line (pt 84 12)(pt 109 12))
+		(line (pt 84 4)(pt 109 4))
+		(line (pt 113 8)(pt 168 8))
+		(line (pt 84 12)(pt 84 4))
+		(line (pt 109 4)(pt 113 8))
+		(line (pt 109 12)(pt 113 8))
+	)
+	(text "VCC" (rect 128 7 148 17)(font "Arial" (font_size 6)))
+	(annotation_block (location)(rect -376 -152 -312 -128))
 )
 (pin
 	(output)
@@ -765,34 +765,6 @@ refer to the applicable agreement for further details.
 	)
 )
 (symbol
-	(rect -104 -56 96 24)
-	(text "enable_generator" (rect 5 0 88 12)(font "Arial" ))
-	(text "touchscreen_driver_enable_generator" (rect 8 64 188 81)(font "Intel Clear" ))
-	(port
-		(pt 0 32)
-		(input)
-		(text "input_clock" (rect 0 0 55 12)(font "Arial" ))
-		(text "input_clock" (rect 21 27 76 39)(font "Arial" ))
-		(line (pt 0 32)(pt 16 32))
-	)
-	(port
-		(pt 200 32)
-		(output)
-		(text "output_enable" (rect 0 0 68 12)(font "Arial" ))
-		(text "output_enable" (rect 122 27 190 39)(font "Arial" ))
-		(line (pt 200 32)(pt 184 32))
-	)
-	(parameter
-		"COUNTER_SIZE"
-		"5"
-		""
-		(type "PARAMETER_SIGNED_DEC")	)
-	(drawing
-		(rectangle (rect 16 16 184 64))
-	)
-	(annotation_block (parameter)(rect -104 -104 94 -66))
-)
-(symbol
 	(rect -480 48 -416 128)
 	(text "DFF" (rect 1 0 19 10)(font "Arial" (font_size 6)))
 	(text "optimal_synch1" (rect 3 68 78 85)(font "Intel Clear" ))
@@ -1229,6 +1201,34 @@ refer to the applicable agreement for further details.
 		(rectangle (rect 16 16 528 192))
 	)
 	(annotation_block (parameter)(rect 344 -104 765 29))
+)
+(symbol
+	(rect -104 -56 96 24)
+	(text "enable_generator" (rect 5 0 88 12)(font "Arial" ))
+	(text "touchscreen_driver_enable_generator" (rect 8 64 188 81)(font "Intel Clear" ))
+	(port
+		(pt 0 32)
+		(input)
+		(text "input_clock" (rect 0 0 55 12)(font "Arial" ))
+		(text "input_clock" (rect 21 27 76 39)(font "Arial" ))
+		(line (pt 0 32)(pt 16 32))
+	)
+	(port
+		(pt 200 32)
+		(output)
+		(text "output_enable" (rect 0 0 68 12)(font "Arial" ))
+		(text "output_enable" (rect 122 27 190 39)(font "Arial" ))
+		(line (pt 200 32)(pt 184 32))
+	)
+	(parameter
+		"COUNTER_SIZE"
+		"9"
+		""
+		(type "PARAMETER_SIGNED_DEC")	)
+	(drawing
+		(rectangle (rect 16 16 184 64))
+	)
+	(annotation_block (parameter)(rect -104 -104 94 -66))
 )
 (connector
 	(pt 968 328)

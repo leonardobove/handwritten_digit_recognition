@@ -15,8 +15,6 @@ quartus/quartus_project/.qsys_edit/
 **/*.pin
 **/*.jdi
 **/*.sld
-**/*.pof
-**/*.sof
 python/bin/
 python/include/
 python/lib/
