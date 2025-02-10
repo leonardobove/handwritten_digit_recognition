@@ -1,27 +1,20 @@
-/**********
-* 1st dense layer implementation (output layer)
-*
-* Inputs: clk => clock signal, enable => enable signal, 
-*         reset => active high sync reset, in_data => in vector, 
-*
-* Outputs: layer_out => dense layer output
-*          layer_done => done signal
-* 
-***********/
+// Output layer module
+// This module applies a fully connected dense layer followed by a ReLU activation layer
 
 module output_layer #(
-  parameter HL_neurons = 32,
+  parameter HL_neurons = 32, // Neurons number of the previous layer
   parameter WIDTH = 8,
-  parameter OL_neurons = 10
+  parameter OL_neurons = 10 // Neurons number of the output layer
 	)(
   input clk,
   input output_go,
   input reset,
-  input signed [4*WIDTH*HL_neurons-1:0] output_in,
-  output signed [4*WIDTH*OL_neurons-1:0] output_out,
-  output output_done
+  input signed [4*WIDTH*HL_neurons-1:0] output_in, // Input from the hidden layer
+  output signed [4*WIDTH*OL_neurons-1:0] output_out, // Output activations after ReLU
+  output output_done // Signal indicating completion of computation
   );
     
+  // Internal signals
   wire signed [4*WIDTH*OL_neurons-1:0] dense_out;
   wire dense_done;
 
@@ -41,6 +34,7 @@ module output_layer #(
   8'sb10000001, 8'sb00010000, 8'sb00000101, 8'sb10110011, 8'sb10011011, 8'sb11111000, 8'sb00001100, 8'sb00001100, 8'sb00011001, 8'sb00001011, 8'sb00010000, 8'sb11110101, 8'sb00000000, 8'sb11010101, 8'sb00010101, 8'sb00010101, 8'sb11101000, 8'sb11110100, 8'sb00010011, 8'sb00001010, 8'sb00011100, 8'sb11101011, 8'sb11010100, 8'sb11011111, 8'sb00011001, 8'sb11110000, 8'sb10111110, 8'sb00010010, 8'sb11111111, 8'sb00100011, 8'sb11000100, 8'sb10011011
   };
   
+  // Dense layer instance
   dense_layer #(
     .NEURON_NB(OL_neurons),
     .IN_SIZE(HL_neurons), 
@@ -56,11 +50,11 @@ module output_layer #(
     .biases(biases_OL_param),
     .dense_out(dense_out), 
     .dense_done(dense_done)
-  ); //Dense layer
+  );
 
+  // Relu Lyer instance
   ReLU_layer #(
     .NEURON_NB(OL_neurons),
-    .IN_SIZE(HL_neurons),
     .WIDTH(4*WIDTH)
   ) ReLU_output_layer (
     .clk(clk),

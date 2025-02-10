@@ -1,42 +1,62 @@
+// Module: FW_logic_FSM (Feedforward Logic FSM)
+// Description: Controls the execution of an MLP (Multi-Layer Perceptron) network for digit prediction.
+// It sequences the computation through MLP activation and digit prediction stages.
+//
+// Inputs:
+// - clk: Clock signal
+// - reset: Active-high reset signal
+// - start: Start signal to initiate processing
+// - en: Enable signal for state transitions
+// - averaged_pixels: Flattened input pixel data for MLP
+//
+// Outputs:
+// - predict_digit: 4-bit predicted digit
+// - done: Indicates when computation is complete
+
 module FW_logic_FSM #(
-    parameter pixels_averaged_nr = 196,
+    parameter pixels_averaged_nr = 196, // Number of input pixels
     parameter WIDTH = 8
 )( 
     input clk,
     input reset,
     input start,
-    input [pixels_averaged_nr*WIDTH-1:0] averaged_pixels, // For example, 784*8 input pixels
+    input [pixels_averaged_nr*WIDTH-1:0] averaged_pixels, // Flattened input pixel data
     input en,
-    output [3:0] predict_digit,
-    output reg done
+    output [3:0] predict_digit, // Output predicted digit
+    output reg done // Done signal indicating completion
 );
+
+    // Number of neurons per layer
+    localparam HL_neurons = 32,
+               OL_neurons = 10;
 
     // Control signals
     reg MLP_go;
     reg predict_digit_go;
 
     // Internal signals
-    wire [10*4*WIDTH-1:0] activated_pixels;
-    wire MLP_done;
-    wire predict_digit_done;
+    wire [10*4*WIDTH-1:0] activated_pixels; // Output activations from MLP
+    wire MLP_done; // MLP computation completion signal
+    wire predict_digit_done; // Digit prediction completion signal
 
     // FSM states
-    localparam RESET               = 3'd0,
-               IDLE                = 3'd1,
-               MLP_START           = 3'd2,
-               MLP_WAIT            = 3'd3,
-               PREDICT_DIGIT_START = 3'd4, 
-               PREDICT_DIGIT_WAIT  = 3'd5,
-               DIGIT_OUT           = 3'd6;
+    localparam RESET               = 3'd0, // Reset state
+               IDLE                = 3'd1, // Waiting for start signal
+               MLP_START           = 3'd2, // Start MLP computation
+               MLP_WAIT            = 3'd3, // Wait for MLP completion
+               PREDICT_DIGIT_START = 3'd4, // Start digit prediction
+               PREDICT_DIGIT_WAIT  = 3'd5, // Wait for digit prediction completion
+               DIGIT_OUT           = 3'd6; // Output predicted digit
 
+    // FSM state registers
     reg [2:0] current_state, next_state;
 
     // MLP block for predictions
     MLP #(
         .averaged_pixels_nr(pixels_averaged_nr),
         .WIDTH(WIDTH),
-        .OL_neurons(10),
-        .HL_neurons(32)
+        .HL_neurons(HL_neurons), // Hidden layer neurons
+        .OL_neurons(OL_neurons)  // Output layer neurons 
     ) MLP_i (
         .clk(clk),
         .reset(reset),
@@ -48,7 +68,7 @@ module FW_logic_FSM #(
 
     // Predicted digit block
     predict_digit #(
-        .WIDTH(4*WIDTH)
+        .WIDTH(4*WIDTH) // Bit width for prediction module
     ) i_predict_digit (
         .clk(clk),
         .reset(reset),

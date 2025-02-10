@@ -15,20 +15,18 @@ module graphic_controller (
 
     // LT24 LCD driver interface
     output [15:0] pixel_rgb,
-    output print,
-    input driver_done,
+    output reg print,
     input driver_initialized
 );
 
     // FSM states
-    localparam RESET             = 3'd0,
-               WAIT_DRIVER_INIT  = 3'd1,
-               IDLE              = 3'd2,
-               WAIT_RAM          = 3'd3,
-               WAIT_DRIVER_DONE  = 3'd4;
+    localparam RESET             = 2'd0,
+               WAIT_DRIVER_INIT  = 2'd1,
+               IDLE              = 2'd2,
+               WAIT              = 2'd3;
 
     // Current state and future state
-    reg [2:0] Sreg, Snext;
+    reg [1:0] Sreg, Snext;
 
     localparam ROW_NUM = 8'd240;      // Rows number
     localparam COL_NUM = 9'd320;      // Columns number
@@ -60,9 +58,8 @@ module graphic_controller (
     // Frame buffer memory interface
     assign read_addr = ram_pointer;
 
-    // ILI9341 LCD interface
+    // ILI9341 LCD input pixel
     assign pixel_rgb = rgb565_color(ram_q);
-    assign print = (Sreg == WAIT_DRIVER_DONE);
 
     /* Convert 1-bit color to RGB565 color.
      * The following mapping is used:
@@ -100,47 +97,45 @@ module graphic_controller (
 
             IDLE:
                 if (en)
-                    Snext = WAIT_RAM;
+                    Snext = WAIT;
                 else
                     Snext = IDLE;
 
-            WAIT_RAM: Snext = WAIT_DRIVER_DONE;
-
-            WAIT_DRIVER_DONE: Snext = IDLE;
+            WAIT:
+                Snext = IDLE;
 
             default: Snext = RESET;
         endcase
     end
 
     always @ (Sreg) begin
-        ram_pointer_en_reg = 1'b0;
-        ram_pointer_reset_reg = 1'b1;
-
         case (Sreg)
             WAIT_DRIVER_INIT: begin
                 ram_pointer_en_reg = 1'b0;
                 ram_pointer_reset_reg = 1'b1;
+
+                print = 1'b0;
             end
 
             IDLE: begin
                 ram_pointer_en_reg = 1'b0;
                 ram_pointer_reset_reg = 1'b0;
+
+                print = 1'b0;
             end
 
-            WAIT_RAM: begin
-                ram_pointer_en_reg = 1'b0;
-                ram_pointer_reset_reg = 1'b0;
-
-            end
-
-            WAIT_DRIVER_DONE: begin
+            WAIT: begin
                 ram_pointer_en_reg = 1'b1;
                 ram_pointer_reset_reg = 1'b0;
+                
+                print = 1'b1;
             end
 
             default: begin
                 ram_pointer_en_reg = 1'b0;
                 ram_pointer_reset_reg = 1'b1;
+
+                print = 1'b0;
             end
         endcase
     end

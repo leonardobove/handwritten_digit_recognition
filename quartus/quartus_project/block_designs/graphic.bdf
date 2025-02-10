@@ -163,7 +163,7 @@ refer to the applicable agreement for further details.
 	(input)
 	(rect -296 -168 -128 -152)
 	(text "INPUT" (rect 125 0 153 10)(font "Arial" (font_size 6)))
-	(text "clk" (rect 5 0 20 12)(font "Arial" ))
+	(text "clk" (rect 5 0 19 12)(font "Arial" ))
 	(pt 168 8)
 	(drawing
 		(line (pt 84 12)(pt 109 12))
@@ -643,34 +643,6 @@ refer to the applicable agreement for further details.
 	(drawing
 		(line (pt 8 8)(pt 24 8))
 	)
-)
-(symbol
-	(rect -104 -192 96 -112)
-	(text "enable_generator" (rect 5 0 88 12)(font "Arial" ))
-	(text "graphic_manager_enable_generator" (rect 8 64 181 81)(font "Intel Clear" ))
-	(port
-		(pt 0 32)
-		(input)
-		(text "input_clock" (rect 0 0 55 12)(font "Arial" ))
-		(text "input_clock" (rect 21 27 76 39)(font "Arial" ))
-		(line (pt 0 32)(pt 16 32))
-	)
-	(port
-		(pt 200 32)
-		(output)
-		(text "output_enable" (rect 0 0 68 12)(font "Arial" ))
-		(text "output_enable" (rect 122 27 190 39)(font "Arial" ))
-		(line (pt 200 32)(pt 184 32))
-	)
-	(parameter
-		"COUNTER_SIZE"
-		"2"
-		""
-		(type "PARAMETER_SIGNED_DEC")	)
-	(drawing
-		(rectangle (rect 16 16 184 64))
-	)
-	(annotation_block (parameter)(rect -104 -240 94 -202))
 )
 (symbol
 	(rect -176 144 32 288)
@@ -1229,6 +1201,34 @@ refer to the applicable agreement for further details.
 		(rectangle (rect 16 16 184 64))
 	)
 	(annotation_block (parameter)(rect -104 -104 94 -66))
+)
+(symbol
+	(rect -104 -192 96 -112)
+	(text "enable_generator" (rect 5 0 88 12)(font "Arial" ))
+	(text "graphic_manager_enable_generator" (rect 8 64 181 81)(font "Intel Clear" ))
+	(port
+		(pt 0 32)
+		(input)
+		(text "input_clock" (rect 0 0 55 12)(font "Arial" ))
+		(text "input_clock" (rect 21 27 76 39)(font "Arial" ))
+		(line (pt 0 32)(pt 16 32))
+	)
+	(port
+		(pt 200 32)
+		(output)
+		(text "output_enable" (rect 0 0 68 12)(font "Arial" ))
+		(text "output_enable" (rect 122 27 190 39)(font "Arial" ))
+		(line (pt 200 32)(pt 184 32))
+	)
+	(parameter
+		"COUNTER_SIZE"
+		"1"
+		""
+		(type "PARAMETER_SIGNED_DEC")	)
+	(drawing
+		(rectangle (rect 16 16 184 64))
+	)
+	(annotation_block (parameter)(rect -104 -240 94 -202))
 )
 (connector
 	(pt 968 328)

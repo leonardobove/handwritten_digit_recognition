@@ -1,30 +1,20 @@
-//////////////////////////////////////////////////////////////////////////////////
-
-/**********
-* 1st dense layer implementation (hidden layer)
-*
-* Inputs: clk => clock signal, enable => enable signal, 
-*         reset => active high sync reset, pooled_img => in vector, 
-*
-* Outputs: hidden_out => dense layer output
-*          layer_done => done signal
-* 
-***********/
-
+// Hidden layer module
+// This module applies a fully connected dense layer followed by a ReLU activation layer
 
 module hidden_layer #(
-    parameter averaged_pixels_nr = 196,
+    parameter averaged_pixels_nr = 196, // Input pixels number
     parameter WIDTH = 8,
-    parameter HL_neurons = 32
+    parameter HL_neurons = 32 // Neuron number for the hidden layer
 	)(
     input clk,
     input hidden_go,
     input reset,
     input signed [WIDTH*averaged_pixels_nr-1:0] hidden_in,
     output signed [4*WIDTH*HL_neurons-1:0] hidden_out,
-    output hidden_done
+    output hidden_done // Signals indicating completion of computation
     );
     
+    // Internal signals
     wire signed [4*WIDTH*HL_neurons-1:0] dense_out;
     wire dense_done;
     
@@ -66,6 +56,7 @@ module hidden_layer #(
     8'sb11111110, 8'sb00000001, 8'sb11110000, 8'sb11110011, 8'sb11101011, 8'sb11100010, 8'sb11010100, 8'sb00011111, 8'sb00100000, 8'sb11000110, 8'sb11010101, 8'sb11101110, 8'sb11111011, 8'sb11111000, 8'sb00000011, 8'sb00100000, 8'sb00010010, 8'sb11111010, 8'sb00100010, 8'sb00000001, 8'sb00000101, 8'sb11110011, 8'sb00000110, 8'sb11110010, 8'sb11100100, 8'sb11011011, 8'sb11110000, 8'sb00000011, 8'sb00000001, 8'sb00011000, 8'sb00111001, 8'sb00010011, 8'sb00000101, 8'sb00010000, 8'sb00001000, 8'sb11111111, 8'sb00000110, 8'sb11111010, 8'sb00000111, 8'sb00010011, 8'sb11111100, 8'sb11101000, 8'sb00101111, 8'sb00000100, 8'sb11111010, 8'sb00001000, 8'sb00010000, 8'sb00101111, 8'sb00010010, 8'sb00001000, 8'sb00010101, 8'sb00011010, 8'sb00001111, 8'sb00001000, 8'sb00000000, 8'sb00001011, 8'sb00100111, 8'sb00000111, 8'sb11111100, 8'sb00001100, 8'sb00010101, 8'sb00100001, 8'sb00010101, 8'sb00010000, 8'sb00000100, 8'sb00000110, 8'sb11110101, 8'sb00000011, 8'sb11011111, 8'sb00010011, 8'sb11111010, 8'sb11010011, 8'sb11100000, 8'sb11101100, 8'sb11011111, 8'sb11001010, 8'sb10110110, 8'sb11110110, 8'sb11100011, 8'sb11001000, 8'sb11000000, 8'sb11001100, 8'sb11110001, 8'sb00011010, 8'sb00011000, 8'sb11010101, 8'sb10010001, 8'sb10001000, 8'sb10010010, 8'sb10100101, 8'sb11011100, 8'sb00001001, 8'sb11101101, 8'sb11110110, 8'sb11100101, 8'sb11001111, 8'sb11111101, 8'sb00110100, 8'sb11011111, 8'sb11101101, 8'sb11100100, 8'sb11100010, 8'sb11111010, 8'sb11111111, 8'sb00111000, 8'sb00100110, 8'sb00001001, 8'sb00011010, 8'sb00010001, 8'sb00001110, 8'sb00001100, 8'sb00110001, 8'sb11100100, 8'sb00000011, 8'sb00011000, 8'sb00011110, 8'sb00011100, 8'sb00010100, 8'sb00100100, 8'sb00010011, 8'sb00000101, 8'sb00000000, 8'sb00001011, 8'sb11111011, 8'sb00011101, 8'sb00110010, 8'sb11110110, 8'sb00010000, 8'sb00011001, 8'sb00011010, 8'sb00011110, 8'sb00001100, 8'sb00010011, 8'sb00000101, 8'sb00000111, 8'sb00001010, 8'sb00000101, 8'sb00000011, 8'sb01001110, 8'sb00101000, 8'sb11110101, 8'sb00001110, 8'sb00100100, 8'sb00010011, 8'sb00001101, 8'sb00001100, 8'sb00001111, 8'sb00010100, 8'sb00000100, 8'sb00000001, 8'sb00000111, 8'sb11111001, 8'sb00100001, 8'sb00011001, 8'sb00000011, 8'sb11011110, 8'sb00101110, 8'sb00001001, 8'sb11110001, 8'sb11111100, 8'sb00000011, 8'sb11110001, 8'sb11111100, 8'sb11100110, 8'sb11110100, 8'sb11111001, 8'sb00010110, 8'sb00100001, 8'sb00001001, 8'sb11100001, 8'sb00000111, 8'sb00000000, 8'sb00000101, 8'sb11110110, 8'sb00000010, 8'sb11111100, 8'sb11101001, 8'sb11100111, 8'sb11101010, 8'sb11100010, 8'sb00000000, 8'sb00011011, 8'sb00001001, 8'sb11110100, 8'sb11100110, 8'sb00000011, 8'sb00011011, 8'sb00011001, 8'sb11110110, 8'sb00001111, 8'sb11101111, 8'sb11110110, 8'sb11100000, 8'sb11110000, 8'sb00001101, 8'sb11110111
     };
     
+    // Dense layer computation
     dense_layer #(
         .NEURON_NB(HL_neurons),
         .IN_SIZE(averaged_pixels_nr), 
@@ -81,11 +72,11 @@ module hidden_layer #(
         .biases(biases_HL_param),
         .dense_out(dense_out), 
         .dense_done(dense_done)
-    ); //Dense layer
+    );
     
+    // ReLU activation layer
     ReLU_layer #(
         .NEURON_NB(HL_neurons),
-        .IN_SIZE(averaged_pixels_nr),
         .WIDTH(4*WIDTH)
     ) ReLU_hidden_layer (
         .clk(clk),

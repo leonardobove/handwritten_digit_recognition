@@ -6,7 +6,7 @@
 module painter #(
     parameter integer N_FRAMES = 2,
     parameter integer N_FRAMES_WIDTH = $clog2(N_FRAMES),
-    parameter integer PIXEL_NUM =  76800, // Pixels number
+    parameter integer PIXEL_NUM = 76800, // Pixels number
     parameter integer PIXEL_NUM_WIDTH = $clog2(PIXEL_NUM),
     parameter integer DRAWING_AREA_SIDE_LENGTH = 28,
     parameter integer DRAWING_AREA_ADDR_WIDTH = $clog2(DRAWING_AREA_SIDE_LENGTH**2)
@@ -47,13 +47,12 @@ module painter #(
     localparam COL_NUM = 9'd320;    // Columns number
  
     // FSM States
-    localparam RESET            = 3'd0,
-               IDLE             = 3'd1,
-               LOAD_FRAME       = 3'd2,
-               PAINT_PIXEL      = 3'd3,
-               WAIT_PAINT_PIXEL = 3'd4;
- 
-    reg [2:0] Sreg, Snext;
+    localparam RESET            = 2'd0,
+               IDLE             = 2'd1,
+               LOAD_FRAME       = 2'd2,
+               PAINT_PIXEL      = 2'd3;
+
+    reg [1:0] Sreg, Snext;
  
     // Buffer for the currently selected frame number
     reg [N_FRAMES_WIDTH-1:0] load_frame_sel_reg;
@@ -97,7 +96,7 @@ module painter #(
     );
  
     // ROM interface
-    assign rom_addr = rom_pointer + load_frame_sel_reg*PIXEL_NUM; // ROM pointer address with frame offset
+    assign rom_addr = rom_pointer + load_frame_sel_reg*PIXEL_NUM[PIXEL_NUM_WIDTH-1:0]; // ROM pointer address with frame offset
     reg rom_q_reg; // Buffer for ROM output data
  
     // Frame buffer memory interface
@@ -106,7 +105,7 @@ module painter #(
      *  If the screen has been touched, draw the corresponding pixel white (1'b1).
      *  Otherwise leave it to 0.
      */
-    assign ram_data = (Sreg == LOAD_FRAME) ? rom_q_reg : (Sreg == PAINT_PIXEL || Sreg == WAIT_PAINT_PIXEL) ? 1'b1 : 1'b0;
+    assign ram_data = (Sreg == LOAD_FRAME) ? rom_q_reg : (Sreg == PAINT_PIXEL) ? 1'b1 : 1'b0;
     /*  If the screen has been touched, add a white pixel at the coordinates given by the touchscreen driver, i.e.
      *  col = (x_pos/4096) * COL_NUM and row = (y_pos/4096) + ROW_NUM.
      *  If a new frame has to be loaded, the position pixel to be drawn comes from the current rom_pointer,
@@ -114,8 +113,13 @@ module painter #(
      *  Otherwise they are set to 0.
      */
  
-    reg [20:0] touchscreen_x;
-    reg [19:0] touchscreen_y;
+    reg [20:0] touchscreen_x_temp;	// Temporary variables for calculations
+    reg [19:0] touchscreen_y_temp;
+	 wire [8:0] touchscreen_x;			// Final (x, y) coordinates of touched pixel
+	 wire [7:0] touchscreen_y;
+	 
+	 assign touchscreen_x = touchscreen_x_temp[8:0];
+	 assign touchscreen_y = touchscreen_y_temp[7:0]; 
  
     // Output ranges from touchscreen ADC
     localparam TS_MINX = 12'd0;//750; with 12
@@ -126,23 +130,23 @@ module painter #(
     // Map touchscreen ADC values to pixel coordinates
     always @ (*) begin
         if (x_pos < TS_MINX)
-            touchscreen_x = 1'b0;
+            touchscreen_x_temp = 1'b0;
         else if (x_pos > TS_MAXX)
-            touchscreen_x = COL_NUM - 1'b1;
+            touchscreen_x_temp = COL_NUM - 1'b1;
         else
-            touchscreen_x = ((x_pos - TS_MINX) * (COL_NUM - 1'b1)) >> 12;
+            touchscreen_x_temp = ((x_pos - TS_MINX) * (COL_NUM - 1'b1)) >> 12;
            
         if (y_pos < TS_MINY)
-            touchscreen_y = ROW_NUM - 1'b1;
+            touchscreen_y_temp = ROW_NUM - 1'b1;
         else if (y_pos > TS_MAXY)
-            touchscreen_y = 1'b0;
+            touchscreen_y_temp = 1'b0;
         else
-            touchscreen_y = ((TS_MAXY - y_pos) * (ROW_NUM - 1'b1)) >> 12;
+            touchscreen_y_temp = ((TS_MAXY - y_pos) * (ROW_NUM - 1'b1)) >> 12;
     end
  
     // Set frame buffer write address
     always @ (*) begin
-        if (Sreg == PAINT_PIXEL || Sreg == WAIT_PAINT_PIXEL)
+        if (Sreg == PAINT_PIXEL)
             ram_write_addr = touchscreen_y*COL_NUM + touchscreen_x;
         else if (Sreg == LOAD_FRAME)
             ram_write_addr = rom_pointer;
@@ -155,10 +159,10 @@ module painter #(
         // Add touched pixel to the neural network inputs array
         // as a white pixel (1).
         // Add it only if the touch happened inside a specific drawing area.
-        if ((Sreg == PAINT_PIXEL || Sreg == WAIT_PAINT_PIXEL) &&
+        if ((Sreg == PAINT_PIXEL) &&
             touchscreen_x >= 21'd0 && touchscreen_x < DRAWING_AREA_SIDE_LENGTH &&
             touchscreen_y >= 20'd0 && touchscreen_y < DRAWING_AREA_SIDE_LENGTH)
-            nn_ram_write_addr = DRAWING_AREA_SIDE_LENGTH**2 - (touchscreen_y*DRAWING_AREA_SIDE_LENGTH + touchscreen_x);
+            nn_ram_write_addr = (DRAWING_AREA_SIDE_LENGTH[$clog2(DRAWING_AREA_SIDE_LENGTH)-1:0])**2 - (touchscreen_y*DRAWING_AREA_SIDE_LENGTH[$clog2(DRAWING_AREA_SIDE_LENGTH)-1:0] + touchscreen_x);
         else if (Sreg == LOAD_FRAME)
             nn_ram_write_addr = nn_ram_pointer;
         else
@@ -195,7 +199,7 @@ module painter #(
                     Snext = RESET;
  
             IDLE:
-                if (pos_ready && en) //TODO: remove these enable conditions
+                if (pos_ready)
                     Snext = PAINT_PIXEL;
                 else if ((load_frame_sel_reg != load_frame_sel) || clear_display)   // Check if frame selection has changed or if the display needs to be cleared
                     Snext = LOAD_FRAME;
@@ -208,10 +212,8 @@ module painter #(
                 else
                     Snext = LOAD_FRAME;
  
-            PAINT_PIXEL: Snext = WAIT_PAINT_PIXEL;
- 
-            WAIT_PAINT_PIXEL: Snext = IDLE;
- 
+            PAINT_PIXEL: Snext = IDLE;
+  
             default: Snext = RESET;
         endcase
  
@@ -251,15 +253,6 @@ module painter #(
             end
  
             PAINT_PIXEL: begin
-                ram_write_en = 1'b1;
-                rom_pointer_en_reg = 1'b0;
-                rom_pointer_reset_reg = 1'b1;
- 
-                nn_ram_we = 1'b1;
-                nn_ram_data = 1'b1;
-            end
- 
-            WAIT_PAINT_PIXEL: begin
                 ram_write_en = 1'b1;
                 rom_pointer_en_reg = 1'b0;
                 rom_pointer_reset_reg = 1'b1;

@@ -14,7 +14,6 @@ module lt24_lcd_driver (
     input reset,
     input [15:0] pixel_rgb, // 16-bit RGB code (5-bit red, 6-bit green, 5-bit blue)
     input print,
-    output reg done,
     output reg initialized,
 
     // ILI9341 interface
@@ -241,7 +240,7 @@ module lt24_lcd_driver (
                     Snext = RESET_WAIT_INIT;
 
             IDLE:
-                if (print && en)
+                if (print)
                     Snext = WRITE;
                 else
                     Snext = IDLE;
@@ -249,7 +248,7 @@ module lt24_lcd_driver (
             WRITE: Snext = WRITE_BUSY;
             
             WRITE_BUSY:
-                if (print && en)
+                if (print)
                     Snext = WRITE;
                 else
                     Snext = IDLE;
@@ -265,7 +264,6 @@ module lt24_lcd_driver (
         init_cnt_en_reg = 1'b0;
         init_cnt_reset_reg = 1'b1;
 
-        done = 1'b0;
         initialized = 1'b0;
 
         case (Sreg)
@@ -297,17 +295,14 @@ module lt24_lcd_driver (
             end
 
             IDLE: begin
-                done = 1'b1;
                 initialized = 1'b1;
             end
 
             WRITE: begin
-                done = 1'b0;
                 initialized = 1'b1;
             end
 
             WRITE_BUSY: begin
-                done = 1'b1;
                 initialized = 1'b1;
             end
 
@@ -319,7 +314,6 @@ module lt24_lcd_driver (
                 init_cnt_en_reg = 1'b0;
                 init_cnt_reset_reg = 1'b1;
         
-                done = 1'b0;
                 initialized = 1'b0;
             end
         endcase

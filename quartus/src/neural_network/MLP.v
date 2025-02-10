@@ -1,18 +1,23 @@
-/**********
-* Neural Network implementation
-*
-* Inputs: clk => clock signal, enable => NN enable signal, img => in vector, 
-*
-* Outputs: digit out => handwritten digit
-*          MLP_done => done signal
-* 
-***********/
+// Module: MLP (Multi-Layer Perceptron)
+// Description: Implements a simple MLP with a hidden layer and an output layer.
+// It processes input features using a fully connected neural network structure.
+//
+// Inputs:
+// - clk: Clock signal
+// - reset: Active-high reset signal
+// - MLP_go: Start signal to begin computation
+// - averaged_pixels: Flattened input feature vector
+//
+// Outputs:
+// - MLP_done: Indicates when computation is complete
+// - output_activations: Flattened output activations from the output layer
+
 module MLP #(
     //constants
-    parameter averaged_pixels_nr = 196,
-    parameter WIDTH = 8,
-    parameter HL_neurons = 32,
-    parameter OL_neurons = 10
+    parameter averaged_pixels_nr = 196, // Number of input features
+    parameter WIDTH = 8, // Bit width for input and weights
+    parameter HL_neurons = 32, // Number of neurons in the hidden layer
+    parameter OL_neurons = 10 // Number of neurons in the output layer
 	)(
     input clk,
     input reset,
@@ -22,6 +27,7 @@ module MLP #(
     output [4*WIDTH*OL_neurons-1:0] output_activations
     );
       
+    // Internal signals
     wire hidden_done;
     wire signed [4*WIDTH*HL_neurons-1:0] hidden_out;
     

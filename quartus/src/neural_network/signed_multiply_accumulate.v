@@ -1,5 +1,4 @@
 // Signed multiply-accumulate
-
 module signed_multiply_accumulate #(
 	parameter WIDTH_A = 32,
 	parameter WIDTH_B = 8,

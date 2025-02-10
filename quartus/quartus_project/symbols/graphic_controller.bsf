@@ -54,16 +54,9 @@ refer to the applicable agreement for further details.
 	(port
 		(pt 224 64)
 		(input)
-		(text "driver_done" (rect 0 0 57 12)(font "Arial" ))
-		(text "driver_done" (rect 142 56 199 68)(font "Arial" ))
-		(line (pt 208 64)(pt 224 64))
-	)
-	(port
-		(pt 224 80)
-		(input)
 		(text "driver_initialized" (rect 0 0 77 12)(font "Arial" ))
-		(text "driver_initialized" (rect 122 72 199 84)(font "Arial" ))
-		(line (pt 208 80)(pt 224 80))
+		(text "driver_initialized" (rect 122 56 199 68)(font "Arial" ))
+		(line (pt 208 64)(pt 224 64))
 	)
 	(port
 		(pt 0 112)
@@ -83,14 +76,14 @@ refer to the applicable agreement for further details.
 		(pt 224 32)
 		(output)
 		(text "pixel_rgb[15..0]" (rect 0 0 75 12)(font "Arial" ))
-		(text "pixel_rgb[15..0]" (rect 140 27 203 39)(font "Arial" ))
+		(text "pixel_rgb[15..0]" (rect 140 27 215 39)(font "Arial" ))
 		(line (pt 224 32)(pt 208 32)(line_width 3))
 	)
 	(port
 		(pt 224 48)
 		(output)
 		(text "print" (rect 0 0 21 12)(font "Arial" ))
-		(text "print" (rect 186 43 203 55)(font "Arial" ))
+		(text "print" (rect 186 43 207 55)(font "Arial" ))
 		(line (pt 224 48)(pt 208 48))
 	)
 	(drawing

@@ -1,8 +1,17 @@
+// Module: neuron
+// Description:
+// This module models a neuron. It performs
+// the computation of a weighted sum of input data with a bias term. The module
+// multiplies each input by its corresponding weight, sums them, and adds a bias 
+// to produce the final output. The module is controlled by a finite state machine 
+// (FSM) that manages the stages of computation, including reset, data processing, 
+// and output generation.
+
 module neuron #(
-    parameter IN_SIZE = 196,
-    parameter WIDTH = 8,
-    parameter WIDTH_IN = 8,
-    parameter WIDTH_OUT = 32
+    parameter IN_SIZE = 196, // Number of input neurons
+    parameter WIDTH = 8, // Bit width of input data and weights
+    parameter WIDTH_IN = 8, // Bit width of the input data
+    parameter WIDTH_OUT = 32 // Bit width of the output neuron value
 )(
     input clk,                                     // Clock signal
     input reset,                                   // Reset signal
@@ -14,21 +23,25 @@ module neuron #(
     output neuron_done
 );
 
-    // FSM States
-    localparam RESET  = 2'd0,
-               IDLE   = 2'd1,
-               MAC    = 2'd2,
-               OUTPUT = 2'd3;
+    // State machine states for FSM (Finite State Machine) control
+    localparam RESET  = 2'd0, // Reset state
+               IDLE   = 2'd1, // Idle state (waiting for neuron_go signal)
+               MAC    = 2'd2, // MAC (Multiply and Accumulate) state for computation
+               OUTPUT = 2'd3; // Output state (once computation is done)
 
+    // Register declarations for FSM state, control signals, and counter
     reg [1:0] current_state, next_state;
     reg mac_clken, mac_sload;
     reg count_en, count_reset;
 
+    // Wire declarations
     wire signed [WIDTH_OUT-1:0] mac_result;
     wire [$clog2(IN_SIZE)-1:0] index;
 
+    // Output assignments
     assign neuron_done = (current_state == OUTPUT);
     assign output_neuron = (current_state == OUTPUT) ? mac_result + {{(WIDTH_OUT-WIDTH_IN){bias[7]}}, bias[7:0]} : 32'd0;
+    // The output neuron value is the MAC result plus the bias (extended to 32 bit) when in OUTPUT state, otherwise it's 0
 
     // MAC module instance
     signed_multiply_accumulate #(
@@ -40,11 +53,12 @@ module neuron #(
         .aclr(reset),
         .clken(mac_clken),
         .sload(mac_sload),
-        .dataa(in_data[(index+1)*WIDTH_IN-1 -: WIDTH_IN]),
-        .datab(weight[(index+1)*WIDTH-1 -: WIDTH]),
+        .dataa(in_data[(index+1)*WIDTH_IN-1 -: WIDTH_IN]), // Input data slice for current index
+        .datab(weight[(index+1)*WIDTH-1 -: WIDTH]), // Weight slice for current index
         .adder_out(mac_result)
     );
 
+    // Instantiate a counter to keep track of the current index in the input data and weights
     counter #(
         .MAX_VALUE(IN_SIZE)
     ) count_input_data_element (
@@ -70,7 +84,7 @@ module neuron #(
 
             IDLE:
                 if (neuron_go)
-                    next_state = MAC;
+                    next_state = MAC; // Move to MAC state if neuron_go is high
                 else
                     next_state = IDLE;
 

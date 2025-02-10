@@ -8,25 +8,31 @@ module average_n_pixels #(
     input clk,
     input reset,
     input [n-1:0] input_pixels,
-    output reg [output_resolution-1:0] out
+    output [output_resolution-1:0] out
 );
 
-    // Declare sum with enough bits to contain the sum of n integers of resolution bits
-    reg [1+$clog2(n):0] sum;
+   // Declare sum with enough bits to contain the sum of n integers of resolution bits
+   reg [1+$clog2(n):0] sum;
 
-    integer i;
-    always @ (*) begin
-        sum = 0;
-        for (i = 0; i < n; i = i + 1)
-            sum = sum + input_pixels[i +: 1];
-    end
+   integer i;
+   always @ (*) begin
+       sum = 0;
+       for (i = 0; i < n; i = i + 1)
+           sum = sum + input_pixels[i +: 1];
+   end
 
-    // Clear or update data
+	// Temporary registred output for calculations
+	reg [$clog2(n)+output_resolution-1:0] out_temp;
+   
+	// Clear or update data
 	always @ (posedge clk) begin
 		if (reset)
-			out <= 0;
+			out_temp <= 0;
 		else
-         out <= (sum * (2**(output_resolution - 1'b1) - 1'b1)) >> $clog2(n);
+         out_temp <= (sum * ((1'b1<<(output_resolution - 1'b1)) - 1'b1)) >> $clog2(n);
 	end
+	
+	// Assign only output_resolution LSBs to out
+	assign out = out_temp[output_resolution-1:0];
 
 endmodule

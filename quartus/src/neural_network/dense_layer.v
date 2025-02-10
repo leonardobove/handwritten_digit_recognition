@@ -1,34 +1,24 @@
-/**********
-* Dense dense implementation
-*
-* Parameters: NEURON_NB => The # of neurons
-*             IN_SIZE => The input vector size
-*             WIDTH => The width of the weights and biases
-*
-* Inputs: clk => clock signal, dense_en => enable signal, 
-*         reset => active high sync reset signal, in_data => in vector, 
-*         weights => neurons weights, biases => neurons biases
-*
-* Outputs: neuron_out => dense dense output
-*          dense_done => done signal
-* 
-***********/
+// This module is a dense layer for the MLP. 
+// It generates neuron instantiations and produces the computed neuron activations as outputs, 
+// along with a done signal that is set to 1 when all neurons have completed their computations. 
+// The module has different width parameters since the input data length varies between layers, 
+// while the output remains 32 bits. The weights and biases maintain an 8-bit precision.
 
 module dense_layer # (
-    parameter NEURON_NB=32, 
-    parameter IN_SIZE=196, 
-    parameter WIDTH=8,
-    parameter WIDTH_IN=8,
-    parameter WIDTH_OUT=32
+    parameter NEURON_NB = 32, // Number of neurons in the dense layer
+    parameter IN_SIZE = 196, // Number of input features per neuron
+    parameter WIDTH = 8, // Bit width for weights and biases
+    parameter WIDTH_IN = 8, // Bit width of the input data
+    parameter WIDTH_OUT = 32 // Bit width of the output data
     )(
     input clk,
-    input dense_go,
+    input dense_go, // Start signal for computation
     input reset,
-    input signed [WIDTH_IN*IN_SIZE-1:0] dense_in,
+    input signed [WIDTH_IN*IN_SIZE-1:0] dense_in, // Flattened input data array
     input signed [WIDTH*NEURON_NB*IN_SIZE-1:0] weights,
     input signed [WIDTH*NEURON_NB-1:0] biases,
-    output signed [WIDTH_OUT*NEURON_NB-1:0] dense_out,
-    output dense_done
+    output signed [WIDTH_OUT*NEURON_NB-1:0] dense_out, // Output activations
+    output dense_done // Signal indicating completion of computation
     );
     
     wire [NEURON_NB-1:0] neuron_done;
@@ -55,6 +45,7 @@ module dense_layer # (
         end
     endgenerate
 
+    // All neurons must complete for dense layer to be done
     assign dense_done = ((neuron_done & (2**NEURON_NB - 1'b1)) == 2**NEURON_NB - 1'b1);
 
 endmodule
