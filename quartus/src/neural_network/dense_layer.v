@@ -1,8 +1,8 @@
 // This module is a dense layer for the MLP. 
 // It generates neuron instantiations and produces the computed neuron activations as outputs, 
 // along with a done signal that is set to 1 when all neurons have completed their computations. 
-// The module has different width parameters since the input data length varies between layers, 
-// while the output remains 32 bits. The weights and biases maintain an 8-bit precision.
+// The module has different width parameters since the input data length varies between layers. 
+// The weights and biases maintain an 8-bit precision.
 
 module dense_layer # (
     parameter NEURON_NB = 32, // Number of neurons in the dense layer
@@ -46,6 +46,6 @@ module dense_layer # (
     endgenerate
 
     // All neurons must complete for dense layer to be done
-    assign dense_done = ((neuron_done & (2**NEURON_NB - 1'b1)) == 2**NEURON_NB - 1'b1);
+    assign dense_done = (neuron_done == 2**NEURON_NB - 1'b1);
 
 endmodule
