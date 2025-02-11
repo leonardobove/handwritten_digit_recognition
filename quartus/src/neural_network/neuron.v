@@ -11,7 +11,7 @@ module neuron #(
     parameter IN_SIZE = 196, // Number of input neurons
     parameter WIDTH = 8, // Bit width of input data and weights
     parameter WIDTH_IN = 8, // Bit width of the input data
-    parameter WIDTH_OUT = 32 // Bit width of the output neuron value
+    parameter WIDTH_OUT = 24 // Bit width of the output neuron value
 )(
     input clk,                                     // Clock signal
     input reset,                                   // Reset signal
@@ -41,7 +41,7 @@ module neuron #(
     // Output assignments
     assign neuron_done = (current_state == OUTPUT);
     assign output_neuron = (current_state == OUTPUT) ? mac_result + {{(WIDTH_OUT-WIDTH){bias[7]}}, bias[7:0]} : {(WIDTH_OUT){1'b0}};
-    // The output neuron value is the MAC result plus the bias (extended to 32 bit) when in OUTPUT state, otherwise it's 0
+    // The output neuron value is the MAC result plus the bias (extended to WIDTH_OUT) when in OUTPUT state, otherwise it's 0
 
     // MAC module instance
     signed_multiply_accumulate #(
