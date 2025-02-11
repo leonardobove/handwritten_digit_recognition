@@ -35,7 +35,7 @@ module FW_logic_FSM #(
     reg predict_digit_go;
 
     // Internal signals
-    wire [10*4*WIDTH-1:0] activated_pixels; // Output activations from MLP
+    wire [10*5*WIDTH-1:0] activated_pixels; // Output activations from MLP
     wire MLP_done; // MLP computation completion signal
     wire predict_digit_done; // Digit prediction completion signal
 
@@ -68,7 +68,7 @@ module FW_logic_FSM #(
 
     // Predicted digit block
     predict_digit #(
-        .WIDTH(4*WIDTH) // Bit width for prediction module
+        .WIDTH(5*WIDTH) // Bit width for prediction module
     ) i_predict_digit (
         .clk(clk),
         .reset(reset),

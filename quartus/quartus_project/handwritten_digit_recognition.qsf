@@ -79,7 +79,7 @@ set_global_assignment -name EDA_SIMULATION_TOOL "ModelSim-Altera (Verilog)"
 set_global_assignment -name EDA_TIME_SCALE "1 ps" -section_id eda_simulation
 set_global_assignment -name EDA_OUTPUT_DATA_FORMAT "VERILOG HDL" -section_id eda_simulation
 set_global_assignment -name EDA_TEST_BENCH_ENABLE_STATUS TEST_BENCH_MODE -section_id eda_simulation
-set_global_assignment -name EDA_NATIVELINK_SIMULATION_TEST_BENCH average_pooling_n_tb -section_id eda_simulation
+set_global_assignment -name EDA_NATIVELINK_SIMULATION_TEST_BENCH predict_digit_tb -section_id eda_simulation
 set_global_assignment -name EDA_TEST_BENCH_NAME graphic_manager_tb -section_id eda_simulation
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id graphic_manager_tb
 set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME graphic_manager_tb -section_id graphic_manager_tb
@@ -174,11 +174,6 @@ set_global_assignment -name EDA_TEST_BENCH_FILE ../tb/average_pooling_n_tb.v -se
 set_global_assignment -name EDA_TEST_BENCH_FILE ../tb/average_pooling_tb.v -section_id average_pooling_tb
 set_global_assignment -name EDA_TEST_BENCH_FILE ../tb/predict_digit_tb.v -section_id predict_digit_tb
 set_global_assignment -name EDA_TEST_BENCH_FILE ../tb/controller_tb.v -section_id controller_tb
-set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
-set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
-set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
-set_global_assignment -name LL_ROOT_REGION ON -section_id "Root Region"
-set_global_assignment -name LL_MEMBER_STATE LOCKED -section_id "Root Region"
 set_global_assignment -name SDC_FILE sdc_files/handwritten_digit_recognition.out.sdc
 set_global_assignment -name VERILOG_FILE ../src/neural_network/signed_multiply_accumulate.v
 set_global_assignment -name VERILOG_FILE ../src/neural_network/ReLU_layer.v
@@ -209,4 +204,9 @@ set_global_assignment -name VERILOG_FILE ../src/lt24_display/enable_generator.v
 set_global_assignment -name VERILOG_FILE ../src/lt24_display/clk_divisor.v
 set_global_assignment -name BDF_FILE block_designs/rising_edge_detector.bdf
 set_global_assignment -name BDF_FILE block_designs/debouncer.bdf
+set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
+set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
+set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
+set_global_assignment -name LL_ROOT_REGION ON -section_id "Root Region"
+set_global_assignment -name LL_MEMBER_STATE LOCKED -section_id "Root Region"
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

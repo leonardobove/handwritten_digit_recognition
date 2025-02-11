@@ -9,13 +9,13 @@ module output_layer #(
   input clk,
   input output_go,
   input reset,
-  input signed [4*WIDTH*HL_neurons-1:0] output_in, // Input from the hidden layer
-  output signed [4*WIDTH*OL_neurons-1:0] output_out, // Output activations after ReLU
+  input signed [3*WIDTH*HL_neurons-1:0] output_in, // Input from the hidden layer
+  output signed [5*WIDTH*OL_neurons-1:0] output_out, // Output activations after ReLU
   output output_done // Signal indicating completion of computation
   );
     
   // Internal signals
-  wire signed [4*WIDTH*OL_neurons-1:0] dense_out;
+  wire signed [5*WIDTH*OL_neurons-1:0] dense_out;
   wire dense_done;
 
   //Biases and weights
@@ -39,8 +39,8 @@ module output_layer #(
     .NEURON_NB(OL_neurons),
     .IN_SIZE(HL_neurons), 
     .WIDTH(WIDTH),
-    .WIDTH_IN(4*WIDTH),
-    .WIDTH_OUT(4*WIDTH)
+    .WIDTH_IN(3*WIDTH),
+    .WIDTH_OUT(5*WIDTH)
   ) output_dense (
     .clk(clk), 
     .dense_go(output_go), 
@@ -52,10 +52,10 @@ module output_layer #(
     .dense_done(dense_done)
   );
 
-  // Relu Lyer instance
+  // Relu Layer instance
   ReLU_layer #(
     .NEURON_NB(OL_neurons),
-    .WIDTH(4*WIDTH)
+    .WIDTH(5*WIDTH)
   ) ReLU_output_layer (
     .clk(clk),
     .reset(reset),

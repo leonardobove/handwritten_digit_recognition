@@ -13,7 +13,7 @@ reg clk;
 reg reset;
 reg start;
 wire en;
-reg [DATA_WIDTH*VECTOR_SIZE-1:0] input_vector;  // 784 8-bit values in a single vector
+reg [DATA_WIDTH*VECTOR_SIZE-1:0] input_vector;  // VECTOR_SIZE 8-bit values in a single vector
 wire [3:0] dut_output;           
 reg [3:0] expected_output; 
 wire done;      
@@ -61,7 +61,7 @@ initial begin
     $write("Hidden layer output\n");
     $write("[ ");
     for (i = dut.FW_logic_FSM_i.MLP_i.hidden_layer_i.hidden_dense.NEURON_NB; i >= 1; i = i - 1) begin
-        $write("%d, ", $signed(dut.FW_logic_FSM_i.MLP_i.hidden_layer_i.hidden_dense.dense_out[(32*i-1)-:32]));
+        $write("%d, ", $signed(dut.FW_logic_FSM_i.MLP_i.hidden_layer_i.hidden_dense.dense_out[(24*i-1)-:24]));
     end
     $write("]\n");
 
@@ -70,7 +70,7 @@ initial begin
     $write("Hidden Relu output\n");
     $write("[ ");
     for (i = dut.FW_logic_FSM_i.MLP_i.hidden_layer_i.HL_neurons; i >= 1; i = i - 1) begin
-        $write("%d, ", $signed(dut.FW_logic_FSM_i.MLP_i.hidden_layer_i.hidden_out[(32*i-1)-:32]));
+        $write("%d, ", $signed(dut.FW_logic_FSM_i.MLP_i.hidden_layer_i.hidden_out[(24*i-1)-:24]));
     end
     $write("]\n");
 
@@ -78,8 +78,8 @@ initial begin
     wait(dut.FW_logic_FSM_i.MLP_i.output_layer_i.output_dense.dense_done);
     $write("Output layer output\n");
     $write("[ ");
-    for (i = 1; i <= dut.FW_logic_FSM_i.MLP_i.output_layer_i.OL_neurons; i = i + 1) begin
-        $write("%d, ", $signed(dut.FW_logic_FSM_i.MLP_i.output_layer_i.output_dense.dense_out[(32*i-1)-:32]));
+    for (i = dut.FW_logic_FSM_i.MLP_i.output_layer_i.OL_neurons; i >= 1; i = i - 1) begin
+        $write("%d, ", $signed(dut.FW_logic_FSM_i.MLP_i.output_layer_i.output_dense.dense_out[(40*i-1)-:40]));
     end
     $write("]\n");
 
@@ -87,8 +87,8 @@ initial begin
     wait(dut.FW_logic_FSM_i.MLP_i.output_layer_i.ReLU_output_layer.relu_done);
     $write("Output Relu output\n");
     $write("[ ");
-    for (i = 1; i <= dut.FW_logic_FSM_i.MLP_i.output_layer_i.OL_neurons; i = i + 1) begin
-        $write("%d, ", $signed(dut.FW_logic_FSM_i.MLP_i.output_layer_i.output_out[(32*i-1)-:32]));
+    for (i = dut.FW_logic_FSM_i.MLP_i.output_layer_i.OL_neurons; i >= 1; i = i - 1) begin
+        $write("%d, ", $signed(dut.FW_logic_FSM_i.MLP_i.output_layer_i.output_out[(40*i-1)-:40]));
     end
     $write("]\n");
 
@@ -108,7 +108,7 @@ initial begin
     $write("Hidden layer output\n");
     $write("[ ");
     for (i = 1; i <= dut.FW_logic_FSM_i.MLP_i.hidden_layer_i.HL_neurons; i = i + 1) begin
-        $write("%d, ", $signed(dut.FW_logic_FSM_i.MLP_i.hidden_layer_i.hidden_dense.dense_out[(32*i-1)-:32]));
+        $write("%d, ", $signed(dut.FW_logic_FSM_i.MLP_i.hidden_layer_i.hidden_dense.dense_out[(24*i-1)-:24]));
     end
     $write("]\n");
  
@@ -117,7 +117,7 @@ initial begin
     $write("Hidden Relu output\n");
     $write("[ ");
     for (i = 1; i <= dut.FW_logic_FSM_i.MLP_i.hidden_layer_i.HL_neurons; i = i + 1) begin
-        $write("%d, ", $signed(dut.FW_logic_FSM_i.MLP_i.hidden_layer_i.hidden_out[(32*i-1)-:32]));
+        $write("%d, ", $signed(dut.FW_logic_FSM_i.MLP_i.hidden_layer_i.hidden_out[(24*i-1)-:24]));
     end
     $write("]\n");
 
@@ -126,7 +126,7 @@ initial begin
     $write("Output layer output\n");
     $write("[ ");
     for (i = 1; i <= dut.FW_logic_FSM_i.MLP_i.output_layer_i.OL_neurons; i = i + 1) begin
-        $write("%d, ", $signed(dut.FW_logic_FSM_i.MLP_i.output_layer_i.output_dense.dense_out[(32*i-1)-:32]));
+        $write("%d, ", $signed(dut.FW_logic_FSM_i.MLP_i.output_layer_i.output_dense.dense_out[(40*i-1)-:40]));
     end
     $write("]\n");
 
@@ -135,7 +135,7 @@ initial begin
     $write("Output Relu output\n");
     $write("[ ");
     for (i = 1; i <= dut.FW_logic_FSM_i.MLP_i.output_layer_i.OL_neurons; i = i + 1) begin
-        $write("%d, ", $signed(dut.FW_logic_FSM_i.MLP_i.output_layer_i.output_out[(32*i-1)-:32]));
+        $write("%d, ", $signed(dut.FW_logic_FSM_i.MLP_i.output_layer_i.output_out[(40*i-1)-:40]));
     end
     $write("]\n");
 

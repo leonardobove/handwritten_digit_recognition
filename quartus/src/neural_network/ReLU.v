@@ -17,7 +17,7 @@ module ReLU #(
     wire signed [WIDTH-1:0] temp;
 
     // Apply ReLU: If data_in > 0, keep data_in; otherwise, set to 0
-    assign temp = (data_in > 0) ? data_in : 0;
+    assign temp = (data_in > 0) ? data_in : {(WIDTH){1'b0}};
 
     // Sequential block to control output data_out based on the clock
     always @(posedge clk) begin

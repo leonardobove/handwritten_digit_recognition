@@ -10,12 +10,12 @@ module hidden_layer #(
     input hidden_go,
     input reset,
     input signed [WIDTH*averaged_pixels_nr-1:0] hidden_in,
-    output signed [4*WIDTH*HL_neurons-1:0] hidden_out,
+    output signed [3*WIDTH*HL_neurons-1:0] hidden_out,
     output hidden_done // Signals indicating completion of computation
     );
     
     // Internal signals
-    wire signed [4*WIDTH*HL_neurons-1:0] dense_out;
+    wire signed [3*WIDTH*HL_neurons-1:0] dense_out;
     wire dense_done;
     
     //Biases and weights
@@ -62,7 +62,7 @@ module hidden_layer #(
         .IN_SIZE(averaged_pixels_nr), 
         .WIDTH(WIDTH),
         .WIDTH_IN(WIDTH),
-        .WIDTH_OUT(4*WIDTH)
+        .WIDTH_OUT(3*WIDTH)
     ) hidden_dense (
         .clk(clk), 
         .dense_go(hidden_go), 
@@ -77,7 +77,7 @@ module hidden_layer #(
     // ReLU activation layer
     ReLU_layer #(
         .NEURON_NB(HL_neurons),
-        .WIDTH(4*WIDTH)
+        .WIDTH(3*WIDTH)
     ) ReLU_hidden_layer (
         .clk(clk),
         .reset(reset),

@@ -24,12 +24,12 @@ module MLP #(
     input MLP_go,
     input [WIDTH*averaged_pixels_nr-1:0] averaged_pixels,
     output MLP_done,
-    output [4*WIDTH*OL_neurons-1:0] output_activations
+    output [5*WIDTH*OL_neurons-1:0] output_activations
     );
       
     // Internal signals
     wire hidden_done;
-    wire signed [4*WIDTH*HL_neurons-1:0] hidden_out;
+    wire signed [3*WIDTH*HL_neurons-1:0] hidden_out;
     
     /* Hidden layer */
     hidden_layer #(

@@ -40,7 +40,7 @@ module neuron #(
 
     // Output assignments
     assign neuron_done = (current_state == OUTPUT);
-    assign output_neuron = (current_state == OUTPUT) ? mac_result + {{(WIDTH_OUT-WIDTH_IN){bias[7]}}, bias[7:0]} : 32'd0;
+    assign output_neuron = (current_state == OUTPUT) ? mac_result + {{(WIDTH_OUT-WIDTH){bias[7]}}, bias[7:0]} : {(WIDTH_OUT){1'b0}};
     // The output neuron value is the MAC result plus the bias (extended to 32 bit) when in OUTPUT state, otherwise it's 0
 
     // MAC module instance

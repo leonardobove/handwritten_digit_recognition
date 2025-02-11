@@ -1,7 +1,7 @@
-quartus/quartus_project/db
-quartus/quartus_project/incremental_db/
-quartus/quartus_project/simulation/
-quartus/quartus_project/.qsys_edit/
+**/db/
+**/incremental_db/
+**/simulation/
+**/.qsys_edit/
 **/*.qws
 **/*.done
 **/*.rpt
@@ -15,6 +15,8 @@ quartus/quartus_project/.qsys_edit/
 **/*.pin
 **/*.jdi
 **/*.sld
+**/*.cdb
+**/*.hdb
 python/bin/
 python/include/
 python/lib/
