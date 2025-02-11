@@ -174,6 +174,12 @@ set_global_assignment -name EDA_TEST_BENCH_FILE ../tb/average_pooling_n_tb.v -se
 set_global_assignment -name EDA_TEST_BENCH_FILE ../tb/average_pooling_tb.v -section_id average_pooling_tb
 set_global_assignment -name EDA_TEST_BENCH_FILE ../tb/predict_digit_tb.v -section_id predict_digit_tb
 set_global_assignment -name EDA_TEST_BENCH_FILE ../tb/controller_tb.v -section_id controller_tb
+set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
+set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
+set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
+set_global_assignment -name LL_ROOT_REGION ON -section_id "Root Region"
+set_global_assignment -name LL_MEMBER_STATE LOCKED -section_id "Root Region"
+set_global_assignment -name VERILOG_FILE ../src/lt24_display/single_port_rom.v
 set_global_assignment -name SDC_FILE sdc_files/handwritten_digit_recognition.out.sdc
 set_global_assignment -name VERILOG_FILE ../src/neural_network/signed_multiply_accumulate.v
 set_global_assignment -name VERILOG_FILE ../src/neural_network/ReLU_layer.v
@@ -187,7 +193,6 @@ set_global_assignment -name VERILOG_FILE ../src/neural_network/FW_logic_FSM.v
 set_global_assignment -name VERILOG_FILE ../src/neural_network/dff_nbit.v
 set_global_assignment -name VERILOG_FILE ../src/neural_network/dense_layer.v
 set_global_assignment -name BDF_FILE block_designs/handwritten_digit_recognition.bdf
-set_global_assignment -name MIF_FILE ../python/merged_frames.mif
 set_global_assignment -name VERILOG_FILE ../src/average_pooling_n.v
 set_global_assignment -name VERILOG_FILE ../src/average_n_pixels.v
 set_global_assignment -name VERILOG_FILE ../src/seven_segment_display_driver.v
@@ -204,9 +209,4 @@ set_global_assignment -name VERILOG_FILE ../src/lt24_display/enable_generator.v
 set_global_assignment -name VERILOG_FILE ../src/lt24_display/clk_divisor.v
 set_global_assignment -name BDF_FILE block_designs/rising_edge_detector.bdf
 set_global_assignment -name BDF_FILE block_designs/debouncer.bdf
-set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
-set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
-set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
-set_global_assignment -name LL_ROOT_REGION ON -section_id "Root Region"
-set_global_assignment -name LL_MEMBER_STATE LOCKED -section_id "Root Region"
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

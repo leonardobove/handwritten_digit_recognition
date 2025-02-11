@@ -486,89 +486,6 @@ refer to the applicable agreement for further details.
 	)
 )
 (symbol
-	(rect 832 304 944 400)
-	(text "LPM_ROM" (rect 12 0 87 16)(font "Arial" (font_size 10)))
-	(text "frame_rom" (rect 56 85 109 102)(font "Intel Clear" ))
-	(port
-		(pt 112 24)
-		(input)
-		(text "address[LPM_WIDTHAD-1..0]" (rect 20 17 186 31)(font "Arial" (font_size 8)))
-		(text "address[]" (rect 38 17 92 31)(font "Arial" (font_size 8)))
-		(line (pt 112 24)(pt 96 24)(line_width 3))
-	)
-	(port
-		(pt 112 40)
-		(input)
-		(text "inclock" (rect 20 33 58 47)(font "Arial" (font_size 8)))
-		(text "inclock" (rect 54 33 92 47)(font "Arial" (font_size 8)))
-		(line (pt 112 40)(pt 96 40))
-	)
-	(port
-		(pt 112 72)
-		(input)
-		(text "memenab" (rect 20 65 74 79)(font "Arial" (font_size 8)))
-		(text "memenab" (rect 38 65 92 79)(font "Arial" (font_size 8)))
-		(line (pt 112 72)(pt 96 72))
-	)
-	(port
-		(pt 112 56)
-		(input)
-		(text "outclock" (rect 20 49 67 63)(font "Arial" (font_size 8)))
-		(text "outclock" (rect 45 49 92 63)(font "Arial" (font_size 8)))
-		(line (pt 112 56)(pt 96 56))
-		(unused)
-	)
-	(port
-		(pt 0 48)
-		(output)
-		(text "q[LPM_WIDTH-1..0]" (rect 80 41 188 55)(font "Arial" (font_size 8)))
-		(text "q[]" (rect 18 41 32 55)(font "Arial" (font_size 8)))
-		(line (pt 16 48)(pt 0 48)(line_width 3))
-	)
-	(parameter
-		"LPM_ADDRESS_CONTROL"
-		"\"REGISTERED\""
-		"Should the address and control ports be registered?"
-		"\"REGISTERED\"" "\"UNREGISTERED\"" 
-	)
-	(parameter
-		"LPM_FILE"
-		"\"../python/merged_frames.mif\""
-		"File containing initial contents of memory array"
-	)
-	(parameter
-		"LPM_NUMWORDS"
-		"262144"
-		"Number of memory words, default is 2^LPM_WIDTHAD"
-	)
-	(parameter
-		"LPM_OUTDATA"
-		"\"UNREGISTERED\""
-		"Should the output data be registered?"
-		"\"REGISTERED\"" "\"UNREGISTERED\"" 
-	)
-	(parameter
-		"LPM_WIDTH"
-		"1"
-		"Data width in bits, any integer > 0"
-		" 1" " 2" " 3" " 4" " 5" " 6" " 7" " 8" " 9" "10" "11" "12" "13" "14" "15" "16" "20" "24" "28" "32" "40" "48" "56" "64" 
-	)
-	(parameter
-		"LPM_WIDTHAD"
-		"18"
-		"Number of address lines, any integer > 0"
-		" 1" " 2" " 3" " 4" " 5" " 6" " 7" " 8" " 9" "10" "11" "12" 
-	)
-	(drawing
-		(line (pt 96 16)(pt 16 16))
-		(line (pt 96 80)(pt 16 80))
-		(line (pt 16 80)(pt 16 16))
-		(line (pt 96 80)(pt 96 16))
-	)
-	(flipy)
-	(annotation_block (parameter)(rect 456 288 794 421))
-)
-(symbol
 	(rect 1032 80 1360 224)
 	(text "simple_dual_port_ram_single_clock" (rect 5 0 178 12)(font "Arial" ))
 	(text "frame_buffer_memory" (rect 8 128 121 140)(font "Arial" ))
@@ -628,21 +545,6 @@ refer to the applicable agreement for further details.
 		(rectangle (rect 16 16 312 128))
 	)
 	(annotation_block (parameter)(rect 1128 16 1317 73))
-)
-(symbol
-	(rect 1024 352 1056 368)
-	(text "VCC" (rect 7 0 27 10)(font "Arial" (font_size 6)))
-	(text "inst5" (rect 3 5 25 22)(font "Intel Clear" )(invisible))
-	(port
-		(pt 16 16)
-		(output)
-		(text "1" (rect 19 7 24 19)(font "Courier New" (bold))(invisible))
-		(text "1" (rect 19 7 24 19)(font "Courier New" (bold))(invisible))
-		(line (pt 16 16)(pt 16 8))
-	)
-	(drawing
-		(line (pt 8 8)(pt 24 8))
-	)
 )
 (symbol
 	(rect -176 144 32 288)
@@ -1230,35 +1132,50 @@ refer to the applicable agreement for further details.
 	)
 	(annotation_block (parameter)(rect -104 -240 94 -202))
 )
+(symbol
+	(rect 640 296 944 376)
+	(text "single_port_rom" (rect 5 0 82 12)(font "Arial" ))
+	(text "frame_rom" (rect 8 64 62 76)(font "Arial" ))
+	(port
+		(pt 304 32)
+		(input)
+		(text "addr[ADDR_WIDTH-1..0]" (rect 0 0 125 12)(font "Arial" ))
+		(text "addr[ADDR_WIDTH-1..0]" (rect 176 24 301 36)(font "Arial" ))
+		(line (pt 288 32)(pt 304 32)(line_width 3))
+	)
+	(port
+		(pt 0 48)
+		(input)
+		(text "clk" (rect 0 0 14 12)(font "Arial" ))
+		(text "clk" (rect 21 43 35 55)(font "Arial" ))
+		(line (pt 0 48)(pt 16 48))
+	)
+	(port
+		(pt 0 32)
+		(output)
+		(text "q[DATA_WIDTH-1..0]" (rect 0 0 106 12)(font "Arial" ))
+		(text "q[DATA_WIDTH-1..0]" (rect 24 24 130 36)(font "Arial" ))
+		(line (pt 16 32)(pt 0 32)(line_width 3))
+	)
+	(parameter
+		"DATA_WIDTH"
+		"1"
+		""
+		(type "PARAMETER_SIGNED_DEC")	)
+	(parameter
+		"ADDR_WIDTH"
+		"18"
+		""
+		(type "PARAMETER_SIGNED_DEC")	)
+	(drawing
+		(rectangle (rect 16 16 288 64))
+	)
+	(annotation_block (parameter)(rect 984 304 1173 361))
+)
 (connector
 	(pt 968 328)
 	(pt 944 328)
 	(bus)
-)
-(connector
-	(pt 952 288)
-	(pt 816 288)
-)
-(connector
-	(pt 816 288)
-	(pt 816 352)
-)
-(connector
-	(pt 816 352)
-	(pt 832 352)
-)
-(connector
-	(text "clk_50" (rect 954 328 985 345)(font "Intel Clear" ))
-	(pt 944 344)
-	(pt 1000 344)
-)
-(connector
-	(pt 1040 368)
-	(pt 1040 376)
-)
-(connector
-	(pt 1040 376)
-	(pt 944 376)
 )
 (connector
 	(pt -176 240)
@@ -1645,6 +1562,23 @@ refer to the applicable agreement for further details.
 	(pt 1376 -80)
 	(pt 1440 -80)
 	(bus)
+)
+(connector
+	(pt 624 288)
+	(pt 952 288)
+)
+(connector
+	(pt 624 288)
+	(pt 624 328)
+)
+(connector
+	(pt 624 328)
+	(pt 640 328)
+)
+(connector
+	(text "clk_50" (rect 608 328 639 345)(font "Intel Clear" ))
+	(pt 640 344)
+	(pt 600 344)
 )
 (junction (pt -448 40))
 (junction (pt -400 144))
