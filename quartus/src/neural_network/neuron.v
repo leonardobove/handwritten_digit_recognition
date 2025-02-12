@@ -31,7 +31,7 @@ module neuron #(
 
     // Register declarations for FSM state, control signals, and counter
     reg [1:0] current_state, next_state;
-    reg mac_clken, mac_sload;
+    reg mac_clken, mac_sload, mac_aclr;
     reg count_en, count_reset;
 
     // Wire declarations
@@ -50,7 +50,7 @@ module neuron #(
         .WIDTH_OUT(WIDTH_OUT)
     ) mac_inst (
         .clk(clk),
-        .aclr(reset),
+        .aclr(mac_aclr || reset),
         .clken(mac_clken),
         .sload(mac_sload),
         .dataa(in_data[(index+1)*WIDTH_IN-1 -: WIDTH_IN]), // Input data slice for current index
@@ -106,6 +106,7 @@ module neuron #(
     always @(current_state) begin      
         case (current_state)
             RESET: begin
+                mac_aclr = 1'b1;
                 mac_clken = 1'b0;
                 mac_sload = 1'b1;
                 count_reset = 1'b1;
@@ -113,6 +114,7 @@ module neuron #(
             end
 
             IDLE: begin
+                mac_aclr = 1'b0;
                 mac_clken = 1'b0;
                 mac_sload = 1'b1;
                 count_reset = 1'b1;
@@ -120,6 +122,7 @@ module neuron #(
             end
 
             MAC: begin
+                mac_aclr = 1'b0;
                 mac_clken = 1'b1;
                 mac_sload = 1'b0;
                 count_reset = 1'b0;
@@ -127,6 +130,7 @@ module neuron #(
             end
 
             OUTPUT: begin
+                mac_aclr = 1'b1;
                 mac_clken = 1'b0;               
                 mac_sload = 1'b0;
                 count_reset = 1'b0;
@@ -134,6 +138,7 @@ module neuron #(
             end
 
             default: begin
+                mac_aclr = 1'b1;
                 mac_clken = 1'b0;
                 mac_sload = 1'b1;
                 count_reset = 1'b1;
