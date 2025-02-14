@@ -97,15 +97,14 @@ module painter #(
  
     // ROM interface
     assign rom_addr = rom_pointer + load_frame_sel_reg*PIXEL_NUM[PIXEL_NUM_WIDTH-1:0]; // ROM pointer address with frame offset
-    reg rom_q_reg; // Buffer for ROM output data
- 
+
     // Frame buffer memory interface
  
     /*  If a new frame has to be loaded, the pixel color (black or white) will depend on the output of the ROM.
      *  If the screen has been touched, draw the corresponding pixel white (1'b1).
      *  Otherwise leave it to 0.
      */
-    assign ram_data = (Sreg == LOAD_FRAME) ? rom_q_reg : (Sreg == PAINT_PIXEL) ? 1'b1 : 1'b0;
+    assign ram_data = (Sreg == LOAD_FRAME) ? rom_q : (Sreg == PAINT_PIXEL) ? 1'b1 : 1'b0;
     /*  If the screen has been touched, add a white pixel at the coordinates given by the touchscreen driver, i.e.
      *  col = (x_pos/4096) * COL_NUM and row = (y_pos/4096) + ROW_NUM.
      *  If a new frame has to be loaded, the position pixel to be drawn comes from the current rom_pointer,
@@ -122,10 +121,10 @@ module painter #(
 	 assign touchscreen_y = touchscreen_y_temp[7:0]; 
  
     // Output ranges from touchscreen ADC
-    localparam TS_MINX = 12'd0;//750; with 12
+    localparam TS_MINX = 12'd0;
     localparam TS_MAXX = 12'd4095;
     localparam TS_MINY = 12'd0;
-    localparam TS_MAXY = 12'd4095;// 3750 with 12
+    localparam TS_MAXY = 12'd4095;
  
     // Map touchscreen ADC values to pixel coordinates
     always @ (*) begin
@@ -173,7 +172,6 @@ module painter #(
     always @ (posedge clk)
         if (reset) begin
             Sreg <= RESET;
-            rom_q_reg <= 1'b0;
             load_frame_sel_reg <= 1'b0;
         end else
             if (en) begin
@@ -181,13 +179,9 @@ module painter #(
  
                 // Update current frame selection
                 load_frame_sel_reg <= load_frame_sel;
- 
-                // Update output data from ROM
-                rom_q_reg <= rom_q;
             end else begin
                 Sreg <= Sreg;
                 load_frame_sel_reg <= load_frame_sel_reg;
-                rom_q_reg <= rom_q_reg;
             end
  
     always @ (*)

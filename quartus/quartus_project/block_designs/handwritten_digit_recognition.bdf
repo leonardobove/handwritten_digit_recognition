@@ -78,7 +78,7 @@ refer to the applicable agreement for further details.
 )
 (pin
 	(input)
-	(rect 304 24 488 40)
+	(rect 344 24 528 40)
 	(text "INPUT" (rect 141 0 169 10)(font "Arial" (font_size 6)))
 	(text "MAX10_CLK1_50" (rect 5 0 88 12)(font "Arial" ))
 	(pt 184 8)
@@ -91,7 +91,7 @@ refer to the applicable agreement for further details.
 		(line (pt 125 12)(pt 129 8))
 	)
 	(text "VCC" (rect 144 7 164 17)(font "Arial" (font_size 6)))
-	(annotation_block (location)(rect 384 -8 448 16))
+	(annotation_block (location)(rect 424 -8 488 16))
 )
 (pin
 	(input)
@@ -1001,19 +1001,6 @@ refer to the applicable agreement for further details.
 	)
 )
 (connector
-	(pt 552 96)
-	(pt 536 96)
-)
-(connector
-	(pt 536 96)
-	(pt 536 32)
-)
-(connector
-	(text "clk" (rect 521 16 535 33)(font "Intel Clear" ))
-	(pt 488 32)
-	(pt 536 32)
-)
-(connector
 	(pt 504 96)
 	(pt 504 112)
 )
@@ -1407,6 +1394,19 @@ refer to the applicable agreement for further details.
 	(text "clk" (rect -19 264 -5 281)(font "Intel Clear" ))
 	(pt 16 280)
 	(pt -32 280)
+)
+(connector
+	(pt 552 96)
+	(pt 544 96)
+)
+(connector
+	(pt 544 96)
+	(pt 544 32)
+)
+(connector
+	(text "clk" (rect 529 16 543 33)(font "Intel Clear" ))
+	(pt 528 32)
+	(pt 544 32)
 )
 (junction (pt 168 128))
 (junction (pt 112 16))

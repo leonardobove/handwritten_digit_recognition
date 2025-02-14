@@ -7,7 +7,7 @@ module lt24_lcd_driver_tb;
     reg [15:0] pixel_rgb_tb = 0;
     reg print_tb = 0;
     
-    wire done_tb, initialized_tb;
+    wire initialized_tb;
     wire rst, csx, dcx, wrx, rdx;
     wire [15:0] data;
 
@@ -18,7 +18,6 @@ module lt24_lcd_driver_tb;
         .reset(reset_tb),
         .pixel_rgb(pixel_rgb_tb),
         .print(print_tb),
-        .done(done_tb),
         .initialized(initialized_tb),
         .tft_rst(rst),
         .tft_csx(csx),
@@ -33,14 +32,9 @@ module lt24_lcd_driver_tb;
         #5 clk_tb = ~clk_tb;
     end
 
-    // Enable generation
-    always begin
-        #40 en_tb = 1'b1;
-        #10 en_tb = 1'b0;
-    end
-
     // Testbench
     initial begin
+        en_tb = 1;
         #10;
         reset_tb = 1;
         #10;
@@ -48,8 +42,11 @@ module lt24_lcd_driver_tb;
         
         wait(initialized_tb != 0);
 
+        #10;
         pixel_rgb_tb = 16'd1;
         print_tb = 1;
+        #10;
+        print_tb = 0;
         #100;
         reset_tb = 1;
         #20;

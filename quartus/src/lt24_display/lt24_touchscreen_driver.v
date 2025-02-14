@@ -65,6 +65,7 @@ module lt24_touchscreen_driver (
     localparam WAIT_X_PHASE_END         = 7'd17;
     localparam GET_X_PHASE_END          = 7'd45;
     localparam Y_CONVERSION_SETUP_START = 7'd30;
+    localparam READ_X_PHASE_END         = 7'd41;
     localparam WAIT_Y_PHASE_END         = 7'd47;
     localparam GET_Y_PHASE_END          = 7'd71;
 
@@ -105,7 +106,7 @@ module lt24_touchscreen_driver (
             x_pos <= 12'd0;
             y_pos <= 12'd0;
         end else begin
-            if (Sreg == GET_X && (adc_dclk_reg == 1'b0)) // Sample at the positive edge of adc_dclk
+            if (Sreg == GET_X && (adc_dclk_reg == 1'b0) && (clk_cnt < READ_X_PHASE_END)) // Sample at the positive edge of adc_dclk
                 x_pos[5'd11 - ((clk_cnt - WAIT_X_PHASE_END)/2)] <= adc_dout;
             else
                 x_pos <= x_pos;

@@ -112,7 +112,6 @@ counter #(
 );
  
 // Assign the address of the current pixel to be fetched
-integer i;
 reg [input_pixel_addr_width-1:0] top_left_pixel_addr;
 always @ (*) begin
     top_left_pixel_addr = output_col_counter * n + output_row_counter * n * input_matrix_side_length;
